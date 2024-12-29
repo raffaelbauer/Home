@@ -7,4 +7,150 @@
     <title>Website von Raffael Bauer</title>
     <link rel="icon" href="IMG_4630.jpeg" type="image/jpeg">
     <style>
-        /* Grundlegende
+        /* Grundlegende Stile */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(45deg, #00B8D4, #004D40);
+            color: #F1F1F1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 100vh;
+            overflow: auto;  /* Scrollen aktivieren */
+            background-size: 400% 400%;
+            animation: backgroundAnimation 15s ease infinite;
+        }
+
+        /* Kopfbereich */
+        header {
+            background: radial-gradient(circle, rgba(0, 188, 212, 0.9), rgba(0, 150, 136, 0.9));
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            border-bottom: 5px solid #004D40;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Hauptbereich */
+        main {
+            padding: 4rem 2rem;
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Button Container */
+        .button-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.8rem;
+            margin: 2rem 0;
+            max-width: 700px;
+        }
+
+        .button-container a {
+            display: block;
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            background: linear-gradient(45deg, #00BCD4, #00897B);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .button-container a:hover {
+            background: linear-gradient(45deg, #00897B, #00BCD4);
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 150, 136, 0.4);
+        }
+
+        .button-container a:active {
+            transform: translateY(2px);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #212121;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            font-size: 1rem;
+            border-top: 5px solid #00897B;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        footer a {
+            color: #00BCD4;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #004D40;
+            text-decoration: underline;
+        }
+
+        /* Animation für das Hintergrundbild */
+        @keyframes backgroundAnimation {
+            0% {background-position: 0 0;}
+            50% {background-position: 50% 50%;}
+            100% {background-position: 100% 100%;}
+        }
+
+        /* Responsives Design */
+        @media (max-width: 768px) {
+            .button-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .button-container a {
+                font-size: 1rem;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Willkommen auf der Website von Raffael Bauer</h1>
+    </header>
+    <main>
+        <div class="button-container">
+            <a href="https://raffaelbauer.github.io/Wunschliste/">Wunschliste</a>
+            <a href="https://raffaelbauer.github.io/meine-Spiele/">Meine Spiele</a>
+            <a href="https://raffaelbauer.github.io/Ausflugsideen/">Ausflugsideen</a>
+            <a href="https://raffaelbauer.github.io/Minecraft-Server/">Minecraft Server</a>
+            <a href="https://raffaelbauer.github.io/Raffaels-Archiv/">Archiv</a>
+            <a href="https://raffaelbauer.github.io/Kontakt/">Mein Social Media</a>
+            <a href="https://raffaelbauer.github.io/Impressum/">Impressum</a>
+            <a href="https://raffaelbauer.github.io/Datenschutzbestimmungen/">Datenschutzbestimmungen</a>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Raffael Bauer. Alle Rechte vorbehalten.</p>
+    </footer>
+</body>
+</html>
