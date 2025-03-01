@@ -8,7 +8,6 @@
     <title>Website von Raffael Bauer</title>
     <link rel="icon" href="IMG_4630.jpeg" type="image/jpeg">
     <style>
-        /* Grundlegende Stile */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -19,12 +18,10 @@
             flex-direction: column;
             justify-content: space-between;
             min-height: 100vh;
-            overflow: auto;  /* Scrollen aktivieren */
-            background-size: 400% 400%;
-            animation: backgroundAnimation 15s ease infinite;
+            overflow: auto;
+            background-size: cover;
         }
 
-        /* Kopfbereich */
         header {
             background: radial-gradient(circle, rgba(0, 188, 212, 0.9), rgba(0, 150, 136, 0.9));
             color: white;
@@ -41,7 +38,6 @@
             text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
         }
 
-        /* Hauptbereich */
         main {
             padding: 4rem 2rem;
             text-align: center;
@@ -52,7 +48,6 @@
             align-items: center;
         }
 
-        /* Button Container */
         .button-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -85,37 +80,13 @@
             transform: translateY(2px);
         }
 
-        /* Footer */
         footer {
-            background-color: #212121;
             color: white;
             text-align: center;
             padding: 2rem;
             font-size: 1rem;
-            border-top: 5px solid #00897B;
-            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
         }
 
-        footer a {
-            color: #00BCD4;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
-
-        footer a:hover {
-            color: #004D40;
-            text-decoration: underline;
-        }
-
-        /* Animation für das Hintergrundbild */
-        @keyframes backgroundAnimation {
-            0% {background-position: 0 0;}
-            50% {background-position: 50% 50%;}
-            100% {background-position: 100% 100%;}
-        }
-
-        /* Responsives Design */
         @media (max-width: 768px) {
             .button-container {
                 grid-template-columns: 1fr;
@@ -140,15 +111,14 @@
     </header>
     <main>
         <div class="button-container">
-            <a href="https://raffaelbauer.github.io/Wunschliste/">Wunschliste</a>
+            <a href="https://raffaelbauer.github.io/Raffaels-Archiv/">Hilfreiche Seiten</a>
             <a href="https://raffaelbauer.github.io/empfehlungen/">Raffaels Empfehlungen</a>
-            <a href="https://raffaelbauer.github.io/meine-Spiele/">Meine Spiele</a>
+            <a href="https://raffaelbauer.github.io/Wunschliste/">Wunschliste</a>
             <a href="https://raffaelbauer.github.io/Ausflugsideen/">Ausflugsideen</a>
+            <a href="https://raffaelbauer.github.io/meine-Spiele/">Meine Spiele</a>
             <a href="https://raffaelbauer.github.io/comming-soon/">Minecraft Server</a>
-            <a href="https://raffaelbauer.github.io/Raffaels-Archiv/">Archiv</a>
             <a href="https://raffaelbauer.github.io/Kontakt/">Kontakt</a>
-            <a href="https://raffaelbauer.github.io/Impressum/">Impressum</a>
-            <a href="https://raffaelbauer.github.io/Datenschutzbestimmungen/">Datenschutzbestimmungen</a>
+            <a href="https://raffaelbauer.github.io/Datenschutzbestimmungen/">Datenschutzerklärung</a>
         </div>
     </main>
     <footer>
