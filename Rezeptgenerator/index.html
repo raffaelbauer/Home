@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rezeptgenerator</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    /* Grundlayout im Neumorphism-Stil */
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #e0e5ec;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .container {
+      background: #f0f0f3;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 9px 9px 16px #a3b1c6, -9px -9px 16px #ffffff;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto 80px; /* Platz für Footer */
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    label {
+      font-weight: 700;
+      margin-top: 15px;
+      display: block;
+      color: #555;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 12px 15px;
+      margin-top: 8px;
+      border: none;
+      border-radius: 10px;
+      background: #e0e5ec;
+      box-shadow: inset 5px 5px 10px #a3b1c6, inset -5px -5px 10px #ffffff;
+      font-size: 1em;
+      color: #333;
+      outline: none;
+      transition: all 0.2s ease-in-out;
+    }
+    input:focus, textarea:focus {
+      box-shadow: inset 2px 2px 5px #a3b1c6, inset -2px -2px 5px #ffffff;
+    }
+    .ingredient {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      align-items: center;
+    }
+    .ingredient input {
+      flex: 1;
+    }
+    .ingredient button {
+      padding: 6px 10px;
+      background: #e0e5ec;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 3px 3px 6px #a3b1c6, -3px -3px 6px #ffffff;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+    }
+    .ingredient button:hover {
+      box-shadow: inset 3px 3px 6px #a3b1c6, inset -3px -3px 6px #ffffff;
+    }
+    button {
+      margin-top: 25px;
+      padding: 12px 20px;
+      background: #e0e5ec;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff;
+      font-size: 1em;
+      font-weight: 700;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+    }
+    button:hover {
+      box-shadow: inset 5px 5px 10px #a3b1c6, inset -5px -5px 10px #ffffff;
+    }
+    /* Vorschau-Bereich für Bilder */
+    #imagePreview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    #imagePreview img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 10px;
+      box-shadow: 3px 3px 6px #a3b1c6, -3px -3px 6px #ffffff;
+    }
+    /* Footer fixiert am unteren Rand */
+    footer {
+      background: #f0f0f3;
+      box-shadow: 9px 9px 16px #a3b1c6, -9px -9px 16px #ffffff;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      font-size: 0.9em;
+      color: #777;
+    }
+    footer a {
+      color: #333;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Rezeptgenerator</h1>
+    <form id="recipeForm">
+      <label for="recipeName">Rezeptname:</label>
+      <input type="text" id="recipeName" name="recipeName" required>
+      
+      <label for="servings">Portionen (optional):</label>
+      <input type="number" id="servings" name="servings" min="1">
+      
+      <label for="zeit">Zeit (optional):</label>
+      <!-- Zeitfeld mit fixem Template, in dem die Minuten nach dem Doppelpunkt eingefügt werden -->
+      <textarea id="zeit" name="zeit" rows="4" readonly></textarea>
+      
+      <label for="nutritional">Nährwerte (optional):</label>
+      <textarea id="nutritional" name="nutritional" rows="3"></textarea>
+      
+      <label>Zutaten (bitte jeweils Zutat und Menge angeben):</label>
+      <div id="ingredientsList">
+        <div class="ingredient">
+          <input type="text" placeholder="Zutat" name="ingredient[]">
+          <input type="text" placeholder="Menge (z. B. g, ml, TL …)" name="amount[]">
+          <button type="button" onclick="this.parentElement.remove()">Entfernen</button>
+        </div>
+      </div>
+      <button type="button" onclick="addIngredient()">Weitere Zutat hinzufügen</button>
+      
+      <label for="preparation">Zubereitungsschritte:</label>
+      <textarea id="preparation" name="preparation" rows="5" required></textarea>
+      
+      <label for="imageUpload">Bilder hochladen (optional):</label>
+      <input type="file" id="imageUpload" name="imageUpload" accept="image/*" multiple>
+      <div id="imagePreview"></div>
+      
+      <button type="submit">PDF generieren</button>
+    </form>
+  </div>
+  
+  <footer>
+    <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten. | <a href="https://raffaelbauer.github.io/Impressum/">Impressum</a> | <a href="https://raffaelbauer.github.io/Datenschutzbestimmungen/">Datenschutzbestimmungen</a></p>
+  </footer>
+  
+  <script>
+    // Template-Text für das Zeitfeld (wird nicht gelöscht)
+    const timeTemplate = "Gesamtzeit: ____ min\nZubereitungszeit: ____ min\nKoch-/Backzeit: ____ min";
+    const zeitField = document.getElementById("zeit");
+    // Setze initial den Template-Text und mache das Feld readonly, damit nur der feste Text angezeigt wird.
+    zeitField.value = timeTemplate;
+    // Ermögliche dennoch, dass der Nutzer an definierten Positionen (nach dem Doppelpunkt) etwas eintippen kann.
+    // Hier simulieren wir dies, indem wir beim Klick das Feld entsperren und beim Verlassen wieder den Template-Charakter erhalten.
+    zeitField.addEventListener("focus", function() {
+      zeitField.removeAttribute("readonly");
+    });
+    zeitField.addEventListener("blur", function() {
+      // Wenn der Nutzer nichts geändert hat, setze wieder den Template-Text.
+      if (zeitField.value.trim() === "") {
+        zeitField.value = timeTemplate;
+        zeitField.setAttribute("readonly", true);
+      }
+    });
+    
+    function addIngredient() {
+      const div = document.createElement('div');
+      div.className = 'ingredient';
+      div.innerHTML = '<input type="text" placeholder="Zutat" name="ingredient[]"> <input type="text" placeholder="Menge (z. B. g, ml, TL …)" name="amount[]"> <button type="button" onclick="this.parentElement.remove()">Entfernen</button>';
+      document.getElementById('ingredientsList').appendChild(div);
+    }
+    
+    // Vorschau der hochgeladenen Bilder anzeigen
+    document.getElementById("imageUpload").addEventListener("change", function() {
+      const preview = document.getElementById("imagePreview");
+      preview.innerHTML = "";
+      const files = this.files;
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = document.createElement("img");
+          img.src = e.target.result;
+          preview.appendChild(img);
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+    
+    document.getElementById('recipeForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF("p", "mm", "a4");
+      
+      const recipeName = document.getElementById('recipeName').value;
+      const servings = document.getElementById('servings').value;
+      const zeit = document.getElementById('zeit').value;
+      const nutritional = document.getElementById('nutritional').value;
+      const preparation = document.getElementById('preparation').value;
+      const fileInput = document.getElementById('imageUpload');
+      
+      // Mehrfachbilder verarbeiten
+      const files = fileInput.files;
+      if (files.length > 0) {
+        let imageDataArray = [];
+        let filesProcessed = 0;
+        for (let i = 0; i < files.length; i++) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            imageDataArray.push(e.target.result);
+            filesProcessed++;
+            if (filesProcessed === files.length) {
+              generatePDF(doc, recipeName, servings, zeit, nutritional, preparation, imageDataArray);
+            }
+          }
+          reader.readAsDataURL(files[i]);
+        }
+      } else {
+        generatePDF(doc, recipeName, servings, zeit, nutritional, preparation, []);
+      }
+    });
+    
+    function generatePDF(doc, recipeName, servings, zeit, nutritional, preparation, imageDataArray) {
+      const pageWidth = doc.internal.pageSize.getWidth();
+      // Gestalte den Header
+      doc.setFillColor(220, 220, 220);
+      doc.rect(0, 0, pageWidth, 30, 'F');
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(24);
+      doc.setTextColor(0, 51, 102);
+      doc.text(recipeName, pageWidth / 2, 20, { align: "center" });
+      
+      let yPos = 40;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      
+      if (servings && servings.toString().trim() !== "") {
+        doc.text(`Portionen: ${servings}`, 10, yPos);
+        yPos += 10;
+      }
+      
+      // Nur hinzufügen, wenn das Zeitfeld vom Template abweicht
+      if (zeit.trim() !== "" && zeit.trim() !== timeTemplate.trim()) {
+        doc.setFont("helvetica", "bold");
+        doc.text("Zeit:", 10, yPos);
+        yPos += 7;
+        doc.setFont("helvetica", "normal");
+        const linesZeit = doc.splitTextToSize(zeit, pageWidth - 20);
+        doc.text(linesZeit, 10, yPos);
+        yPos += linesZeit.length * 7 + 5;
+      }
+      
+      if (nutritional.trim() !== "") {
+        doc.setFont("helvetica", "bold");
+        doc.text("Nährwerte:", 10, yPos);
+        yPos += 7;
+        doc.setFont("helvetica", "normal");
+        const linesNutritional = doc.splitTextToSize(nutritional, pageWidth - 20);
+        doc.text(linesNutritional, 10, yPos);
+        yPos += linesNutritional.length * 7 + 5;
+      }
+      
+      // Bilder in einem Gitter anzeigen
+      if (imageDataArray.length > 0) {
+        let xPos = 10;
+        const imageMaxWidth = 50, imageMaxHeight = 50;
+        imageDataArray.forEach(function(imgData) {
+          const imgProps = doc.getImageProperties(imgData);
+          let imgWidth = imgProps.width, imgHeight = imgProps.height;
+          if (imgWidth > imageMaxWidth) {
+            imgHeight *= imageMaxWidth / imgWidth;
+            imgWidth = imageMaxWidth;
+          }
+          if (imgHeight > imageMaxHeight) {
+            imgWidth *= imageMaxHeight / imgHeight;
+            imgHeight = imageMaxHeight;
+          }
+          // Falls das Bild den Seitenrand überschreitet, wechsle zur nächsten Zeile
+          if (xPos + imgWidth > pageWidth - 10) {
+            xPos = 10;
+            yPos += imageMaxHeight + 10;
+          }
+          doc.addImage(imgData, 'JPEG', xPos, yPos, imgWidth, imgHeight);
+          xPos += imgWidth + 10;
+        });
+        yPos += imageMaxHeight + 10;
+      }
+      
+      // Zutaten: Nur Zutaten, bei denen beide Felder nicht leer sind.
+      const ingredientDivs = document.querySelectorAll('#ingredientsList .ingredient');
+      let validIngredients = [];
+      ingredientDivs.forEach(function(div) {
+        const inputs = div.getElementsByTagName('input');
+        const zutat = inputs[0].value.trim();
+        const menge = inputs[1].value.trim();
+        if (zutat !== "" && menge !== "") {
+          validIngredients.push(`• ${zutat} (${menge})`);
+        }
+      });
+      if (validIngredients.length > 0) {
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text("Zutaten:", 10, yPos);
+        yPos += 10;
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(12);
+        validIngredients.forEach(function(text) {
+          doc.text(text, 10, yPos);
+          yPos += 7;
+        });
+        yPos += 5;
+      }
+      
+      // Zubereitungsschritte
+      if (preparation.trim() !== "") {
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text("Zubereitung:", 10, yPos);
+        yPos += 10;
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(12);
+        const linesPrep = doc.splitTextToSize(preparation, pageWidth - 20);
+        doc.text(linesPrep, 10, yPos);
+      }
+      
+      doc.save(`${recipeName}.pdf`);
+    }
+  </script>
+</body>
+</html>
