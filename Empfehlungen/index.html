@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Empfehlungen von Raffael Bauer">
+    <title>Raffaels Empfehlungen</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(90deg, #2c3e50, #34495e);
+            color: #ecf0f1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 100vh;
+            text-align: center;
+        }
+        header {
+            background: #1abc9c;
+            padding: 2rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+        }
+        .button-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 2rem auto;
+            max-width: 700px;
+        }
+        .button-container a {
+            display: block;
+            padding: 1.2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+            transition: all 0.3s ease-in-out;
+        }
+        .button-container a:hover {
+            background: linear-gradient(45deg, #c0392b, #e74c3c);
+            transform: translateY(-5px);
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            color: black;
+            background: none;
+            font-weight: normal;
+            margin-top: auto;
+        }
+        footer a {
+            text-decoration: none;
+            color: black;
+            font-weight: normal;
+        }
+        .suggestion-text {
+            font-size: 1.2rem;
+            color: #ecf0f1;
+            margin-top: 2rem;
+        }
+        .whatsapp-button {
+            display: block;
+            padding: 1.5rem;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            background: linear-gradient(45deg, #25d366, #128c7e);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(23, 163, 109, 0.3);
+            transition: all 0.3s ease-in-out;
+            margin-top: 2rem;
+            width: 100%;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .whatsapp-button:hover {
+            background: linear-gradient(45deg, #128c7e, #25d366);
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Raffaels Empfehlungen</h1>
+    </header>
+    <main>
+        <div class="button-container">
+            <a href="https://raffaelbauer.github.io/ki-empfehlungen/">KI</a>
+            <a href="https://raffaelbauer.github.io/film-empfehlungen/">Filme & Serien</a>
+            <a href="https://raffaelbauer.github.io/empfehlungen-spiele/">Spiele</a>
+            <a href="https://raffaelbauer.github.io/comming-soon/">Apps</a>
+        </div>
+        <div class="suggestion-text">
+            <p>Für Vorschläge, was ich noch empfehlen könnte, schreib mir gerne auf WhatsApp!</p>
+            <a href="https://wa.me/41799534432?text=Hallo%20Raffael,%20ich%20habe%20ein%20Vorschlag%20f%C3%BCr%20deine%20Empfehlungen!" class="whatsapp-button">
+                WhatsApp Nachricht senden
+            </a>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
+        <p>
+            <a href="https://raffaelbauer.github.io/Datenschutzerklaerung/">Datenschutzbestimmungen</a>
+        </p>
+    </footer>
+</body>
+</html>
