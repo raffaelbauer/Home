@@ -3,205 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Raffaels Film- und Serienempfehlungen">
-    <title>Raffaels Film- und Serienempfehlungen</title>
+    <meta name="description" content="Raffaels Games Empfehlung: Minecraft, Meine eigenen Spiele, Supermarket Simulator, Kebabs Chef, Wobbly Life, Coole Websites mit Spielen, Monopoly, SupercityCon, Offline Games">
+    <title>Raffaels Games Empfehlung</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
             background-color: #1e1e1e;
-            color: #f5f5f5;
-            line-height: 1.6;
+            color: #fff;
             display: flex;
             flex-direction: column;
+            justify-content: flex-start;
             min-height: 100vh;
         }
         header {
-            background: linear-gradient(135deg, #ff8c00, #ff4500);
-            color: #fff;
-            padding: 4rem 2rem;
+            background-color: #111;
+            color: #1abc9c;
+            padding: 2rem;
             text-align: center;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
         header h1 {
-            font-size: 4rem;
-            margin: 0;
-            font-weight: 700;
-            letter-spacing: 2px;
-        }
-        main {
-            max-width: 1200px;
-            margin: 3rem auto;
-            padding: 0 2rem;
-            flex: 1;
-        }
-        .category {
-            background-color: #2c2c2c;
-            border-radius: 15px;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
-            padding: 3rem;
-            margin-bottom: 4rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .category:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
-        }
-        .category h2 {
             font-size: 3rem;
-            color: #ff8c00;
-            margin-bottom: 2rem;
-            text-transform: uppercase;
-            font-weight: 600;
-            letter-spacing: 1.5px;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
         }
-        .category ul {
-            list-style: none;
-            padding: 0;
+        .container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 20px;
+            padding: 20px;
         }
-        .category li {
-            margin-bottom: 2.5rem;
-            display: flex;
-            flex-direction: column;
-            background: #3a3a3a;
-            padding: 1rem;
-            border-radius: 10px;
-        }
-        .category li strong {
-            color: #ff8c00;
-            font-weight: bold;
-            font-size: 1.5rem;
-        }
-        .category li span {
-            margin-top: 0.5rem;
-            font-size: 1.1rem;
-        }
-        .category a {
-            color: #ff4500;
-            text-decoration: none;
-            font-weight: 600;
-            border: 2px solid #ff4500;
-            padding: 8px 16px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            margin-top: 1rem;
-            display: inline-block;
+        .game {
+            background-color: #2c3e50;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            padding: 1.5rem;
+            height: 300px;
             text-align: center;
+            transition: transform 0.3s ease-in-out;
         }
-        .category a:hover {
+        .game:hover {
+            transform: translateY(-5px);
+        }
+        .game h2 {
+            font-size: 1.8rem;
+            color: #ecf0f1;
+            margin-bottom: 1rem;
+        }
+        .game p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+        .game a {
+            display: inline-block;
+            background-color: #1abc9c;
+            padding: 0.8rem 1.2rem;
             color: #fff;
-            background-color: #ff4500;
-            border-color: #ff4500;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+        .game a:hover {
+            background-color: #16a085;
         }
         footer {
             text-align: center;
-            padding: 2rem;
-            background: none;
-            color: #f5f5f5;
             font-size: 1rem;
-        }
-        footer a {
-            color: #ff8c00;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        footer a:hover {
-            text-decoration: underline;
+            color: #fff;
+            padding: 1rem 0;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Raffaels Film- und Serienempfehlungen</h1>
+        <h1>Raffaels Games Empfehlung</h1>
     </header>
-    <main>
-        <div class="category">
-            <h2>Filme</h2>
-            <ul>
-                <li>
-                    <strong>The Green Mile</strong> – Ein berührendes Drama über einen Gefängniswärter, der mit einem außergewöhnlichen Insassen konfrontiert wird. Dieser besitzt übernatürliche Fähigkeiten, die sein Weltbild erschüttern.<br>
-                    <span><strong>Altersempfehlung:</strong> Ab 12 Jahren.</span><br>
-                    <span>Ansehen auf: Prime Video, Apple TV, Google Play Movies, Magenta TV</span><br>
-                    <a href="https://www.youtube.com/watch?v=JqISeCD4WMI">Trailer auf YouTube</a>
-                </li>
-                            <li>
-                    <strong>Hangover 1, 2 & 3</strong> – Drei Freunde erleben nach wilden Partynächten chaotische und witzige Abenteuer. Während sie versuchen, sich an die vergangenen Ereignisse zu erinnern, geraten sie in immer verrücktere Situationen.<br>
-                    <span><strong>Altersempfehlung:</strong> Ab 16 Jahren.</span><br>
-                    <span>Ansehen auf: Netflix, Apple TV, Amazon Video, Google Play Movies</span><br>
-                    <a href="https://www.youtube.com/watch?v=_lGl1cn9AS4">Trailer auf YouTube</a>
-                </li>
-                <li>
-                    <strong>Interstate 60</strong> – Eine geheimnisvolle Straße, die auf keiner Karte existiert, führt einen jungen Mann auf eine surreale Reise voller skurriler Begegnungen. Ein tiefgründiger Film über Entscheidungen und das Schicksal.<br>
-                    <span><strong>Altersempfehlung:</strong> Ab 12 Jahren.</span><br>
-                    <span>Ansehen auf: DVD oder illegale Webseiten</span><br>
-                    <a href="https://www.youtube.com/watch?v=tOkhIK4fw_I">Trailer auf YouTube</a>
-                </li>
-                <li>
-                    <strong>Leave the World Behind</strong> – Ein Mystery-Thriller über eine Familie, die in einem abgelegenen Haus von unerwarteten Besuchern und mysteriösen Ereignissen überrascht wird. Der Film spielt mit Ängsten und lässt das Publikum mit offenen Fragen zurück. Hinweis von Raffael: Der Film hat ein offenes Ende. Wer damit nicht umgehen kann, sollte den Film besser nicht schauen.<br>
-                    <span><strong>Altersempfehlung:</strong> Ab 16 Jahren.</span><br>
-                    <span>Ansehen auf: Netflix</span><br>
-                    <a href="https://www.youtube.com/watch?v=-t-GhwgZ7XY">Trailer auf YouTube</a>
-                </li>
-                <li>
-                    <strong>Mr. Poppers Pinguine</strong> – Eine lustige Familienkomödie über einen Mann, dessen Leben durch sechs Pinguine komplett durcheinandergebracht wird. Während er sich anfangs über die Tiere ärgert, lernt er schließlich, was im Leben wirklich zählt.<br>
-                    <span><strong>Altersempfehlung:</strong> Ab 6 Jahren.</span><br>
-                    <span>Ansehen auf: Disney+, Apple TV, Amazon Video, Google Play Movies</span><br>
-                    <a href="https://www.youtube.com/watch?v=wQaVnYdlwV0">Trailer auf YouTube</a>
-                </li>
-                <li>
-                    <strong>Der Junge im gestreiften Pyjama</strong> – Eine tragische Geschichte über die Freundschaft zwischen zwei Jungen während des Zweiten Weltkriegs. Achtung: Kann für einige Zuschauer als sehr brutal empfunden werden.Hinweis von Raffael: In dem Film geht es darum, wie Juden gezielt von den Nazis umgebracht werden. Wer damit nicht umgehen kann, sollte den Film besser nicht anschauen.<br>
-                    <span><strong>Altersempfehlung:</strong> Ab 12 Jahren.</span><br>
-                    <span>Ansehen auf: Netflix, Apple TV, Amazon Video, Google Play Movies, Paramount+</span><br>
-                    <a href="https://www.youtube.com/watch?v=QIeCLH8PP4U">Trailer auf YouTube</a>
-                </li>
-                <li>
-                    <strong>School Survival – Die schlimmsten Jahre meines Lebens</strong> – Ein rebellischer Teenager kämpft gegen die strengen Regeln seiner Schule und findet kreative Wege, um sich gegen das System aufzulehnen.<br>
-                    <span><strong>Altersempfehlung:</strong> Ab 10 Jahren.</span><br>
-                    <span>Ansehen auf: Netflix</span><br>
-                    <a href="https://www.youtube.com/watch?v=QB3z7Hr36y0">Trailer auf YouTube</a>
-                </li>
-                <li>
-                    <strong>Knallharte Jungs</strong> – Eine freche deutsche Komödie über die Herausforderungen der Pubertät.Hinweis von Raffael: Der Film hat viele anstößige Szenen. Ich empfehle, sich zweimal zu überlegen, mit wem man den Film ansehen will.<br>
-                    <span><strong>Altersempfehlung:</strong> Ab 16 Jahren.</span><br>
-                    <span>Ansehen auf: Netflix, Apple TV, Amazon Video, Google Play Movies</span><br>
-                    <a href="https://www.youtube.com/watch?v=5--eii9GNjk">Trailer auf YouTube</a>
-                </li>
-                <li>
-                    <strong>Steig nicht aus!</strong> – Ein packender Thriller, in dem ein Mann gezwungen wird, in seinem Auto zu bleiben, da eine Bombe unter seinem Sitz explodieren könnte.<br>
-                    <span><strong>Altersempfehlung:</strong> Ab 12 Jahren.</span><br>
-                    <span>Ansehen auf: Netflix, Apple TV, Amazon Video, Magenta TV, Google Play Movies</span><br>
-                    <a href="https://www.youtube.com/watch?v=FpcbGpk13Ps">Trailer auf YouTube</a>
-                </li>
-            </ul>
+    <main class="container">
+        <div class="game">
+            <h2>Minecraft</h2>
+            <p>Minecraft ist ein Sandbox-Spiel, das den Spielern die Freiheit gibt, in einer offenen Welt zu bauen, zu erkunden und zu überleben.</p>
+            <div class="video-link">
+                <a href="https://youtu.be/Od2F_KQoP-Y?si=ePOCnPX7qhJZ8MnY">Beschreibung in einem von Raffael selbstgemachten Video</a>
+            </div>
         </div>
-        <div class="category">
-            <h2>Serien</h2>
-            <ul>
-                <li>
-                    <strong>The End of the F***ing World</strong> – Zwei Teenager mit komplizierten Persönlichkeiten begeben sich auf eine düstere Reise. Sie wollen dem eintönigen Alltag entfliehen, finden dabei jedoch heraus, dass sie mehr verbindet als gedacht.<br>
-                    <span><strong>Altersempfehlung:</strong> Ab 16 Jahren.</span><br>
-                    <span>Ansehen auf: Netflix</span><br>
-                    <a href="https://www.youtube.com/watch?v=o1JGbhWpuJE">Trailer auf YouTube</a>
-                </li>
-                <li>
-                    <strong>The Rain</strong> – Eine postapokalyptische Serie, in der eine Gruppe Überlebender gegen eine tödliche Seuche kämpft, die durch Regen übertragen wird. Ein nervenaufreibender Überlebenskampf beginnt.<br>
-                    <span><strong>Altersempfehlung:</strong> Ab 16 Jahren.</span><br>
-                    <span>Ansehen auf: Netflix</span><br>
-                    <a href="https://www.youtube.com/watch?v=2JZDBGwHK1k">Trailer auf YouTube</a>
-                </li>
-                <li>
-                    <strong>Manifest</strong> – Ein Flugzeug verschwindet für fünf Jahre und kehrt zurück – doch für die Passagiere ist keine Zeit vergangen. Sie erhalten geheimnisvolle Visionen und versuchen, das Rätsel zu lösen.<br>
-                    <span><strong>Altersempfehlung:</strong> Ab 12 Jahren.</span><br>
-                    <span>Ansehen auf: Netflix, Apple TV, Amazon Video</span><br>
-                    <a href="https://www.youtube.com/watch?v=I1hNAIzkQWY">Trailer auf YouTube</a>
-                </li>
-            </ul>
+        <div class="game">
+            <h2>Meine eigenen Games Empfehlung</h2>
+            <p>Ich habe einige coole Spiele entwickelt, die du direkt online spielen kannst. Besuche die Website, um sie auszuprobieren!</p>
+            <a href="https://raffaelbauer.github.io/meine-Spiele/">Meine Spiele spielen</a>
+        </div>
+        <div class="game">
+            <h2>Supermarket Simulator - Games Empfehlung</h2>
+            <p>Supermarket Simulator ist ein lustiges Spiel, bei dem du als Supermarktmanager arbeiten musst, um deinen Laden zu führen und das Geschäft am Laufen zu halten.</p>
+            <a href="https://store.steampowered.com/app/1012900/Supermarket_Simulator/">Auf Steam kaufen</a>
+        </div>
+        <div class="game">
+            <h2>Kebabs Chef - Games Empfehlung</h2>
+            <p>In Kebabs Chef wirst du zum Meistergriller, der köstliche Kebabs für hungrige Kunden zubereitet.</p>
+            <a href="https://store.steampowered.com/app/1132120/Kebabs_Chef/">Auf Steam kaufen</a>
+        </div>
+        <div class="game">
+            <h2>Wobbly Life - Games Empfehlung</h2>
+            <p>Wobbly Life ist ein Open-World-Spiel mit lustigen Aufgaben und Herausforderungen.</p>
+            <a href="https://store.steampowered.com/app/907340/Wobbly_Life/">Auf Steam kaufen</a>
+        </div>
+        <div class="game">
+            <h2>Coole Websites mit Games Empfehlung</h2>
+            <p>Hier sind einige coole Websites, die verschiedene Spiele-Sammlungen bieten, die du direkt im Browser spielen kannst!</p>
+            <a href="https://neal.fun/">Neal.fun</a>
+            <a href="https://poki.com/de#utm_source=redirect-en-de">Poki.com</a>
+        </div>
+        <div class="game">
+            <h2>Monopoly - Games Empfehlung</h2>
+            <p>Monopoly ist das bekannte Brettspiel, das nun auch als Handyspiel verfügbar ist.</p>
+            <a href="#" id="monopolyLink">Jetzt herunterladen</a>
+        </div>
+        <div class="game">
+            <h2>SupercityCon - Games Empfehlung</h2>
+            <p>SupercityCon ist ein Städtebauspiel, bei dem du deine eigene Stadt aufbaust und verwaltest.</p>
+            <a href="#" id="supercityconLink">Jetzt herunterladen</a>
+        </div>
+        <div class="game">
+            <h2>Offline Games Empfehlung</h2>
+            <p>Offline Games bietet eine Sammlung von Spielen, die du ohne Internetverbindung spielen kannst.</p>
+            <a href="#" id="offlinegamesLink">Jetzt herunterladen</a>
         </div>
     </main>
     <footer>
         <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
-        <p><a href="https://raffaelbauer.github.io/Datenschutzerklaerung/">Datenschutzbestimmungen</a></p>
+        <p>
+            <a href="https://raffaelbauer.github.io/Datenschutzerklaerung/">Datenschutzbestimmungen</a>
+        </p>
     </footer>
 </body>
 </html>
