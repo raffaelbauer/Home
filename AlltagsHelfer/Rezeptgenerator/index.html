@@ -7,10 +7,9 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    /* Grundlayout im Neumorphism-Stil */
     body {
       font-family: 'Roboto', sans-serif;
-      background: #e0e5ec;
+      background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
       margin: 0;
       padding: 20px;
       min-height: 100vh;
@@ -18,13 +17,11 @@
       flex-direction: column;
     }
     .container {
-      background: #f0f0f3;
-      border-radius: 20px;
+      background: transparent;
       padding: 40px;
-      box-shadow: 9px 9px 16px #a3b1c6, -9px -9px 16px #ffffff;
       max-width: 900px;
       width: 100%;
-      margin: 0 auto 80px; /* Platz für Footer */
+      margin: 0 auto 80px;
     }
     h1 {
       text-align: center;
@@ -42,17 +39,16 @@
       width: 100%;
       padding: 12px 15px;
       margin-top: 8px;
+      background: #fff;
       border: none;
-      border-radius: 10px;
-      background: #e0e5ec;
-      box-shadow: inset 5px 5px 10px #a3b1c6, inset -5px -5px 10px #ffffff;
+      border-bottom: 1px solid #ccc;
       font-size: 1em;
       color: #333;
       outline: none;
-      transition: all 0.2s ease-in-out;
+      transition: border 0.2s ease-in-out;
     }
     input:focus, textarea:focus {
-      box-shadow: inset 2px 2px 5px #a3b1c6, inset -2px -2px 5px #ffffff;
+      border-color: #4a90e2;
     }
     .ingredient {
       display: flex;
@@ -62,36 +58,42 @@
     }
     .ingredient input {
       flex: 1;
+      background: #fff;
+      border: none;
+      border-bottom: 1px solid #ccc;
+      padding: 12px 15px;
+      transition: border 0.2s ease-in-out;
+    }
+    .ingredient input:focus {
+      border-color: #4a90e2;
     }
     .ingredient button {
       padding: 6px 10px;
-      background: #e0e5ec;
+      background: #e74c3c;
       border: none;
-      border-radius: 8px;
-      box-shadow: 3px 3px 6px #a3b1c6, -3px -3px 6px #ffffff;
+      border-radius: 5px;
+      color: #fff;
       cursor: pointer;
-      transition: all 0.2s ease-in-out;
+      transition: background 0.2s ease-in-out;
     }
     .ingredient button:hover {
-      box-shadow: inset 3px 3px 6px #a3b1c6, inset -3px -3px 6px #ffffff;
+      background: #c0392b;
     }
     button {
       margin-top: 25px;
       padding: 12px 20px;
-      background: #e0e5ec;
+      background: #4a90e2;
       border: none;
-      border-radius: 10px;
-      box-shadow: 5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff;
+      border-radius: 5px;
       font-size: 1em;
       font-weight: 700;
-      color: #333;
+      color: #fff;
       cursor: pointer;
-      transition: all 0.2s ease-in-out;
+      transition: background 0.2s ease-in-out;
     }
     button:hover {
-      box-shadow: inset 5px 5px 10px #a3b1c6, inset -5px -5px 10px #ffffff;
+      background: #357ab8;
     }
-    /* Vorschau-Bereich für Bilder */
     #imagePreview {
       display: flex;
       flex-wrap: wrap;
@@ -102,24 +104,18 @@
       width: 80px;
       height: 80px;
       object-fit: cover;
-      border-radius: 10px;
-      box-shadow: 3px 3px 6px #a3b1c6, -3px -3px 6px #ffffff;
+      border-radius: 5px;
     }
-    /* Footer fixiert am unteren Rand */
     footer {
-      background: #f0f0f3;
-      box-shadow: 9px 9px 16px #a3b1c6, -9px -9px 16px #ffffff;
+      background: transparent;
       text-align: center;
       padding: 10px;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
       font-size: 0.9em;
-      color: #777;
+      color: #fff;
+      /* Footer als normaler Block, nicht fixiert */
     }
     footer a {
-      color: #333;
+      color: #fff;
       text-decoration: none;
     }
     footer a:hover {
@@ -138,13 +134,12 @@
       <input type="number" id="servings" name="servings" min="1">
       
       <label for="zeit">Zeit (optional):</label>
-      <!-- Zeitfeld mit fixem Template, in dem die Minuten nach dem Doppelpunkt eingefügt werden -->
       <textarea id="zeit" name="zeit" rows="4" readonly></textarea>
       
       <label for="nutritional">Nährwerte (optional):</label>
       <textarea id="nutritional" name="nutritional" rows="3"></textarea>
       
-      <label>Zutaten (bitte jeweils Zutat und Menge angeben):</label>
+      <label>Zutaten:</label>
       <div id="ingredientsList">
         <div class="ingredient">
           <input type="text" placeholder="Zutat" name="ingredient[]">
@@ -166,22 +161,18 @@
   </div>
   
   <footer>
-    <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten. <a href="https://raffaelbauer.ch/Datenschutz//">Datenschutzbestimmungen</a></p>
+    <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
+    <p><a href="https://raffaelbauer.ch/Datenschutz/">Datenschutzbestimmungen</a></p>
   </footer>
   
   <script>
-    // Template-Text für das Zeitfeld (wird nicht gelöscht)
-    const timeTemplate = "Gesamtzeit: ____ min\nZubereitungszeit: ____ min\nKoch-/Backzeit: ____ min";
+    const timeTemplate = "Gesamtzeit:\nZubereitungszeit:\nKoch-/Backzeit:";
     const zeitField = document.getElementById("zeit");
-    // Setze initial den Template-Text und mache das Feld readonly, damit nur der feste Text angezeigt wird.
     zeitField.value = timeTemplate;
-    // Ermögliche dennoch, dass der Nutzer an definierten Positionen (nach dem Doppelpunkt) etwas eintippen kann.
-    // Hier simulieren wir dies, indem wir beim Klick das Feld entsperren und beim Verlassen wieder den Template-Charakter erhalten.
     zeitField.addEventListener("focus", function() {
       zeitField.removeAttribute("readonly");
     });
     zeitField.addEventListener("blur", function() {
-      // Wenn der Nutzer nichts geändert hat, setze wieder den Template-Text.
       if (zeitField.value.trim() === "") {
         zeitField.value = timeTemplate;
         zeitField.setAttribute("readonly", true);
@@ -195,7 +186,6 @@
       document.getElementById('ingredientsList').appendChild(div);
     }
     
-    // Vorschau der hochgeladenen Bilder anzeigen
     document.getElementById("imageUpload").addEventListener("change", function() {
       const preview = document.getElementById("imagePreview");
       preview.innerHTML = "";
@@ -224,7 +214,6 @@
       const preparation = document.getElementById('preparation').value;
       const fileInput = document.getElementById('imageUpload');
       
-      // Mehrfachbilder verarbeiten
       const files = fileInput.files;
       if (files.length > 0) {
         let imageDataArray = [];
@@ -247,7 +236,6 @@
     
     function generatePDF(doc, recipeName, servings, zeit, nutritional, preparation, imageDataArray) {
       const pageWidth = doc.internal.pageSize.getWidth();
-      // Gestalte den Header
       doc.setFillColor(220, 220, 220);
       doc.rect(0, 0, pageWidth, 30, 'F');
       doc.setFont("helvetica", "bold");
@@ -265,7 +253,6 @@
         yPos += 10;
       }
       
-      // Nur hinzufügen, wenn das Zeitfeld vom Template abweicht
       if (zeit.trim() !== "" && zeit.trim() !== timeTemplate.trim()) {
         doc.setFont("helvetica", "bold");
         doc.text("Zeit:", 10, yPos);
@@ -286,7 +273,6 @@
         yPos += linesNutritional.length * 7 + 5;
       }
       
-      // Bilder in einem Gitter anzeigen
       if (imageDataArray.length > 0) {
         let xPos = 10;
         const imageMaxWidth = 50, imageMaxHeight = 50;
@@ -301,7 +287,6 @@
             imgWidth *= imageMaxHeight / imgHeight;
             imgHeight = imageMaxHeight;
           }
-          // Falls das Bild den Seitenrand überschreitet, wechsle zur nächsten Zeile
           if (xPos + imgWidth > pageWidth - 10) {
             xPos = 10;
             yPos += imageMaxHeight + 10;
@@ -312,7 +297,6 @@
         yPos += imageMaxHeight + 10;
       }
       
-      // Zutaten: Nur Zutaten, bei denen beide Felder nicht leer sind.
       const ingredientDivs = document.querySelectorAll('#ingredientsList .ingredient');
       let validIngredients = [];
       ingredientDivs.forEach(function(div) {
@@ -337,7 +321,6 @@
         yPos += 5;
       }
       
-      // Zubereitungsschritte
       if (preparation.trim() !== "") {
         doc.setFont("helvetica", "bold");
         doc.setFontSize(14);
