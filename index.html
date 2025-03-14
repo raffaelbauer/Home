@@ -8,13 +8,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary-color: #2a4d69;
-      --secondary-color: #4a90e2;
-      --accent-color: #ff6f61; /* Akzentfarbe */
-      --background-color-start: #fdf6e3; /* Startfarbe des Verlaufs */
-      --background-color-end: #f7f7f7;   /* Endfarbe des Verlaufs */
+      /* Header: Warmer Orange-Gradient */
+      --header-color-start: #ff7e5f;
+      --header-color-end:   #feb47b;
+      /* Body: Dezenter, heller Grau-Verlauf */
+      --body-bg-start:   #f9f9f9;
+      --body-bg-end:     #e0e0e0;
+      /* Karten: Weiß mit grauem Rahmen */
       --card-background: #ffffff;
-      --text-color: #333;
+      --card-border:     #dcdcdc;
+      --text-color:      #333;
+      --link-color:      #ff7e5f;
     }
     * {
       box-sizing: border-box;
@@ -23,12 +27,12 @@
       font-family: 'Roboto', sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, var(--background-color-start), var(--background-color-end));
+      background: linear-gradient(135deg, var(--body-bg-start), var(--body-bg-end));
       color: var(--text-color);
       line-height: 1.6;
     }
     header {
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      background: linear-gradient(135deg, var(--header-color-start), var(--header-color-end));
       padding: 2rem;
       text-align: center;
       color: #fff;
@@ -48,39 +52,25 @@
     }
     .card {
       background: var(--card-background);
+      border: 1px solid var(--card-border);
       border-radius: 8px;
       padding: 2rem;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      border: 2px solid transparent;
-      position: relative;
-    }
-    /* Farbiges Detail: Akzentstreifen oben */
-    .card::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 5px;
-      width: 100%;
-      background: var(--accent-color);
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
     }
     .card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-      border-color: var(--accent-color);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     }
     .card h2 {
       font-size: 1.8rem;
       margin-bottom: 1rem;
-      color: var(--primary-color);
+      color: var(--link-color);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -95,12 +85,11 @@
       display: block;
     }
     footer {
-      background: var(--primary-color);
-      color: #fff;
       text-align: center;
       padding: 1.2rem;
       font-size: 0.9rem;
       margin-top: 2rem;
+      color: var(--text-color);
     }
     @media (max-width: 600px) {
       header h1 {
