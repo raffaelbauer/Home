@@ -9,7 +9,7 @@
             font-family: 'Arial', sans-serif;
             text-align: center;
             padding: 50px;
-            background: linear-gradient(135deg, #1DCAC7, #14B0DA, #E63946, #FDC830, #FC4A1A);
+            background: linear-gradient(to bottom right, #a8e6ff, #007acc);
             color: white;
             display: flex;
             flex-direction: column;
@@ -19,11 +19,9 @@
             margin: 0;
         }
         #container {
-            background: rgba(255, 255, 255, 0.15);
             padding: 30px;
             border-radius: 15px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            background: transparent;
             z-index: 1;
         }
         #countdown {
@@ -62,11 +60,11 @@
             color: #ccc;
             font-style: italic;
         }
-        #inputSection {
+        #inputSection, #countdownSection {
             z-index: 2;
         }
-        #countdownSection {
-            z-index: 2;
+        footer a {
+            color: white;
         }
     </style>
 </head>
