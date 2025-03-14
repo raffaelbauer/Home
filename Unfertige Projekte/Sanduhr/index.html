@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Sanduhr Timer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+      }
+      canvas {
+        display: block;
+      }
+      .controls {
+        margin-top: 20px;
+      }
+      .timer-display {
+        font-size: 24px;
+        margin-top: 10px;
+      }
+      button {
+        padding: 10px 15px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>3D Sanduhr Timer</h1>
+    <input type="number" id="timeInput" placeholder="Zeit in Sekunden" min="1" />
+    <button onclick="startTimer()">Start</button>
+    <div class="timer-display" id="timerDisplay">00:00</div>
+    <div id="sanduhr-container"></div>
+    <footer>
+      <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
+      <p>
+        <a href="https://raffaelbauer.github.io/Datenschutzerklaerung/">
+          Datenschutzbestimmungen</a>
+      </p>
+    </footer>
+    <script>
+      let scene, camera, renderer, topSand, bottomSand, fallingSandParticles, hourglassFrame;
+
+      function init3D() {
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(500, 500);
+        document.getElementById("sanduhr-container").appendChild(renderer.domElement);
+
+        // Sanduhr-Rahmen
+        const frameGeometry = new THREE.CylinderGeometry(1.5, 1.5, 6, 32);
+        const frameMaterial = new THREE.MeshStandardMaterial({
+          color: 0x8B4513,
+          metalness: 0.3,
+          roughness: 0.6,
+        });
+        hourglassFrame = new THREE.Mesh(frameGeometry, frameMaterial);
+        scene.add(hourglassFrame);
+
+        // Oberer Sand
+        const sandMaterial = new THREE.MeshStandardMaterial({ color: 0xFFD700 });
+        const topSandGeometry = new THREE.ConeGeometry(1.2, 2, 32);
+        topSand = new THREE.Mesh(topSandGeometry, sandMaterial);
+        topSand.position.y = 2;
+        scene.add(topSand);
+
+        // Fallender Sand als Partikel
+        const particleGeometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(300);
+        for (let i = 0; i < positions.length; i += 3) {
+          positions[i] = (Math.random() - 0.5) * 0.2;
+          positions[i + 1] = Math.random() * 2 - 1;
+          positions[i + 2] = (Math.random() - 0.5) * 0.2;
+        }
+        particleGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+        const particleMaterial = new THREE.PointsMaterial({ color: 0xFFD700, size: 0.05 });
+        fallingSandParticles = new THREE.Points(particleGeometry, particleMaterial);
+        fallingSandParticles.position.y = 1;
+        scene.add(fallingSandParticles);
+
+        // Unterer Sand
+        const bottomSandGeometry = new THREE.ConeGeometry(1.2, 2, 32);
+        bottomSand = new THREE.Mesh(bottomSandGeometry, sandMaterial);
+        bottomSand.position.y = -2;
+        bottomSand.rotation.x = Math.PI;
+        scene.add(bottomSand);
+
+        // Licht
+        const light = new THREE.PointLight(0xffffff, 1.2);
+        light.position.set(5, 10, 10);
+        scene.add(light);
+
+        camera.position.z = 8;
+        animate();
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+      }
+
+      function startTimer() {
+        let seconds = parseInt(document.getElementById("timeInput").value);
+        if (isNaN(seconds) || seconds <= 0) {
+          alert("Bitte eine gültige Zeit eingeben!");
+          return;
+        }
+        const timerDisplay = document.getElementById("timerDisplay");
+        const countdown = setInterval(() => {
+          if (seconds > 0) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            timerDisplay.innerText = `${minutes.toString().padStart(2, "0")}:${secs
+              .toString()
+              .padStart(2, "0")}`;
+            seconds--;
+
+            // Sand Animation
+            topSand.scale.y = Math.max(0, 1 - seconds / 60);
+            bottomSand.scale.y = Math.min(1, seconds / 60);
+            fallingSandParticles.position.y -= 0.03;
+          } else {
+            clearInterval(countdown);
+            timerDisplay.innerText = "00:00";
+            alert("Zeit abgelaufen!");
+          }
+        }, 1000);
+      }
+
+      init3D();
+    </script>
+  </body>
+</html>
