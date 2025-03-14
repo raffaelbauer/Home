@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎁 Raffaels Wunschliste 🎁</title>
+    <style>
+        /* Allgemeine Stile für die Seite */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 36px;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #e3f2fd;
+            margin: 15px 0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        li:hover {
+            background-color: #bbdefb;
+        }
+
+        a.list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #333;
+            text-decoration: none;
+            padding: 15px;
+            width: 100%;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        a.list-item:hover {
+            text-decoration: underline;
+        }
+
+        a.list-item span:first-child::before {
+            content: "🎁 ";
+        }
+
+        button {
+            display: block;
+            background-color: #007bff;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            padding: 10px 20px;
+            margin: 20px auto;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 60%;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        footer {
+            text-align: center;
+            color: #333;
+            padding: 10px;
+            font-size: 14px;
+            margin-top: 30px;
+        }
+
+        footer a {
+            color: #007bff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🎁 Raffaels Wunschliste 🎁</h1>
+</header>
+
+<main>
+    <ul>
+        <li><a class="list-item" href="https://www.radbag.ch/pinguin-coolers"><span>Pinguin Coolers (Eiswürfel in Pinguinform)</span><span>16,99 CHF</span></a></li>
+        <li><a class="list-item" href="https://www.radbag.ch/leuchtender-nebel-nachtlicht"><span>Leuchtender Nebel Nachtlicht</span><span>24,99 CHF</span></a></li>
+        <li><a class="list-item" href="https://kamerino.de/products/kamerino-pro?variant=50457906839818"><span>Kamerino PRO SnowVision (Kamera gemacht um Aufnahmen vom Skifahren zu machen)</span><span>CHF 63.00</span></a></li>
+        <li><a class="list-item" href="https://shufflebox.store/products/shufflebox-g1-pro-2025-version-automatic-card-shuffler-dealer-machine"><span>ShuffleBox G1 Pro (Fortgeschrittene Kartenmischmaschine mit Extrafunktionen)</span><span>139.99 CHF</span></a></li>
+        <li><a class="list-item" href="https://www.brack.ch/nintendo-switch-rot-blau-1485182"><span>Nintendo Switch</span><span>268,00 CHF</span></a></li>
+        <li><a class="list-item" href="https://lungtank.com/products/lung-t-500%E2%84%A2-hand-pump-sub-mask"><span>Lung T-500 + Hand Pump + Sub-Mask</span><span>344.00 CHF</span></a></li>
+        <li><a class="list-item" href="https://www.apple.com/ch-de/shop/buy-iphone/iphone-16-pro/6,3%22-display-1tb-titan-schwarz"><span>Neuestes iPhone</span><span>1'549,00 CHF</span></a></li>
+        <li><a class="list-item" href="https://raffaelbauer.github.io/Ausflugsideen/"><span>Ausflug mit mir von meiner Liste</span><span>Preis Selbst Wählbar</span></a></li>
+        <li><a class="list-item" href="https://startselect.com/ch-de/gutscheine/steam-karten"><span>Steam Gutscheinkarte</span><span>Preis Selbst Wählbar</span></a></li>
+        <li><a class="list-item" href="https://raffaelbauer.github.io/Ueberraschung/"><span>Du kannst mir auch einfach Geld schenken</span><span>Preis Selbst Wählbar</span></a></li>
+        <li><a class="list-item" href="https://wa.me/41799534432?text=Hallo%20Raffael%2C%20w%C3%A4re%20es%20eine%20M%C3%B6glichkeit%2C%20dass%20ich%20dir%20...%20auf%20...%20schenke%3F"><span>Du kannst mir auch etwas anderes vorschlagen</span><span>Preis Selbst Wählbar</span></a></li>
+    </ul>
+</main>
+
+<footer>
+    <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
+    <p>
+        <a href="https://raffaelbauer.github.io/Datenschutzerklaerung/">Datenschutzbestimmungen</a>
+    </p>
+</footer>
+
+</body>
+</html>
