@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+<html lang="de">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>Online virtueller Würfel: 7 Würfel mit 9 Seiten</title>
+  <meta name="description" content="Virtueller online Würfel" />
+  <meta name="keywords" content="online, virtuel, Würfel, Wuerfel, 1d6, ergebnisse" />
+  <meta name="theme-color" content="#e6fddb">
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+    table.settings { margin: auto; margin-bottom: 20px; }
+    table.settings td { padding: 5px; }
+    /* Würfel im Karten-Stil (für Seiten != 6) */
+    .dice-card {
+      display: inline-block; width: 60px; height: 60px; margin: 10px;
+      border: 2px solid #000; line-height: 60px; font-size: 24px; font-weight: bold;
+      color: #fff; background: linear-gradient(45deg, #ff9999, #ffcc99);
+      animation: flipCard 1s ease-out;
+    }
+    @keyframes flipCard {
+      from { transform: rotateY(0deg); opacity: 0; }
+      to { transform: rotateY(360deg); opacity: 1; }
+    }
+    /* 3D-Würfel für 6 Seiten */
+    .scene { width: 60px; height: 60px; perspective: 300px; display: inline-block; margin: 10px; }
+    .dice-cube {
+      width: 60px; height: 60px; position: relative; transform-style: preserve-3d;
+      animation: rollCube 1s ease-out;
+    }
+    .dice-cube div {
+      position: absolute; width: 60px; height: 60px; border: 2px solid #000;
+      line-height: 60px; font-size: 24px; font-weight: bold; color: #fff;
+    }
+    .face1 { background: #ff9999; transform: rotateY(0deg) translateZ(30px); }
+    .face2 { background: #99ff99; transform: rotateY(90deg) translateZ(30px); }
+    .face3 { background: #9999ff; transform: rotateX(90deg) translateZ(30px); }
+    .face4 { background: #ffff99; transform: rotateX(-90deg) translateZ(30px); }
+    .face5 { background: #ff99ff; transform: rotateY(-90deg) translateZ(30px); }
+    .face6 { background: #99ffff; transform: rotateY(180deg) translateZ(30px); }
+    @keyframes rollCube {
+      from { transform: rotateX(0deg) rotateY(0deg); }
+      to { transform: rotateX(720deg) rotateY(720deg); }
+    }
+  </style>
+</head>
+<body>
+  <div align="center">
+    <form id="diceForm" onsubmit="event.preventDefault(); rollDice();">
+      <h1>Würfel online!</h1>
+      <table class="settings">
+        <tr>
+          <td>Anzahl der Seiten:</td>
+          <td><input type="number" min="2" style="width:45px;text-align:center;" id="sides" value="9"></td>
+          <td>(Minimal 2. Bis zu 9 Seiten mit Punkten.)</td>
+        </tr>
+        <tr>
+          <td>Anzahl der Würfel:</td>
+          <td>
+            <select id="diceCount" style="width:45px;">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7" selected>7</option>
+            </select>
+          </td>
+          <td><input type="button" value="Werfen" onclick="rollDice()"></td>
+        </tr>
+      </table>
+    </form>
+    <div id="diceArea"></div>
+    <br>
+    Wurfelergebnisse: <span id="sum">0</span>
+    <br><br>
+    <button onclick="rollDice()">Wieder werfen!</button>
+  </div>
+  
+  <script>
+    function rollDice() {
+      const sides = parseInt(document.getElementById('sides').value);
+      const diceCount = parseInt(document.getElementById('diceCount').value);
+      const diceArea = document.getElementById('diceArea');
+      diceArea.innerHTML = "";
+      let total = 0;
+      
+      for(let i = 0; i < diceCount; i++) {
+        const result = Math.floor(Math.random() * sides) + 1;
+        total += result;
+        if(sides === 6) {
+          // 3D-Würfel mit Animation
+          const scene = document.createElement('div');
+          scene.className = 'scene';
+          const cube = document.createElement('div');
+          cube.className = 'dice-cube';
+          // Erstelle die 6 Würfelseiten
+          const faces = [
+            { class: 'face1', value: 1 },
+            { class: 'face2', value: 2 },
+            { class: 'face3', value: 3 },
+            { class: 'face4', value: 4 },
+            { class: 'face5', value: 5 },
+            { class: 'face6', value: 6 }
+          ];
+          faces.forEach(face => {
+            const faceDiv = document.createElement('div');
+            faceDiv.className = face.class;
+            faceDiv.textContent = face.value;
+            cube.appendChild(faceDiv);
+          });
+          // Nach der Animation wird der Würfel korrekt ausgerichtet
+          setTimeout(() => {
+            let finalRotation = '';
+            switch(result) {
+              case 1: finalRotation = 'rotateX(0deg) rotateY(0deg)'; break;
+              case 2: finalRotation = 'rotateX(0deg) rotateY(-90deg)'; break;
+              case 3: finalRotation = 'rotateX(90deg) rotateY(0deg)'; break;
+              case 4: finalRotation = 'rotateX(-90deg) rotateY(0deg)'; break;
+              case 5: finalRotation = 'rotateX(0deg) rotateY(90deg)'; break;
+              case 6: finalRotation = 'rotateX(0deg) rotateY(180deg)'; break;
+              default: finalRotation = 'rotateX(0deg) rotateY(0deg)';
+            }
+            cube.style.animation = "none";
+            cube.style.transform = finalRotation;
+          }, 1000);
+          scene.appendChild(cube);
+          diceArea.appendChild(scene);
+        } else {
+          // Würfel als Karten-Stil mit Animation für andere Seitenzahlen
+          const card = document.createElement('div');
+          card.className = 'dice-card';
+          card.textContent = result;
+          diceArea.appendChild(card);
+        }
+      }
+      document.getElementById('sum').textContent = total;
+    }
+  </script>
+  <footer>
+    <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
+    <p>
+      <a href="https://raffaelbauer.github.io/Impressum/">Impressum</a> | 
+      <a href="https://raffaelbauer.github.io/Datenschutzbestimmungen/">Datenschutzbestimmungen</a>
+    </p>
+  </footer>
+</body>
+</html>
