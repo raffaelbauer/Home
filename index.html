@@ -1,128 +1,173 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Die offizielle Website von Raffael Bauer">
-    <title>Website von Raffael Bauer</title>
-    <link rel="icon" href="IMG_4630.jpeg" type="image/jpeg">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(45deg, #00B8D4, #004D40);
-            color: #F1F1F1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 100vh;
-            overflow: auto;
-            background-size: cover;
-        }
-
-        header {
-            background: radial-gradient(circle, rgba(0, 188, 212, 0.9), rgba(0, 150, 136, 0.9));
-            color: white;
-            padding: 3rem 2rem;
-            text-align: center;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            border-bottom: 5px solid #004D40;
-        }
-
-        header h1 {
-            font-size: 3rem;
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
-        }
-
-        main {
-            padding: 4rem 2rem;
-            text-align: center;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .button-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.8rem;
-            margin: 2rem 0;
-            max-width: 700px;
-        }
-
-        .button-container a {
-            display: block;
-            padding: 1.5rem;
-            text-align: center;
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: white;
-            text-decoration: none;
-            background: linear-gradient(45deg, #00BCD4, #00897B);
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
-            transition: all 0.3s ease-in-out;
-        }
-
-        .button-container a:hover {
-            background: linear-gradient(45deg, #00897B, #00BCD4);
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0, 150, 136, 0.4);
-        }
-
-        .button-container a:active {
-            transform: translateY(2px);
-        }
-
-        footer {
-            color: white;
-            text-align: center;
-            padding: 2rem;
-            font-size: 1rem;
-        }
-
-        @media (max-width: 768px) {
-            .button-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 480px) {
-            header h1 {
-                font-size: 2rem;
-            }
-
-            .button-container a {
-                font-size: 1rem;
-                padding: 1rem;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Raffael Bauer - Kreativ und Innovativ</title>
+  <link rel="icon" href="IMG_4630.jpeg" type="image/jpeg">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #2a4d69;
+      --secondary-color: #4a90e2;
+      --accent-color: #ff6f61; /* Akzentfarbe */
+      --background-color-start: #fdf6e3; /* Startfarbe des Verlaufs */
+      --background-color-end: #f7f7f7;   /* Endfarbe des Verlaufs */
+      --card-background: #ffffff;
+      --text-color: #333;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, var(--background-color-start), var(--background-color-end));
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+    header {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      padding: 2rem;
+      text-align: center;
+      color: #fff;
+    }
+    header h1 {
+      font-size: 2.8rem;
+      margin: 0;
+      letter-spacing: 1px;
+    }
+    main {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 2rem auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    .card {
+      background: var(--card-background);
+      border-radius: 8px;
+      padding: 2rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border: 2px solid transparent;
+      position: relative;
+    }
+    /* Farbiges Detail: Akzentstreifen oben */
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 5px;
+      width: 100%;
+      background: var(--accent-color);
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      border-color: var(--accent-color);
+    }
+    .card h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card p {
+      font-size: 1rem;
+      margin: 0;
+    }
+    a.card-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    footer {
+      background: var(--primary-color);
+      color: #fff;
+      text-align: center;
+      padding: 1.2rem;
+      font-size: 0.9rem;
+      margin-top: 2rem;
+    }
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 2rem;
+      }
+      .card {
+        padding: 1.5rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Willkommen auf der Website von Raffael Bauer</h1>
-    </header>
-    <main>
-        <div class="button-container">
-            <a href="https://raffaelbauer.ch/AlltagsHelfer/">AlltagsHelfer</a>
-            <a href="https://raffaelbauer.ch/Empfehlungen/">Empfehlungen</a>
-            <a href="https://raffaelbauer.ch/Wunschliste/">Wunschliste</a>
-            <a href="https://raffaelbauer.ch/Ausflugsideen/">Ausflugsideen</a>
-            <a href="https://raffaelbauer.ch/Games/">Meine Games</a>
-            <a href="https://raffaelbauer.ch/Minecraftserver/">Minecraft Server</a>
-            <a href="https://raffaelbauer.ch/Socialmedia/">Raffael`s Social media</a>
-            <a href="https://raffaelbauer.ch/Datenschutz/">Datenschutzerklärung</a>
-        </div>
-    </main>
-    <footer>
-        <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
-    </footer>
+  <header>
+    <h1>Willkommen auf der Website von Raffael Bauer</h1>
+  </header>
+  <main>
+    <a class="card-link" href="https://raffaelbauer.ch/AlltagsHelfer/">
+      <div class="card">
+        <h2>Alltagshelfer</h2>
+        <p>Praktische Tools und innovative Ideen, die deinen Alltag effizienter gestalten.</p>
+      </div>
+    </a>
+    <a class="card-link" href="https://raffaelbauer.ch/Ausflugsideen/">
+      <div class="card">
+        <h2>Ausflugsideen</h2>
+        <p>Inspirationen und Vorschläge für unvergessliche Ausflüge und Erlebnisse.</p>
+      </div>
+    </a>
+    <a class="card-link" href="https://raffaelbauer.ch/Empfehlungen/">
+      <div class="card">
+        <h2>Empfehlungen</h2>
+        <p>Meine persönlichen Favoriten und handverlesene Tipps aus verschiedenen Bereichen.</p>
+      </div>
+    </a>
+    <a class="card-link" href="https://raffaelbauer.ch/Wunschliste/">
+      <div class="card">
+        <h2>Wunschliste</h2>
+        <p>Eine Übersicht meiner Wunschliste mit Geschenkideen und Lieblingsartikeln.</p>
+      </div>
+    </a>
+    <a class="card-link" href="https://raffaelbauer.ch/Games/">
+      <div class="card">
+        <h2>Meine Games</h2>
+        <p>Informationen und Projekte rund um meine selbst entwickelten und favorisierten Spiele.</p>
+      </div>
+    </a>
+    <a class="card-link" href="https://raffaelbauer.ch/Minecraftserver/">
+      <div class="card">
+        <h2>Minecraft Server</h2>
+        <p>Werde Teil meiner Minecraft-Community und erlebe spannendes Miteinander.</p>
+      </div>
+    </a>
+    <a class="card-link" href="https://raffaelbauer.ch/Socialmedia/">
+      <div class="card">
+        <h2>Social Media</h2>
+        <p>Finde alle meine Social Media-Kanäle und bleibe immer auf dem Laufenden.</p>
+      </div>
+    </a>
+    <a class="card-link" href="https://raffaelbauer.ch/Datenschutz/">
+      <div class="card">
+        <h2>Datenschutzerklärung</h2>
+        <p>Wichtige Informationen zum Datenschutz und zur Nutzung dieser Website.</p>
+      </div>
+    </a>
+  </main>
+  <footer>
+    <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
+  </footer>
 </body>
 </html>
