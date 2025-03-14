@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Raffael Bauer - Kreativ und Innovativ</title>
+  <title>Raffael Bauer</title>
   <link rel="icon" href="IMG_4630.jpeg" type="image/jpeg">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -14,11 +14,13 @@
       /* Body: Dezenter, heller Grau-Verlauf */
       --body-bg-start:   #f9f9f9;
       --body-bg-end:     #e0e0e0;
-      /* Karten: Weiß mit grauem Rahmen */
+      /* Karten: Weiß mit feinem, grauem Rahmen */
       --card-background: #ffffff;
       --card-border:     #dcdcdc;
       --text-color:      #333;
       --link-color:      #ff7e5f;
+      /* Neuer Footer-Hintergrund, damit der Gradient dort nicht sichtbar ist */
+      --footer-bg:       #333;
     }
     * {
       box-sizing: border-box;
@@ -85,11 +87,12 @@
       display: block;
     }
     footer {
+      background: var(--footer-bg);
       text-align: center;
       padding: 1.2rem;
       font-size: 0.9rem;
       margin-top: 2rem;
-      color: var(--text-color);
+      color: #fff;
     }
     @media (max-width: 600px) {
       header h1 {
