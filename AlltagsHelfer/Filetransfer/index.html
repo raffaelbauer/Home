@@ -58,7 +58,7 @@
             background: #007bff;
             transition: width 0.3s;
         }
-        #progressText {
+        #progressText, #timeRemaining {
             margin-top: 10px;
             font-weight: bold;
         }
@@ -75,15 +75,6 @@
         #linkBox {
             margin-top: 20px;
             display: none;
-        }
-        #downloadLink {
-            word-break: break-all;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background: white;
-            width: 80%;
-            text-align: center;
         }
         #copyButton {
             background: #007acc;
@@ -130,6 +121,7 @@
         <div id="progressBar">
             <div id="progressFill"></div>
         </div>
+        <p id="timeRemaining"></p>
         <p id="uploadAlmostDone">Der Upload ist jeden Moment abgeschlossen...</p>
         <p id="warning">Bitte den Tab nicht schließen oder die Seite aktualisieren während des Uploads!</p>
     </div>
@@ -148,6 +140,7 @@
 
             let formData = new FormData();
             formData.append("file", file);
+            let startTime = Date.now();
 
             let xhr = new XMLHttpRequest();
             xhr.open("POST", "https://home-ujmu.onrender.com/upload", true);
@@ -161,6 +154,13 @@
                     document.getElementById("progressFill").style.width = percentComplete + "%";
                     document.getElementById("progressText").textContent = "Hochladen: " + percentComplete + "%";
                     
+                    let elapsedTime = (Date.now() - startTime) / 1000;
+                    let estimatedTotalTime = (elapsedTime / (event.loaded / event.total));
+                    let remainingTime = estimatedTotalTime - elapsedTime;
+                    let minutes = Math.floor(remainingTime / 60);
+                    let seconds = Math.floor(remainingTime % 60);
+                    document.getElementById("timeRemaining").textContent = "Verbleibende Zeit: " + minutes + " Min. " + seconds + " Sek.";
+
                     if (percentComplete === 100) {
                         document.getElementById("uploadAlmostDone").style.display = "block";
                     }
@@ -180,26 +180,16 @@
             xhr.send(formData);
         });
 
-        document.getElementById("copyButton").addEventListener("click", function() {
+        document.getElementById("copyButton").addEventListener("click", async function() {
             let linkField = document.getElementById("downloadLink");
-
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(linkField.value).then(function() {
-                    document.getElementById("copySuccess").style.display = "block";
-                    setTimeout(() => {
-                        document.getElementById("copySuccess").style.display = "none";
-                    }, 2000);
-                }).catch(function(err) {
-                    console.error("Fehler beim Kopieren:", err);
-                });
-            } else {
-                linkField.select();
-                linkField.setSelectionRange(0, 99999);
-                document.execCommand("copy");
+            try {
+                await navigator.clipboard.writeText(linkField.value);
                 document.getElementById("copySuccess").style.display = "block";
                 setTimeout(() => {
                     document.getElementById("copySuccess").style.display = "none";
                 }, 2000);
+            } catch (err) {
+                alert("Fehler beim Kopieren des Links.");
             }
         });
     </script>
