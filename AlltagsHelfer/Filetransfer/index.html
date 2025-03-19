@@ -184,7 +184,10 @@
                     document.getElementById("progressContainer").style.display = "none";
                     document.getElementById("warning").style.display = "none";
                     document.getElementById("linkBox").style.display = "block";
-                    document.getElementById("downloadLink").value = response.url;
+                    let link = response.url;
+
+                    // SETZE DAS DOWNLOAD-ATTRIBUTE, DAMIT DIE DATEI DIREKT HERUNTERGELADEN WIRD
+                    document.getElementById("downloadLink").value = link;
                 }
             };
 
