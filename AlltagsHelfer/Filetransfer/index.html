@@ -68,6 +68,18 @@
             font-size: 1rem;
             text-align: center;
         }
+        #timeRemaining {
+            margin-top: 5px;
+            font-size: 1rem;
+            text-align: center;
+            display: none;
+        }
+        #warningText {
+            color: red;
+            font-size: 1rem;
+            margin-top: 10px;
+            display: none;
+        }
         #linkBox {
             margin-top: 20px;
             display: none;
@@ -114,6 +126,8 @@
             <div id="progressBarInner"></div>
         </div>
         <p id="progressText">0%</p>
+        <p id="timeRemaining"></p>
+        <p id="warningText">Bitte schliesse diesen Tab nicht und aktualisiere die Seite nicht während des Uploads!</p>
     </div>
 
     <div id="linkBox">
@@ -132,12 +146,31 @@
             let xhr = new XMLHttpRequest();
             xhr.open("POST", "https://home-ujmu.onrender.com/upload", true);
             
+            document.getElementById("progressContainer").style.display = "block";
+            document.getElementById("warningText").style.display = "block";
+            
+            let startTime = Date.now();
             xhr.upload.onprogress = function(event) {
                 if (event.lengthComputable) {
                     let percent = Math.round((event.loaded / event.total) * 100);
-                    document.getElementById("progressContainer").style.display = "block";
                     document.getElementById("progressBarInner").style.width = percent + "%";
                     document.getElementById("progressText").textContent = percent + "%";
+                    
+                    let elapsedTime = (Date.now() - startTime) / 1000;
+                    let estimatedTotalTime = (elapsedTime / (event.loaded / event.total));
+                    let remainingTime = estimatedTotalTime - elapsedTime;
+                    
+                    if (remainingTime > 1) {
+                        let hours = Math.floor(remainingTime / 3600);
+                        let minutes = Math.floor((remainingTime % 3600) / 60);
+                        let seconds = Math.floor(remainingTime % 60);
+                        let timeString = "";
+                        if (hours > 0) timeString += hours + " Std. ";
+                        if (minutes > 0) timeString += minutes + " Min. ";
+                        if (seconds > 0 || (hours === 0 && minutes === 0)) timeString += seconds + " Sek.";
+                        document.getElementById("timeRemaining").textContent = "Verbleibende Zeit: " + timeString;
+                        document.getElementById("timeRemaining").style.display = "block";
+                    }
                 }
             };
             
