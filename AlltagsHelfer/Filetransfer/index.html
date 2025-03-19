@@ -128,7 +128,8 @@
     <div id="progressContainer">
         <p id="progressText">Hochladen: 0%</p>
         <div id="progressBar">
-            <div id="progressFill"></n        </div>
+            <div id="progressFill"></div>
+        </div>
         <p id="timeRemaining"></p>
         <p id="uploadAlmostDone">Der Upload ist jeden Moment abgeschlossen...</p>
         <p id="warning">Bitte den Tab nicht schließen oder die Seite aktualisieren während des Uploads!</p>
@@ -177,16 +178,17 @@
             xhr.send(formData);
         });
 
-        document.getElementById("copyButton").addEventListener("click", function() {
+        document.getElementById("copyButton").addEventListener("click", async function() {
             let linkField = document.getElementById("downloadLink");
-            navigator.clipboard.writeText(linkField.value).then(() => {
+            try {
+                await navigator.clipboard.writeText(linkField.value);
                 document.getElementById("copySuccess").style.display = "block";
                 setTimeout(() => {
                     document.getElementById("copySuccess").style.display = "none";
                 }, 2000);
-            }).catch(err => {
-                console.error("Fehler beim Kopieren:", err);
-            });
+            } catch (err) {
+                alert("Fehler beim Kopieren des Links.");
+            }
         });
     </script>
 
