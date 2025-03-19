@@ -1,1 +1,51 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datei-Transfer</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+        #uploadBox { border: 2px dashed #007bff; padding: 40px; cursor: pointer; width: 300px; margin: auto; }
+        #fileInput { display: none; }
+        #linkBox { margin-top: 20px; display: none; }
+        #downloadLink { word-break: break-all; }
+    </style>
+</head>
+<body>
+    <h1>Einfach Dateien hochladen & teilen</h1>
+    <div id="uploadBox" onclick="document.getElementById('fileInput').click();">
+        <p>Klicke hier oder ziehe eine Datei hinein</p>
+    </div>
+    <input type="file" id="fileInput">
+    <div id="linkBox">
+        <p>Dein Download-Link:</p>
+        <a id="downloadLink" href="#" target="_blank"></a>
+    </div>
 
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function() {
+            let file = this.files[0];
+            if (!file) return;
+
+            let formData = new FormData();
+            formData.append("file", file);
+
+            fetch("/upload", { method: "POST", body: formData })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("linkBox").style.display = "block";
+                    document.getElementById("downloadLink").href = data.url;
+                    document.getElementById("downloadLink").textContent = data.url;
+                });
+        });
+    </script>
+
+    <footer>
+        <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
+        <p>
+            <a href="https://raffaelbauer.github.io/Datenschutzerklaerung/">Datenschutzbestimmungen</a>
+        </p>
+    </footer>
+</body>
+</html>
