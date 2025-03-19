@@ -4,6 +4,9 @@ const path = require("path");
 const fs = require("fs");
 
 const app = express();
+const cors = require("cors");
+app.use(cors());
+
 const uploadDir = path.join(__dirname, "uploads");
 
 // Falls der Upload-Ordner nicht existiert, wird er erstellt
