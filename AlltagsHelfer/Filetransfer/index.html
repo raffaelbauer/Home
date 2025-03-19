@@ -76,22 +76,16 @@
             margin-top: 20px;
             display: none;
         }
-        #downloadMessage {
-            color: orange;
-            display: none;
+        #copyButton {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 8px;
             margin-top: 10px;
         }
-        #downloadLink {
-            word-break: break-all;
-            display: inline-block;
-            text-decoration: none;
-            background: #007acc;
-            color: #fff;
-            padding: 10px 15px;
-            border-radius: 8px;
-            transition: background 0.3s ease;
-        }
-        #downloadLink:hover {
+        #copyButton:hover {
             background: #005ea6;
         }
         footer {
@@ -128,8 +122,8 @@
 
     <div id="linkBox">
         <p>Dein Download-Link:</p>
-        <a id="downloadLink" href="#"></a>
-        <p id="downloadMessage">Falls der Download nicht automatisch startet, bitte hier klicken.</p>
+        <input type="text" id="downloadLink" readonly>
+        <button id="copyButton">Kopieren</button>
     </div>
 
     <script>
@@ -164,22 +158,19 @@
                     document.getElementById("progressContainer").style.display = "none";
                     document.getElementById("warning").style.display = "none";
                     document.getElementById("linkBox").style.display = "block";
-                    document.getElementById("downloadLink").href = response.url;
-                    document.getElementById("downloadLink").textContent = response.url;
-                    
-                    setTimeout(function() {
-                        let downloadLink = document.createElement("a");
-                        downloadLink.href = response.url;
-                        downloadLink.download = "";
-                        document.body.appendChild(downloadLink);
-                        downloadLink.click();
-                        document.body.removeChild(downloadLink);
-                        document.getElementById("downloadMessage").style.display = "block";
-                    }, 1000);
+                    document.getElementById("downloadLink").value = response.url;
                 }
             };
 
             xhr.send(formData);
+        });
+
+        document.getElementById("copyButton").addEventListener("click", function() {
+            let linkField = document.getElementById("downloadLink");
+            linkField.select();
+            linkField.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+            alert("Download-Link wurde kopiert!");
         });
     </script>
 
