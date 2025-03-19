@@ -16,86 +16,60 @@
             align-items: center;
             justify-content: flex-start;
             min-height: 100vh;
+            text-align: center;
         }
         header {
-            max-width: 850px;
-            background: transparent;
-            width: 100%;
-            text-align: center;
             padding: 30px;
-            margin: 20px auto;
         }
-        header h1 {
-            margin: 0;
-            font-size: 2.5rem;
+        h1 {
             color: #007acc;
+            font-size: 2.5rem;
         }
         #uploadBox {
-            border: 2px dashed #007acc;
+            border: 2px dashed #007bff;
             padding: 40px;
             cursor: pointer;
             width: 300px;
             margin: 20px auto;
-            background: transparent;
-            text-align: center;
-            transition: transform 0.3s ease-in-out;
+            background: white;
+            transition: 0.3s;
         }
         #uploadBox:hover {
-            transform: translateY(-5px);
+            background: #f0f8ff;
         }
-        #fileInput { display: none; }
-        #progressContainer {
+        #fileInput {
             display: none;
+        }
+        #progressContainer {
             margin-top: 20px;
-            width: 80%;
-            max-width: 400px;
+            display: none;
         }
         #progressBar {
             width: 100%;
             height: 20px;
-            background: #e0e0e0;
+            background: #ccc;
             border-radius: 10px;
             overflow: hidden;
+            margin-top: 10px;
         }
-        #progressBarInner {
-            width: 0%;
+        #progressFill {
             height: 100%;
-            background: #007acc;
+            width: 0;
+            background: #007bff;
             transition: width 0.3s;
         }
         #progressText {
-            margin-top: 5px;
-            font-size: 1rem;
-            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
         }
-        #timeRemaining {
-            margin-top: 5px;
-            font-size: 1rem;
-            text-align: center;
-            display: none;
-        }
-        #warningText {
+        #warning {
             color: red;
-            font-size: 1rem;
             margin-top: 10px;
             display: none;
         }
         #linkBox {
             margin-top: 20px;
             display: none;
-        }
-        #downloadLink {
-            word-break: break-all;
-            display: inline-block;
-            text-decoration: none;
-            background: #007acc;
-            color: #fff;
-            padding: 10px 15px;
-            border-radius: 8px;
-            transition: background 0.3s ease;
-        }
-        #downloadLink:hover {
-            background: #005ea6;
         }
         footer {
             width: 100%;
@@ -104,7 +78,6 @@
             margin-top: auto;
             color: #fff;
             font-weight: bold;
-            background: transparent;
         }
         footer a {
             color: #fff;
@@ -122,68 +95,72 @@
     <input type="file" id="fileInput">
     
     <div id="progressContainer">
+        <p id="progressText">Hochladen: 0%</p>
         <div id="progressBar">
-            <div id="progressBarInner"></div>
+            <div id="progressFill"></div>
         </div>
-        <p id="progressText">0%</p>
-        <p id="timeRemaining"></p>
-        <p id="warningText">Bitte schliesse diesen Tab nicht und aktualisiere die Seite nicht während des Uploads!</p>
+        <p id="timeLeft"></p>
+        <p id="warning">Bitte den Tab nicht schließen oder die Seite aktualisieren während des Uploads!</p>
     </div>
 
     <div id="linkBox">
-        <p>Dein Download-Link:</p>
-        <a id="downloadLink" href="#"></a>
+        <p>Dein Download startet in wenigen Sekunden...</p>
     </div>
 
     <script>
         document.getElementById('fileInput').addEventListener('change', function() {
             let file = this.files[0];
             if (!file) return;
-            
+
             let formData = new FormData();
             formData.append("file", file);
-            
+
+            let startTime = Date.now();
+            document.getElementById("progressContainer").style.display = "block";
+            document.getElementById("warning").style.display = "block";
+
             let xhr = new XMLHttpRequest();
             xhr.open("POST", "https://home-ujmu.onrender.com/upload", true);
-            
-            document.getElementById("progressContainer").style.display = "block";
-            document.getElementById("warningText").style.display = "block";
-            
-            let startTime = Date.now();
+
             xhr.upload.onprogress = function(event) {
                 if (event.lengthComputable) {
-                    let percent = Math.round((event.loaded / event.total) * 100);
-                    document.getElementById("progressBarInner").style.width = percent + "%";
-                    document.getElementById("progressText").textContent = percent + "%";
+                    let percentComplete = Math.round((event.loaded / event.total) * 100);
+                    document.getElementById("progressFill").style.width = percentComplete + "%";
+                    document.getElementById("progressText").textContent = "Hochladen: " + percentComplete + "%";
+
+                    let elapsedTime = (Date.now() - startTime) / 1000; // Sekunden
+                    let speed = event.loaded / elapsedTime; // Bytes pro Sekunde
+                    let remainingTime = (event.total - event.loaded) / speed; // Sekunden
+
+                    let hours = Math.floor(remainingTime / 3600);
+                    let minutes = Math.floor((remainingTime % 3600) / 60);
+                    let seconds = Math.floor(remainingTime % 60);
+
+                    let timeText = "Verbleibende Zeit: ";
+                    if (hours > 0) timeText += hours + "h ";
+                    if (minutes > 0) timeText += minutes + "m ";
+                    if (seconds > 0) timeText += seconds + "s";
                     
-                    let elapsedTime = (Date.now() - startTime) / 1000;
-                    let estimatedTotalTime = (elapsedTime / (event.loaded / event.total));
-                    let remainingTime = estimatedTotalTime - elapsedTime;
-                    
-                    if (remainingTime > 1) {
-                        let hours = Math.floor(remainingTime / 3600);
-                        let minutes = Math.floor((remainingTime % 3600) / 60);
-                        let seconds = Math.floor(remainingTime % 60);
-                        let timeString = "";
-                        if (hours > 0) timeString += hours + " Std. ";
-                        if (minutes > 0) timeString += minutes + " Min. ";
-                        if (seconds > 0 || (hours === 0 && minutes === 0)) timeString += seconds + " Sek.";
-                        document.getElementById("timeRemaining").textContent = "Verbleibende Zeit: " + timeString;
-                        document.getElementById("timeRemaining").style.display = "block";
-                    }
+                    document.getElementById("timeLeft").textContent = timeText;
                 }
             };
-            
+
             xhr.onload = function() {
                 if (xhr.status == 200) {
-                    let data = JSON.parse(xhr.responseText);
+                    let response = JSON.parse(xhr.responseText);
+                    let downloadLink = document.createElement("a");
+                    downloadLink.href = response.url;
+                    downloadLink.download = file.name;
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+
                     document.getElementById("progressContainer").style.display = "none";
+                    document.getElementById("warning").style.display = "none";
                     document.getElementById("linkBox").style.display = "block";
-                    document.getElementById("downloadLink").href = data.url;
-                    document.getElementById("downloadLink").textContent = data.url;
                 }
             };
-            
+
             xhr.send(formData);
         });
     </script>
