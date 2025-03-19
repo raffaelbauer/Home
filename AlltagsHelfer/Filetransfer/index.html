@@ -142,36 +142,80 @@
         <p id="copySuccess">✅ Link wurde kopiert!</p>
     </div>
 
-   <script>
-    document.getElementById('fileInput').addEventListener('change', function() {
-        let file = this.files[0];
-        if (!file) return;
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function() {
+            let file = this.files[0];
+            if (!file) return;
 
-        let formData = new FormData();
-        formData.append("file", file);
+            let formData = new FormData();
+            formData.append("file", file);
 
-        let xhr = new XMLHttpRequest();
-        xhr.open("POST", "https://home-ujmu.onrender.com/upload", true);
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "https://home-ujmu.onrender.com/upload", true);
 
-        xhr.onload = function() {
-            if (xhr.status == 200) {
-                let response = JSON.parse(xhr.responseText);
-                let downloadURL = response.url;
+            let startTime = Date.now();
+            document.getElementById("progressContainer").style.display = "block";
+            document.getElementById("warning").style.display = "block";
 
-                // ✅ Automatischen Download starten
-                let link = document.createElement("a");
-                link.href = downloadURL;
-                link.setAttribute("download", file.name); // Dateiname setzen
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
-        };
+            xhr.upload.onprogress = function(event) {
+                if (event.lengthComputable) {
+                    let percentComplete = Math.round((event.loaded / event.total) * 100);
+                    document.getElementById("progressFill").style.width = percentComplete + "%";
+                    document.getElementById("progressText").textContent = "Hochladen: " + percentComplete + "%";
 
-        xhr.send(formData);
-    });
-</script>
+                    let elapsedTime = (Date.now() - startTime) / 1000;
+                    let speed = event.loaded / elapsedTime;
+                    let remainingTime = (event.total - event.loaded) / speed;
 
+                    let minutes = Math.floor(remainingTime / 60);
+                    let seconds = Math.floor(remainingTime % 60);
+
+                    document.getElementById("timeLeft").textContent = `Verbleibende Zeit: ${minutes}m ${seconds}s`;
+
+                    if (percentComplete === 100) {
+                        document.getElementById("uploadAlmostDone").style.display = "block";
+                    }
+                }
+            };
+
+            xhr.onload = function() {
+                if (xhr.status == 200) {
+                    let response = JSON.parse(xhr.responseText);
+                    let downloadURL = response.url;
+
+                    // ✅ Link anzeigen
+                    document.getElementById("progressContainer").style.display = "none";
+                    document.getElementById("linkBox").style.display = "block";
+                    document.getElementById("downloadLink").value = downloadURL;
+
+                    // ✅ Automatischen Download starten
+                    setTimeout(() => {
+                        let link = document.createElement("a");
+                        link.href = downloadURL;
+                        link.setAttribute("download", file.name); // Erzwingt den Download
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }, 2000);
+                }
+            };
+
+            xhr.send(formData);
+        });
+
+        document.getElementById("copyButton").addEventListener("click", function() {
+            let linkField = document.getElementById("downloadLink");
+
+            navigator.clipboard.writeText(linkField.value).then(function() {
+                document.getElementById("copySuccess").style.display = "block";
+                setTimeout(() => {
+                    document.getElementById("copySuccess").style.display = "none";
+                }, 2000);
+            }).catch(function(err) {
+                console.error("Fehler beim Kopieren:", err);
+            });
+        });
+    </script>
 
     <footer>
         <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
