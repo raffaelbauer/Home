@@ -2,10 +2,10 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const cors = require("cors"); // CORS-Modul laden
 
 const app = express();
-const cors = require("cors");
-app.use(cors());
+app.use(cors()); // CORS aktivieren
 
 const uploadDir = path.join(__dirname, "uploads");
 
