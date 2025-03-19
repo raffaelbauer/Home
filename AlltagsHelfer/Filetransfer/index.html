@@ -62,6 +62,11 @@
             margin-top: 10px;
             font-weight: bold;
         }
+        #uploadAlmostDone {
+            color: green;
+            margin-top: 10px;
+            display: none;
+        }
         #warning {
             color: red;
             margin-top: 10px;
@@ -70,6 +75,24 @@
         #linkBox {
             margin-top: 20px;
             display: none;
+        }
+        #downloadMessage {
+            color: orange;
+            display: none;
+            margin-top: 10px;
+        }
+        #downloadLink {
+            word-break: break-all;
+            display: inline-block;
+            text-decoration: none;
+            background: #007acc;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+        #downloadLink:hover {
+            background: #005ea6;
         }
         footer {
             width: 100%;
@@ -99,12 +122,14 @@
         <div id="progressBar">
             <div id="progressFill"></div>
         </div>
-        <p id="timeLeft"></p>
+        <p id="uploadAlmostDone">Der Upload ist jeden Moment abgeschlossen...</p>
         <p id="warning">Bitte den Tab nicht schließen oder die Seite aktualisieren während des Uploads!</p>
     </div>
 
     <div id="linkBox">
-        <p>Dein Download startet in wenigen Sekunden...</p>
+        <p>Dein Download-Link:</p>
+        <a id="downloadLink" href="#"></a>
+        <p id="downloadMessage">Falls der Download nicht automatisch startet, bitte hier klicken.</p>
     </div>
 
     <script>
@@ -115,49 +140,42 @@
             let formData = new FormData();
             formData.append("file", file);
 
-            let startTime = Date.now();
-            document.getElementById("progressContainer").style.display = "block";
-            document.getElementById("warning").style.display = "block";
-
             let xhr = new XMLHttpRequest();
             xhr.open("POST", "https://home-ujmu.onrender.com/upload", true);
+
+            document.getElementById("progressContainer").style.display = "block";
+            document.getElementById("warning").style.display = "block";
 
             xhr.upload.onprogress = function(event) {
                 if (event.lengthComputable) {
                     let percentComplete = Math.round((event.loaded / event.total) * 100);
                     document.getElementById("progressFill").style.width = percentComplete + "%";
                     document.getElementById("progressText").textContent = "Hochladen: " + percentComplete + "%";
-
-                    let elapsedTime = (Date.now() - startTime) / 1000; // Sekunden
-                    let speed = event.loaded / elapsedTime; // Bytes pro Sekunde
-                    let remainingTime = (event.total - event.loaded) / speed; // Sekunden
-
-                    let hours = Math.floor(remainingTime / 3600);
-                    let minutes = Math.floor((remainingTime % 3600) / 60);
-                    let seconds = Math.floor(remainingTime % 60);
-
-                    let timeText = "Verbleibende Zeit: ";
-                    if (hours > 0) timeText += hours + "h ";
-                    if (minutes > 0) timeText += minutes + "m ";
-                    if (seconds > 0) timeText += seconds + "s";
                     
-                    document.getElementById("timeLeft").textContent = timeText;
+                    if (percentComplete === 100) {
+                        document.getElementById("uploadAlmostDone").style.display = "block";
+                    }
                 }
             };
 
             xhr.onload = function() {
                 if (xhr.status == 200) {
                     let response = JSON.parse(xhr.responseText);
-                    let downloadLink = document.createElement("a");
-                    downloadLink.href = response.url;
-                    downloadLink.download = file.name;
-                    document.body.appendChild(downloadLink);
-                    downloadLink.click();
-                    document.body.removeChild(downloadLink);
-
                     document.getElementById("progressContainer").style.display = "none";
                     document.getElementById("warning").style.display = "none";
                     document.getElementById("linkBox").style.display = "block";
+                    document.getElementById("downloadLink").href = response.url;
+                    document.getElementById("downloadLink").textContent = response.url;
+                    
+                    setTimeout(function() {
+                        let downloadLink = document.createElement("a");
+                        downloadLink.href = response.url;
+                        downloadLink.download = "";
+                        document.body.appendChild(downloadLink);
+                        downloadLink.click();
+                        document.body.removeChild(downloadLink);
+                        document.getElementById("downloadMessage").style.display = "block";
+                    }, 1000);
                 }
             };
 
