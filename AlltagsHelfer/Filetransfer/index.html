@@ -58,7 +58,7 @@
             background: #007bff;
             transition: width 0.3s;
         }
-        #progressText, #timeRemaining {
+        #progressText, #timeLeft {
             margin-top: 10px;
             font-weight: bold;
         }
@@ -130,7 +130,7 @@
         <div id="progressBar">
             <div id="progressFill"></div>
         </div>
-        <p id="timeRemaining"></p>
+        <p id="timeLeft">Verbleibende Zeit: Berechnung...</p>
         <p id="uploadAlmostDone">Der Upload ist jeden Moment abgeschlossen...</p>
         <p id="warning">Bitte den Tab nicht schließen oder die Seite aktualisieren während des Uploads!</p>
     </div>
@@ -149,11 +149,11 @@
 
             let formData = new FormData();
             formData.append("file", file);
-            let startTime = Date.now();
 
             let xhr = new XMLHttpRequest();
             xhr.open("POST", "https://home-ujmu.onrender.com/upload", true);
 
+            let startTime = Date.now();
             document.getElementById("progressContainer").style.display = "block";
             document.getElementById("warning").style.display = "block";
 
@@ -162,6 +162,19 @@
                     let percentComplete = Math.round((event.loaded / event.total) * 100);
                     document.getElementById("progressFill").style.width = percentComplete + "%";
                     document.getElementById("progressText").textContent = "Hochladen: " + percentComplete + "%";
+
+                    let elapsedTime = (Date.now() - startTime) / 1000;
+                    let speed = event.loaded / elapsedTime;
+                    let remainingTime = (event.total - event.loaded) / speed;
+
+                    let minutes = Math.floor(remainingTime / 60);
+                    let seconds = Math.floor(remainingTime % 60);
+
+                    document.getElementById("timeLeft").textContent = `Verbleibende Zeit: ${minutes}m ${seconds}s`;
+
+                    if (percentComplete === 100) {
+                        document.getElementById("uploadAlmostDone").style.display = "block";
+                    }
                 }
             };
 
@@ -178,17 +191,17 @@
             xhr.send(formData);
         });
 
-        document.getElementById("copyButton").addEventListener("click", async function() {
+        document.getElementById("copyButton").addEventListener("click", function() {
             let linkField = document.getElementById("downloadLink");
-            try {
-                await navigator.clipboard.writeText(linkField.value);
+
+            navigator.clipboard.writeText(linkField.value).then(function() {
                 document.getElementById("copySuccess").style.display = "block";
                 setTimeout(() => {
                     document.getElementById("copySuccess").style.display = "none";
                 }, 2000);
-            } catch (err) {
-                alert("Fehler beim Kopieren des Links.");
-            }
+            }).catch(function(err) {
+                console.error("Fehler beim Kopieren:", err);
+            });
         });
     </script>
 
