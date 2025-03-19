@@ -5,40 +5,153 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Datei-Transfer</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-        #uploadBox { border: 2px dashed #007bff; padding: 40px; cursor: pointer; width: 300px; margin: auto; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+        header {
+            max-width: 850px;
+            background: transparent;
+            width: 100%;
+            text-align: center;
+            padding: 30px;
+            margin: 20px auto;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            color: #007acc;
+        }
+        #uploadBox {
+            border: 2px dashed #007acc;
+            padding: 40px;
+            cursor: pointer;
+            width: 300px;
+            margin: 20px auto;
+            background: transparent;
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+        }
+        #uploadBox:hover {
+            transform: translateY(-5px);
+        }
         #fileInput { display: none; }
-        #linkBox { margin-top: 20px; display: none; }
-        #downloadLink { word-break: break-all; }
+        #progressContainer {
+            display: none;
+            margin-top: 20px;
+            width: 80%;
+            max-width: 400px;
+        }
+        #progressBar {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        #progressBarInner {
+            width: 0%;
+            height: 100%;
+            background: #007acc;
+            transition: width 0.3s;
+        }
+        #progressText {
+            margin-top: 5px;
+            font-size: 1rem;
+            text-align: center;
+        }
+        #linkBox {
+            margin-top: 20px;
+            display: none;
+        }
+        #downloadLink {
+            word-break: break-all;
+            display: inline-block;
+            text-decoration: none;
+            background: #007acc;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+        #downloadLink:hover {
+            background: #005ea6;
+        }
+        footer {
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+            margin-top: auto;
+            color: #fff;
+            font-weight: bold;
+            background: transparent;
+        }
+        footer a {
+            color: #fff;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
-    <h1>Einfach Dateien hochladen & teilen</h1>
+    <header>
+        <h1>Einfach Dateien hochladen & teilen</h1>
+    </header>
     <div id="uploadBox" onclick="document.getElementById('fileInput').click();">
         <p>Klicke hier oder ziehe eine Datei hinein</p>
     </div>
     <input type="file" id="fileInput">
+    
+    <div id="progressContainer">
+        <div id="progressBar">
+            <div id="progressBarInner"></div>
+        </div>
+        <p id="progressText">0%</p>
+    </div>
+
     <div id="linkBox">
         <p>Dein Download-Link:</p>
-        <a id="downloadLink" href="#" target="_blank"></a>
+        <a id="downloadLink" href="#"></a>
     </div>
 
     <script>
         document.getElementById('fileInput').addEventListener('change', function() {
             let file = this.files[0];
             if (!file) return;
-
+            
             let formData = new FormData();
             formData.append("file", file);
-
-            fetch("https://home-ujmu.onrender.com/upload", { method: "POST", body: formData })
-
-                .then(response => response.json())
-                .then(data => {
+            
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "https://home-ujmu.onrender.com/upload", true);
+            
+            xhr.upload.onprogress = function(event) {
+                if (event.lengthComputable) {
+                    let percent = Math.round((event.loaded / event.total) * 100);
+                    document.getElementById("progressContainer").style.display = "block";
+                    document.getElementById("progressBarInner").style.width = percent + "%";
+                    document.getElementById("progressText").textContent = percent + "%";
+                }
+            };
+            
+            xhr.onload = function() {
+                if (xhr.status == 200) {
+                    let data = JSON.parse(xhr.responseText);
+                    document.getElementById("progressContainer").style.display = "none";
                     document.getElementById("linkBox").style.display = "block";
                     document.getElementById("downloadLink").href = data.url;
                     document.getElementById("downloadLink").textContent = data.url;
-                });
+                }
+            };
+            
+            xhr.send(formData);
         });
     </script>
 
