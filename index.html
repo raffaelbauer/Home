@@ -14,21 +14,20 @@
       --link-color:      #00AB6F;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Roboto', sans-serif;
+    html, body {
+      height: 100%;
       margin: 0;
       padding: 0;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Roboto', sans-serif;
       background: linear-gradient(to bottom right, #00CDFF, #00AB6F);
       color: var(--text-color);
       line-height: 1.6;
     }
 
     header {
-      background: linear-gradient(to right, #64b5f6, #42a5f5);
+      background: transparent;
       padding: 2rem;
       text-align: center;
       color: #fff;
@@ -42,6 +41,7 @@
     }
 
     main {
+      flex: 1;
       padding: 2rem;
       max-width: 1200px;
       margin: 2rem auto;
@@ -92,15 +92,9 @@
     footer {
       text-align: center;
       font-size: 0.9rem;
-      margin-top: 4rem;
       padding: 1rem;
       color: white;
       font-weight: bold;
-    }
-
-    footer a {
-      color: white;
-      text-decoration: underline;
     }
 
     @media (max-width: 600px) {
@@ -118,6 +112,7 @@
   <header>
     <h1>Willkommen auf der Website von Raffael Bauer</h1>
   </header>
+
   <main>
     <a class="card-link" href="https://raffaelbauer.ch/AlltagsHelfer/">
       <div class="card">
@@ -162,9 +157,9 @@
       </div>
     </a>
   </main>
+
   <footer>
     <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
-    </p>
   </footer>
 </body>
 </html>
