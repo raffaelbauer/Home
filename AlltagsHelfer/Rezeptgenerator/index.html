@@ -7,6 +7,9 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       font-family: 'Roboto', sans-serif;
       background: linear-gradient(135deg, #4facfe, #00f2fe);
@@ -15,17 +18,18 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      overflow-x: hidden;
     }
     .container {
       background: transparent;
-      padding: 40px;
+      padding: 20px;
       max-width: 900px;
       width: 100%;
       margin: 0 auto 80px;
     }
     h1 {
       text-align: center;
-      font-size: 2.5em;
+      font-size: 2.2em;
       margin-bottom: 20px;
       color: #333;
     }
@@ -52,13 +56,14 @@
     }
     .ingredient {
       display: flex;
+      flex-wrap: wrap;
       gap: 10px;
       margin-top: 10px;
       align-items: center;
-      flex-wrap: wrap;
     }
     .ingredient input {
       flex: 1;
+      min-width: 100px;
     }
     .ingredient button {
       padding: 6px 10px;
@@ -68,6 +73,7 @@
       color: #fff;
       cursor: pointer;
       transition: background 0.2s ease-in-out;
+      white-space: nowrap;
     }
     .ingredient button:hover {
       background: #00c0e6;
@@ -83,6 +89,7 @@
       color: #fff;
       cursor: pointer;
       transition: background 0.2s ease-in-out;
+      width: 100%;
     }
     button:hover {
       background: #00f2fe;
@@ -106,9 +113,6 @@
       font-size: 0.9em;
       font-weight: bold;
       color: #fff;
-      position: relative;
-      bottom: 0;
-      width: 100%;
     }
     footer a {
       color: #fff;
@@ -116,6 +120,16 @@
     }
     footer a:hover {
       text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .ingredient {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      button {
+        font-size: 1em;
+      }
     }
   </style>
 </head>
@@ -322,9 +336,10 @@
           yPos += imgSize + 10;
         }
 
+        // PDF-Fußzeile mit Generator-Text
         doc.setFontSize(10);
         doc.setTextColor(150);
-        doc.text("Erstellt mit dem Rezeptgenerator auf raffaelbauer.ch", 10, 290);
+        doc.text("Erstellt mit Raffaels Rezeptgenerator", pageWidth / 2, 290, { align: "center" });
 
         doc.save(`${recipeName}.pdf`);
       }
