@@ -1,349 +1,213 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Rezeptgenerator</title>
-  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet"/>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Roboto', sans-serif;
-      background: linear-gradient(135deg, #4facfe, #00f2fe);
-      margin: 0;
-      padding: 20px;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-    }
-    .container {
-      background: transparent;
-      padding: 20px;
-      max-width: 900px;
-      width: 100%;
-      margin: 0 auto 80px;
-    }
-    h1 {
-      text-align: center;
-      font-size: 2.2em;
-      margin-bottom: 20px;
-      color: #333;
-    }
-    label {
-      font-weight: 700;
-      margin-top: 15px;
-      display: block;
-      color: #555;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 12px 15px;
-      margin-top: 8px;
-      background: #fff;
-      border: none;
-      border-bottom: 1px solid #ccc;
-      font-size: 1em;
-      color: #333;
-      outline: none;
-      transition: border 0.2s ease-in-out;
-    }
-    input:focus, textarea:focus {
-      border-color: #4facfe;
-    }
-    .ingredient {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 10px;
-      align-items: center;
-    }
-    .ingredient input {
-      flex: 1;
-      min-width: 100px;
-    }
-    .ingredient button {
-      padding: 6px 10px;
-      background: #00f2fe;
-      border: none;
-      border-radius: 5px;
-      color: #fff;
-      cursor: pointer;
-      transition: background 0.2s ease-in-out;
-      white-space: nowrap;
-    }
-    .ingredient button:hover {
-      background: #00c0e6;
-    }
-    button {
-      margin-top: 25px;
-      padding: 12px 20px;
-      background: #4facfe;
-      border: none;
-      border-radius: 5px;
-      font-size: 1em;
-      font-weight: 700;
-      color: #fff;
-      cursor: pointer;
-      transition: background 0.2s ease-in-out;
-      width: 100%;
-    }
-    button:hover {
-      background: #00f2fe;
-    }
-    #imagePreview {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    #imagePreview img {
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 5px;
-    }
-    footer {
-      background: transparent;
-      text-align: center;
-      padding: 10px;
-      font-size: 0.9em;
-      font-weight: bold;
-      color: #fff;
-    }
-    footer a {
-      color: #fff;
-      text-decoration: none;
-    }
-    footer a:hover {
-      text-decoration: underline;
-    }
-
-    @media (max-width: 600px) {
-      .ingredient {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      button {
-        font-size: 1em;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Rezeptgenerator</h1>
-    <form id="recipeForm">
-      <label for="recipeName">Rezeptname:</label>
-      <input type="text" id="recipeName" name="recipeName" required>
-
-      <label for="servings">Portionen (optional):</label>
-      <input type="number" id="servings" name="servings" min="1">
-
-      <label for="zeit">Zeit (optional):</label>
-      <textarea id="zeit" name="zeit" rows="4" readonly></textarea>
-
-      <label for="nutritional">Nährwerte (optional):</label>
-      <textarea id="nutritional" name="nutritional" rows="3"></textarea>
-
-      <label>Zutaten:</label>
-      <div id="ingredientsList">
-        <div class="ingredient">
-          <input type="text" placeholder="Zutat" name="ingredient[]">
-          <input type="text" placeholder="Menge (z. B. g, ml, TL …)" name="amount[]">
-          <button type="button" onclick="this.parentElement.remove()">Entfernen</button>
-        </div>
-      </div>
-      <button type="button" onclick="addIngredient()">Weitere Zutat hinzufügen</button>
-
-      <label for="preparation">Zubereitungsschritte:</label>
-      <textarea id="preparation" name="preparation" rows="5" required></textarea>
-
-      <label for="imageUpload">Bilder hochladen (optional):</label>
-      <input type="file" id="imageUpload" name="imageUpload" accept="image/*" multiple>
-      <div id="imagePreview"></div>
-
-      <button type="submit">PDF generieren</button>
-    </form>
-  </div>
-
-  <footer>
-    <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
-    <p><a href="https://raffaelbauer.ch/Datenschutz/">Datenschutzbestimmungen</a></p>
-  </footer>
-
-  <script>
-    const timeTemplate = "Gesamtzeit:\nZubereitungszeit:\nKoch-/Backzeit:";
-    const zeitField = document.getElementById("zeit");
-    zeitField.value = timeTemplate;
-    zeitField.addEventListener("focus", () => zeitField.removeAttribute("readonly"));
-    zeitField.addEventListener("blur", () => {
-      if (zeitField.value.trim() === "") {
-        zeitField.value = timeTemplate;
-        zeitField.setAttribute("readonly", true);
-      }
-    });
-
-    function addIngredient() {
-      const div = document.createElement('div');
-      div.className = 'ingredient';
-      div.innerHTML = `
-        <input type="text" placeholder="Zutat" name="ingredient[]">
-        <input type="text" placeholder="Menge (z. B. g, ml, TL …)" name="amount[]">
-        <button type="button" onclick="this.parentElement.remove()">Entfernen</button>
-      `;
-      document.getElementById('ingredientsList').appendChild(div);
-    }
-
-    document.getElementById("imageUpload").addEventListener("change", function () {
-      const preview = document.getElementById("imagePreview");
-      preview.innerHTML = "";
-      Array.from(this.files).forEach(file => {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          const img = document.createElement("img");
-          img.src = e.target.result;
-          preview.appendChild(img);
-        };
-        reader.readAsDataURL(file);
-      });
-    });
-
-    document.getElementById('recipeForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF("p", "mm", "a4");
-      const pageWidth = doc.internal.pageSize.getWidth();
-      let yPos = 20;
-
-      const recipeName = document.getElementById('recipeName').value;
-      const servings = document.getElementById('servings').value;
-      const zeit = document.getElementById('zeit').value;
-      const nutritional = document.getElementById('nutritional').value;
-      const preparation = document.getElementById('preparation').value;
-      const files = document.getElementById('imageUpload').files;
-
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(22);
-      doc.setTextColor(0, 102, 204);
-      doc.text(recipeName, pageWidth / 2, yPos, { align: "center" });
-
-      yPos += 10;
-      doc.setDrawColor(200);
-      doc.line(10, yPos, pageWidth - 10, yPos);
-      yPos += 10;
-
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(0, 0, 0);
-
-      if (servings) {
-        doc.text(`Portionen: ${servings}`, 10, yPos);
-        yPos += 8;
-      }
-
-      if (zeit && zeit.trim() !== timeTemplate.trim()) {
-        doc.setFont("helvetica", "bold");
-        doc.text("Zeit:", 10, yPos);
-        yPos += 6;
-        doc.setFont("helvetica", "normal");
-        const lines = doc.splitTextToSize(zeit, pageWidth - 20);
-        doc.text(lines, 10, yPos);
-        yPos += lines.length * 7;
-      }
-
-      if (nutritional) {
-        doc.setFont("helvetica", "bold");
-        doc.text("Nährwerte:", 10, yPos);
-        yPos += 6;
-        doc.setFont("helvetica", "normal");
-        const lines = doc.splitTextToSize(nutritional, pageWidth - 20);
-        doc.text(lines, 10, yPos);
-        yPos += lines.length * 7;
-      }
-
-      const ingredientDivs = document.querySelectorAll('#ingredientsList .ingredient');
-      const validIngredients = Array.from(ingredientDivs).map(div => {
-        const inputs = div.querySelectorAll('input');
-        const zutat = inputs[0].value.trim();
-        const menge = inputs[1].value.trim();
-        return zutat && menge ? `• ${zutat} (${menge})` : null;
-      }).filter(Boolean);
-
-      if (validIngredients.length > 0) {
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(14);
-        doc.text("Zutaten:", 10, yPos);
-        yPos += 8;
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(12);
-        validIngredients.forEach(line => {
-          doc.text(line, 10, yPos);
-          yPos += 6;
-        });
-        yPos += 4;
-      }
-
-      if (preparation) {
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(14);
-        doc.text("Zubereitung:", 10, yPos);
-        yPos += 8;
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(12);
-        const lines = doc.splitTextToSize(preparation, pageWidth - 20);
-        doc.text(lines, 10, yPos);
-        yPos += lines.length * 7;
-      }
-
-      const imageDataArray = [];
-      if (files.length > 0) {
-        let loaded = 0;
-        Array.from(files).forEach(file => {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            imageDataArray.push(e.target.result);
-            loaded++;
-            if (loaded === files.length) {
-              renderImages();
-            }
-          };
-          reader.readAsDataURL(file);
-        });
-      } else {
-        renderImages();
-      }
-
-      function renderImages() {
-        if (imageDataArray.length > 0) {
-          yPos += 10;
-          doc.setFont("helvetica", "bold");
-          doc.text("Bilder:", 10, yPos);
-          yPos += 6;
-          let xPos = 10;
-          const imgSize = 40;
-          imageDataArray.forEach(img => {
-            if (xPos + imgSize > pageWidth - 10) {
-              xPos = 10;
-              yPos += imgSize + 10;
-            }
-            doc.addImage(img, 'JPEG', xPos, yPos, imgSize, imgSize);
-            xPos += imgSize + 5;
-          });
-          yPos += imgSize + 10;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meine Eigenen Spiele</title>
+    <style>
+        /* Globale Einstellungen für saubere Breitenberechnung */
+        *, *::before, *::after {
+            box-sizing: border-box;
         }
 
-        // PDF-Fußzeile mit Generator-Text
-        doc.setFontSize(10);
-        doc.setTextColor(150);
-        doc.text("Erstellt mit Raffaels Rezeptgenerator", pageWidth / 2, 290, { align: "center" });
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            color: #444;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-        doc.save(`${recipeName}.pdf`);
-      }
-    });
-  </script>
+        header {
+            background-color: #ff6f61;
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            width: 100%;
+            clip-path: ellipse(60% 100% at 50% 0);
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            animation: fadeIn 2s ease-out;
+        }
+
+        header p {
+            font-size: 1.3rem;
+            margin-top: 1rem;
+            font-style: italic;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            padding: 3rem;
+            width: 100%;
+            max-width: 1200px;
+            flex-grow: 1;
+        }
+
+        .game {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            max-width: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 0.7s ease-out;
+        }
+
+        @keyframes slideIn {
+            0% { transform: translateY(50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .game:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .game h2 {
+            font-size: 1.6rem;
+            color: #ff6f61;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .game h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 5px;
+            background-color: #ff6f61;
+            border-radius: 5px;
+        }
+
+        .game p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .game a {
+            display: inline-block;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            background-color: #ff6f61;
+            padding: 12px 24px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: fit-content;
+        }
+
+        .game a:hover {
+            background-color: #e04e45;
+            transform: scale(1.05);
+        }
+
+        footer {
+            color: white;
+            text-align: center;
+            font-size: 0.9rem;
+            width: 100%;
+            margin-top: auto;
+            font-weight: bold;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+            color: #ff6f61;
+        }
+
+        /* Responsive Optimierungen */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.2rem;
+            }
+
+            header p {
+                font-size: 1.1rem;
+            }
+
+            section {
+                padding: 2rem 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game {
+                padding: 1.5rem;
+            }
+
+            .game h2 {
+                font-size: 1.4rem;
+            }
+
+            .game p {
+                font-size: 1rem;
+            }
+
+            .game a {
+                font-size: 1rem;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Meine Eigenen Spiele</h1>
+    <p>Hier stelle ich meine selbst entwickelten Spiele vor</p>
+</header>
+
+<section>
+    <div class="game">
+        <h2>Spiel 1: Eat just unhealthy</h2>
+        <p>„Muss auf Computer oder Laptop gespielt werden. Du startest das Spiel mit der Space-Taste. Du steuerst einen Mund mit den Pfeiltasten. 
+        Für jeden gegessenen Donut und Muffin erhältst du 1 Punkt. Für jedes nicht gegessene Donut und Muffin verlierst du 1 Leben. 
+        Äpfel und Bananen geben dir jeweils 1 Punkt, aber wenn du sie nicht isst, verlierst du ein Leben. 
+        Das Spiel endet, wenn deine Leben auf 0 sinken oder du 50 Punkte erreichst, was einen Sieg bedeutet.“</p>
+        <a href="https://raffaelbauer.ch/Games/Eat-just-unehealthy/">Spiel spielen</a>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
+    <p>
+        <a href="https://raffaelbauer.ch/Datenschutz/">Datenschutzbestimmungen</a>
+    </p>
+</footer>
+
 </body>
 </html>
