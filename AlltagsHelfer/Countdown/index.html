@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countdown Timer</title>
+    <title>Countdown</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -63,6 +63,12 @@
         #inputSection, #countdownSection {
             z-index: 2;
         }
+        footer {
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            margin-top: 50px;
+        }
         footer a {
             color: white;
             text-decoration: none;
@@ -101,11 +107,15 @@
             
             const url = new URL(window.location.href);
             url.searchParams.set("time", input);
-            url.searchParams.set("title", title);
+            if (title) {
+                url.searchParams.set("title", title);
+            } else {
+                url.searchParams.delete("title");
+            }
             
             if (navigator.share) {
                 navigator.share({
-                    title: title || 'Mein Countdown',
+                    title: title || 'Countdown',
                     text: 'Hier ist mein Countdown:',
                     url: url.toString()
                 }).catch(err => console.log('Fehler beim Teilen:', err));
@@ -114,10 +124,8 @@
             }
         }
 
-        function runCountdown(targetDate, title) {
+        function runCountdown(targetDate) {
             const countdownElement = document.getElementById("countdown");
-            const titleElement = document.getElementById("pageTitle");
-            titleElement.innerHTML = title || "Countdown";
 
             function updateCountdown() {
                 const now = new Date().getTime();
@@ -144,17 +152,15 @@
         function createNewCountdown() {
             document.getElementById("inputSection").style.display = "block";
             document.getElementById("countdownSection").style.display = "none";
-            document.getElementById("pageTitle").innerHTML = "Countdown";
         }
 
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
             const time = urlParams.get("time");
-            const title = urlParams.get("title");
             if (time) {
                 document.getElementById("inputSection").style.display = "none";
                 document.getElementById("countdownSection").style.display = "block";
-                runCountdown(new Date(time).getTime(), title);
+                runCountdown(new Date(time).getTime());
             }
         };
     </script>
