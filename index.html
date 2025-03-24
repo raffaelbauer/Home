@@ -23,7 +23,7 @@
       color: var(--text-color);
       display: flex;
       flex-direction: column;
-      overflow-x: hidden; /* verhindert horizontales Scrollen */
+      overflow-x: hidden;
     }
 
     header {
@@ -46,10 +46,9 @@
       max-width: 1200px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.5rem;
-      width: 100%;
-      box-sizing: border-box;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.8rem;
+      align-items: start;
     }
 
     .card {
@@ -98,7 +97,7 @@
 
     @media (max-width: 600px) {
       main {
-        grid-template-columns: 1fr; /* eine Spalte auf kleinen Geräten */
+        grid-template-columns: 1fr;
       }
 
       header h1 {
