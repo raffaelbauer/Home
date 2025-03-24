@@ -3,139 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meine Kontaktdaten und Social Media</title>
+    <title>Social Media & Kontakte – Raffael Bauer</title>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background: #f4f9fd;
+            background: linear-gradient(to bottom, #a8edea, #fed6e3);
             color: #333;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
-            height: 100vh;
         }
 
         header {
-            background: #4CAF50;
-            color: white;
-            padding: 2rem;
             text-align: center;
-            border-bottom: 4px solid #388E3C;
+            padding: 1.5rem;
+            color: #fff;
         }
 
         header h1 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             margin: 0;
-            font-weight: 600;
         }
 
         main {
-            padding: 2rem;
             flex-grow: 1;
+            padding: 1rem;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        .whatsapp-container {
-            width: 100%;
-            max-width: 400px;
+        .links-container {
+            max-width: 500px;
+            width: 90%;
+            background-color: rgba(255,255,255,0.9);
             padding: 1.5rem;
-            border: 2px solid #4CAF50;
-            border-radius: 10px;
-            background-color: white;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
             margin-bottom: 2rem;
         }
 
-        .whatsapp-container h2 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
+        .links-container h2 {
             color: #4CAF50;
-            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1rem;
         }
 
-        .whatsapp-container a {
+        .links-container a {
             display: block;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            padding: 0.8rem;
             margin: 0.5rem 0;
-            padding: 1rem;
             text-align: center;
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: white;
-            background-color: #4CAF50;
-            text-decoration: none;
             border-radius: 8px;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s;
         }
 
-        .whatsapp-container a:hover {
-            background-color: #388E3C;
-        }
-
-        .button-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-            width: 100%;
-            max-width: 500px;
-        }
-
-        .button-container a {
-            display: block;
-            width: 100%;
-            padding: 1rem;
-            text-align: center;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: white;
-            background-color: #4CAF50;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-        }
-
-        .button-container a:hover {
+        .links-container a:hover {
             background-color: #388E3C;
         }
 
         footer {
-            color: black;
+            color: white;
+            font-weight: bold;
             text-align: center;
-            font-size: 1rem;
-            width: 100%;
-            margin-top: auto;
-            padding-bottom: 10px;
+            padding: 1rem 0;
         }
 
         footer a {
-            color: black;
+            color: white;
             text-decoration: none;
         }
 
         footer a:hover {
             text-decoration: underline;
-            color: #ff7f50;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Mein Social Media</h1>
+        <h1>Meine Social Media & Kontakte</h1>
     </header>
+
     <main>
-        <div class="whatsapp-container">
-            <h2>Meine WhatsApp Kanäle</h2>
+        <div class="links-container">
+            <h2>WhatsApp-Kanäle</h2>
             <a href="https://whatsapp.com/channel/0029VaqICW9FXUuaZEqlh31a">Raffael Persönlich</a>
             <a href="https://whatsapp.com/channel/0029Vap7S2YGehET8ixa630T">Unterhaltung von Raffael</a>
             <a href="https://whatsapp.com/channel/0029Vap4QSVJENxwZyC1ff3n">News von Raffael</a>
         </div>
 
-        <div class="button-container">
-            <a href="mailto:raffaelbauer@icloud.com">E-Mail</a>
+        <div class="links-container">
+            <h2>Social Media & mehr</h2>
+            <a href="mailto:raffaelbauer@icloud.com">E-Mail senden</a>
             <a href="https://www.instagram.com/raffael__bauer/profilecard/?igsh=MTZ1eWx3bWxxZTl2YQ==">Instagram</a>
             <a href="https://snapchat.com/t/E3II3HY0">Snapchat</a>
             <a href="https://www.tiktok.com/@raffael.bauer?_t=8s6Y2LQ9cww&_r=1">TikTok</a>
@@ -146,6 +116,7 @@
             <a href="https://www.duolingo.com/profile/Raffael__Bauer?via=share_profile_qr">Duolingo</a>
         </div>
     </main>
+
     <footer>
         <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
         <p>
