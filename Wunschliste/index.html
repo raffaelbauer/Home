@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎁 Raffaels Wunschliste 🎁</title>
     <style>
-        /* Allgemeine Stile für die Seite */
+        /* Farbverlauf nur im body */
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f7f7f7;
             margin: 0;
             padding: 0;
             color: #333;
+            background: linear-gradient(to bottom right, #cce7ff, #ffffff);
+            overflow-x: hidden;
         }
         header {
             background-color: #007bff;
@@ -24,7 +25,6 @@
             margin: 0;
             font-size: 36px;
         }
-        /* Subtitel unter dem Header */
         header p.subtitle {
             margin: 5px 0 0;
             font-size: 16px;
@@ -90,15 +90,15 @@
         }
         footer {
             text-align: center;
-            color: #333;
-            padding: 10px;
+            color: white;
+            font-weight: bold;
+            padding: 20px 10px;
             font-size: 14px;
-            margin-top: 30px;
+            margin-top: 50px;
         }
         footer a {
-            color: #007bff;
+            color: white;
             text-decoration: none;
-            margin: 0 10px;
         }
         footer a:hover {
             text-decoration: underline;
@@ -118,113 +118,31 @@
 
 <main>
     <ul>
-        <!-- Artikel mit bekannten, numerischen Preisen (aufsteigend sortiert) -->
-        <li>
-            <a class="list-item" href="https://www.amazon.de/Gregs-Tagebuch-19-Schlamassel-Comic-Roman-Held/dp/3833909218/ref=sr_1_1?sr=8-1">
-                <span>Gregs Tagebuch 19 (als gebundenes Buch)</span>
-                <span>14,78 CHF</span>
-            </a>
-        </li>
-        <li>
-            <a class="list-item" href="https://www.radbag.ch/pinguin-coolers">
-                <span>Pinguin Coolers (Eiswürfel in Pinguinform)</span>
-                <span>16,99 CHF</span>
-            </a>
-        </li>
-        <li>
-            <a class="list-item" href="https://www.radbag.ch/leuchtender-nebel-nachtlicht">
-                <span>Leuchtender Nebel Nachtlicht</span>
-                <span>24,99 CHF</span>
-            </a>
-        </li>
-        <li>
-            <a class="list-item" href="https://www.galaxus.ch/de/s14/product/zeller-present-schiefer-wandtafel-40-x-60-cm-pinnwand-8855086">
-                <span>Magnetwand</span>
-                <span>36,70 CHF</span>
-            </a>
-        </li>
-        <li>
-            <a class="list-item" href="https://kamerino.de/products/kamerino-pro?variant=50457906839818">
-                <span>Kamerino PRO SnowVision (Aufnahmen vom Skifahren)</span>
-                <span>63,00 CHF</span>
-            </a>
-        </li>
-        <li>
-            <a class="list-item" href="https://mywhomeofficial.com/products/fingerprint-door-lock">
-                <span>Finger Print Lok Türschloss (per Fingerabdruck öffnen)</span>
-                <span>64 CHF</span>
-            </a>
-        </li>
-        <li>
-            <a class="list-item" href="https://www.bilderwelten.de/p/WBLB_3502/WBLB_3502-30x90-Canvas">
-                <span>Bild für mein Zimmer (40 x 120 cm)</span>
-                <span>100 CHF</span>
-            </a>
-        </li>
-        <li>
-            <a class="list-item" href="https://shufflebox.store/products/shufflebox-g1-pro-2025-version-automatic-card-shuffler-dealer-machine">
-                <span>ShuffleBox G1 Pro (mit Extrafunktionen)</span>
-                <span>139,99 CHF</span>
-            </a>
-        </li>
-        <li>
-            <a class="list-item" href="https://lungtank.com/products/lung-t-500%E2%84%A2-hand-pump-sub-mask">
-                <span>Lung T-500 + Hand Pump + Sub-Mask</span>
-                <span>344,00 CHF</span>
-            </a>
-        </li>
-        <li>
-            <a class="list-item" href="https://www.apple.com/ch-de/shop/buy-iphone/iphone-16-pro/6,3%22-display-1tb-titan-schwarz">
-                <span>Neuestes iPhone</span>
-                <span>1'549,00 CHF</span>
-            </a>
-        </li>
-        
-        <!-- Artikel mit unklaren bzw. variablen Preisen -->
-        <li>
-            <a class="list-item" href="https://raffaelbauer.ch/Wunschliste/Nintendo%20Switch%202%20Verf%C3%BCgbarkeit/">
-                <span>Nintendo Switch 2</span>
-                <span>Preis unbekannt</span>
-            </a>
-        </li>
-        <li>
-            <a class="list-item" href="https://www.amazon.com/-/de/dp/B0D8J5P11X?creativeASIN=B0D8J5P11X&asc_item-id=amzn1.ideas.OCANLIKC0B84&ref_=aip_sf_list_spv_ofs_m_asin">
-                <span>RAYNEO Air VR Brille</span>
-                <span>Preis unbekannt</span>
-            </a>
-        </li>
-        <li>
-            <a class="list-item" href="https://raffaelbauer.ch/Ausflugsideen/">
-                <span>Ausflug mit mir von meiner Liste</span>
-                <span>Preis Selbst Wählbar</span>
-            </a>
-        </li>
-        <li>
-            <a class="list-item" href="https://startselect.com/ch-de/gutscheine/steam-karten">
-                <span>Steam Gutscheinkarte</span>
-                <span>Preis Selbst Wählbar</span>
-            </a>
-        </li>
-        <li>
-            <a class="list-item" href="https://raffaelbauer.ch/Wunschliste/Ueberraschung/">
-                <span>Du kannst mir auch einfach Geld schenken</span>
-                <span>Preis Selbst Wählbar</span>
-            </a>
-        </li>
-        <li>
-            <a class="list-item" href="https://wa.me/41799534432?text=Hallo%20Raffael%2C%20w%C3%A4re%20es%20eine%20M%C3%B6glichkeit%2C%20dass%20ich%20dir%20...%20auf%20...%20schenke%3F">
-                <span>Du kannst mir auch etwas anderes vorschlagen</span>
-                <span>Preis Selbst Wählbar</span>
-            </a>
-        </li>
+        <!-- Artikel mit bekannten Preisen -->
+        <li><a class="list-item" href="https://www.amazon.de/Gregs-Tagebuch-19-Schlamassel-Comic-Roman-Held/dp/3833909218/ref=sr_1_1?sr=8-1"><span>Gregs Tagebuch 19 (als gebundenes Buch)</span><span>14,78 CHF</span></a></li>
+        <li><a class="list-item" href="https://www.radbag.ch/pinguin-coolers"><span>Pinguin Coolers (Eiswürfel in Pinguinform)</span><span>16,99 CHF</span></a></li>
+        <li><a class="list-item" href="https://www.radbag.ch/leuchtender-nebel-nachtlicht"><span>Leuchtender Nebel Nachtlicht</span><span>24,99 CHF</span></a></li>
+        <li><a class="list-item" href="https://www.galaxus.ch/de/s14/product/zeller-present-schiefer-wandtafel-40-x-60-cm-pinnwand-8855086"><span>Magnetwand</span><span>36,70 CHF</span></a></li>
+        <li><a class="list-item" href="https://kamerino.de/products/kamerino-pro?variant=50457906839818"><span>Kamerino PRO SnowVision (Aufnahmen vom Skifahren)</span><span>63,00 CHF</span></a></li>
+        <li><a class="list-item" href="https://mywhomeofficial.com/products/fingerprint-door-lock"><span>Finger Print Lok Türschloss (per Fingerabdruck öffnen)</span><span>64 CHF</span></a></li>
+        <li><a class="list-item" href="https://www.bilderwelten.de/p/WBLB_3502/WBLB_3502-30x90-Canvas"><span>Bild für mein Zimmer (40 x 120 cm)</span><span>100 CHF</span></a></li>
+        <li><a class="list-item" href="https://shufflebox.store/products/shufflebox-g1-pro-2025-version-automatic-card-shuffler-dealer-machine"><span>ShuffleBox G1 Pro (mit Extrafunktionen)</span><span>139,99 CHF</span></a></li>
+        <li><a class="list-item" href="https://lungtank.com/products/lung-t-500%E2%84%A2-hand-pump-sub-mask"><span>Lung T-500 + Hand Pump + Sub-Mask</span><span>344,00 CHF</span></a></li>
+        <li><a class="list-item" href="https://www.apple.com/ch-de/shop/buy-iphone/iphone-16-pro/6,3%22-display-1tb-titan-schwarz"><span>Neuestes iPhone</span><span>1'549,00 CHF</span></a></li>
+
+        <!-- Artikel mit unklarem Preis -->
+        <li><a class="list-item" href="https://raffaelbauer.ch/Wunschliste/Nintendo%20Switch%202%20Verf%C3%BCgbarkeit/"><span>Nintendo Switch 2</span><span>Preis unbekannt</span></a></li>
+        <li><a class="list-item" href="https://www.amazon.com/-/de/dp/B0D8J5P11X?creativeASIN=B0D8J5P11X&asc_item-id=amzn1.ideas.OCANLIKC0B84&ref_=aip_sf_list_spv_ofs_m_asin"><span>RAYNEO Air VR Brille</span><span>Preis unbekannt</span></a></li>
+        <li><a class="list-item" href="https://raffaelbauer.ch/Ausflugsideen/"><span>Ausflug mit mir von meiner Liste</span><span>Preis Selbst Wählbar</span></a></li>
+        <li><a class="list-item" href="https://startselect.com/ch-de/gutscheine/steam-karten"><span>Steam Gutscheinkarte</span><span>Preis Selbst Wählbar</span></a></li>
+        <li><a class="list-item" href="https://raffaelbauer.ch/Wunschliste/Ueberraschung/"><span>Du kannst mir auch einfach Geld schenken</span><span>Preis Selbst Wählbar</span></a></li>
+        <li><a class="list-item" href="https://wa.me/41799534432?text=Hallo%20Raffael%2C%20w%C3%A4re%20es%20eine%20M%C3%B6glichkeit%2C%20dass%20ich%20dir%20...%20auf%20...%20schenke%3F"><span>Du kannst mir auch etwas anderes vorschlagen</span><span>Preis Selbst Wählbar</span></a></li>
     </ul>
 </main>
 
 <footer>
     <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
-    <p>
-        <a href="https://raffaelbauer.ch/Datenschutz/">Datenschutzbestimmungen</a>
-    </p>
+    <p><a href="https://raffaelbauer.ch/Datenschutz/">Datenschutzbestimmungen</a></p>
 </footer>
 
 </body>
