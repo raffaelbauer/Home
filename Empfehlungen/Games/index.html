@@ -6,17 +6,21 @@
     <meta name="description" content="Raffaels Games Empfehlung: Minecraft, Meine eigenen Spiele, Supermarket Simulator, Kebabs Chef, Wobbly Life, Coole Websites mit Spielen, Monopoly, SupercityCon, Offline Games">
     <title>Raffaels Games Empfehlung</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #1e1e1e;
+            min-height: 100vh;
+            background: linear-gradient(to bottom right, #1e1e1e, #2c3e50);
             color: #fff;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
-            min-height: 100vh;
         }
+
         header {
             background-color: #111;
             color: #1abc9c;
@@ -24,56 +28,90 @@
             text-align: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
+
         header h1 {
-            font-size: 3rem;
+            font-size: 2.5rem;
             margin: 0;
             font-family: 'Roboto', sans-serif;
         }
-        .container {
+
+        main.container {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
             padding: 20px;
+            width: 100%;
         }
+
         .game {
             background-color: #2c3e50;
             border-radius: 15px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
             padding: 1.5rem;
-            height: 300px;
             text-align: center;
             transition: transform 0.3s ease-in-out;
         }
+
         .game:hover {
             transform: translateY(-5px);
         }
+
         .game h2 {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             color: #ecf0f1;
             margin-bottom: 1rem;
         }
+
         .game p {
-            font-size: 1.1rem;
+            font-size: 1rem;
             margin-bottom: 1.5rem;
         }
+
         .game a {
             display: inline-block;
             background-color: #1abc9c;
-            padding: 0.8rem 1.2rem;
+            padding: 0.6rem 1rem;
             color: #fff;
             font-weight: bold;
             text-decoration: none;
             border-radius: 8px;
             transition: background-color 0.3s;
+            margin: 0.2rem;
         }
+
         .game a:hover {
             background-color: #16a085;
         }
+
         footer {
             text-align: center;
             font-size: 1rem;
             color: #fff;
             padding: 1rem 0;
+            font-weight: bold;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .game h2 {
+                font-size: 1.3rem;
+            }
+
+            .game p {
+                font-size: 0.95rem;
+            }
+
+            .game a {
+                font-size: 0.95rem;
+            }
         }
     </style>
 </head>
@@ -85,49 +123,47 @@
         <div class="game">
             <h2>Minecraft</h2>
             <p>Minecraft ist ein Sandbox-Spiel, das den Spielern die Freiheit gibt, in einer offenen Welt zu bauen, zu erkunden und zu überleben.</p>
-            <div class="video-link">
-                <a href="https://youtu.be/Od2F_KQoP-Y?si=ePOCnPX7qhJZ8MnY">Beschreibung in einem von Raffael selbstgemachten Video</a>
-            </div>
+            <a href="https://youtu.be/Od2F_KQoP-Y?si=ePOCnPX7qhJZ8MnY">Video von Raffael</a>
         </div>
         <div class="game">
-            <h2>Meine eigenen Games Empfehlung</h2>
+            <h2>Meine eigenen Games</h2>
             <p>Ich habe einige coole Spiele entwickelt, die du direkt online spielen kannst. Besuche die Website, um sie auszuprobieren!</p>
             <a href="https://raffaelbauer.github.io/meine-Spiele/">Meine Spiele spielen</a>
         </div>
         <div class="game">
-            <h2>Supermarket Simulator - Games Empfehlung</h2>
-            <p>Supermarket Simulator ist ein lustiges Spiel, bei dem du als Supermarktmanager arbeiten musst, um deinen Laden zu führen und das Geschäft am Laufen zu halten.</p>
+            <h2>Supermarket Simulator</h2>
+            <p>Arbeite als Supermarktmanager und führe deinen Laden zum Erfolg!</p>
             <a href="https://store.steampowered.com/app/1012900/Supermarket_Simulator/">Auf Steam kaufen</a>
         </div>
         <div class="game">
-            <h2>Kebabs Chef - Games Empfehlung</h2>
-            <p>In Kebabs Chef wirst du zum Meistergriller, der köstliche Kebabs für hungrige Kunden zubereitet.</p>
+            <h2>Kebabs Chef</h2>
+            <p>Werde zum Meistergriller und koche leckere Kebabs für deine Kundschaft.</p>
             <a href="https://store.steampowered.com/app/1132120/Kebabs_Chef/">Auf Steam kaufen</a>
         </div>
         <div class="game">
-            <h2>Wobbly Life - Games Empfehlung</h2>
-            <p>Wobbly Life ist ein Open-World-Spiel mit lustigen Aufgaben und Herausforderungen.</p>
+            <h2>Wobbly Life</h2>
+            <p>Open-World-Spiel mit vielen lustigen Aufgaben und Herausforderungen.</p>
             <a href="https://store.steampowered.com/app/907340/Wobbly_Life/">Auf Steam kaufen</a>
         </div>
         <div class="game">
-            <h2>Coole Websites mit Games Empfehlung</h2>
-            <p>Hier sind einige coole Websites, die verschiedene Spiele-Sammlungen bieten, die du direkt im Browser spielen kannst!</p>
+            <h2>Coole Websites mit Games</h2>
+            <p>Spiele-Sammlungen direkt im Browser – ideal für zwischendurch!</p>
             <a href="https://neal.fun/">Neal.fun</a>
             <a href="https://poki.com/de#utm_source=redirect-en-de">Poki.com</a>
         </div>
         <div class="game">
-            <h2>Monopoly - Games Empfehlung</h2>
-            <p>Monopoly ist das bekannte Brettspiel, das nun auch als Handyspiel verfügbar ist.</p>
+            <h2>Monopoly</h2>
+            <p>Das berühmte Brettspiel – jetzt auch für dein Smartphone.</p>
             <a href="#" id="monopolyLink">Jetzt herunterladen</a>
         </div>
         <div class="game">
-            <h2>SupercityCon - Games Empfehlung</h2>
-            <p>SupercityCon ist ein Städtebauspiel, bei dem du deine eigene Stadt aufbaust und verwaltest.</p>
+            <h2>SupercityCon</h2>
+            <p>Baue und verwalte deine eigene Stadt in diesem Strategiespiel.</p>
             <a href="#" id="supercityconLink">Jetzt herunterladen</a>
         </div>
         <div class="game">
-            <h2>Offline Games Empfehlung</h2>
-            <p>Offline Games bietet eine Sammlung von Spielen, die du ohne Internetverbindung spielen kannst.</p>
+            <h2>Offline Games</h2>
+            <p>Spiele, die du auch ohne Internetverbindung genießen kannst.</p>
             <a href="#" id="offlinegamesLink">Jetzt herunterladen</a>
         </div>
     </main>
