@@ -6,51 +6,52 @@
     <meta name="description" content="Coming Soon - Diese Seite ist bald verfügbar.">
     <title>Coming Soon</title>
     <style>
-        /* Grundlegendes Styling */
+        /* Farbverlauf-Hintergrund nur im body */
         body {
-            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
             height: 100vh;
+            background: linear-gradient(135deg, #1e2a47, #3a4a7f);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #1e2a47, #3a4a7f); /* Dunklerer Hintergrund für besseren Kontrast */
-            color: white;
+            overflow-x: hidden;
             text-align: center;
-            overflow: hidden;
-            flex-direction: column;
         }
 
         .container {
-            background: rgba(0, 0, 0, 0.7); /* Dunkler Hintergrund für Container */
-            padding: 50px;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.6);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
             max-width: 600px;
-            width: 100%;
+            width: 90%;
+            backdrop-filter: blur(6px);
+            animation: fadeIn 1.5s ease-in-out;
         }
 
         h1 {
             font-size: 3rem;
-            margin-bottom: 20px;
-            letter-spacing: 3px;
-            font-weight: 700;
-            color: #f4e04d; /* Gelbe Farbe für besseren Kontrast */
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            font-weight: bold;
+            color: #f4e04d;
         }
 
         p {
-            font-size: 1.5rem;
-            margin-bottom: 30px;
-            opacity: 0.9;
-            color: #e0e0e0; /* Helleres Grau für den Text */
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            color: #dddddd;
         }
 
         .countdown {
-            font-size: 2.5rem;
-            font-weight: 600;
-            color: #ff7f50; /* Warmes Orange für den Countdown */
-            margin-bottom: 20px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff7f50;
+            animation: pulse 2s infinite;
         }
 
         /* Footer Styling */
@@ -58,9 +59,10 @@
             color: white;
             text-align: center;
             font-size: 1rem;
+            font-weight: bold;
             width: 100%;
             margin-top: auto;
-            padding-bottom: 10px;
+            padding: 1rem 0;
         }
 
         footer a {
@@ -73,9 +75,19 @@
             color: #ff7f50;
         }
 
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
         @media (max-width: 768px) {
             h1 {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
             }
 
             p {
@@ -83,7 +95,25 @@
             }
 
             .countdown {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 2rem 1.5rem;
+            }
+
+            h1 {
                 font-size: 2rem;
+            }
+
+            p {
+                font-size: 1.1rem;
+            }
+
+            .countdown {
+                font-size: 1.4rem;
             }
         }
     </style>
@@ -92,7 +122,7 @@
 
     <div class="container">
         <h1>Coming Soon</h1>
-        <p>Unsere Seite ist momentan in Arbeit. Bleib dran, sie wird bald verfügbar sein!</p>
+        <p>Unsere Website ist gerade in der Entwicklung – wir freuen uns schon, sie bald mit dir zu teilen!</p>
         <div class="countdown">Bald verfügbar!</div>
     </div>
 
