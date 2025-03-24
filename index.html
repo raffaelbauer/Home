@@ -8,42 +8,39 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* Header: Warmer Orange-Gradient */
-      --header-color-start: #ff7e5f;
-      --header-color-end:   #feb47b;
-      /* Body: Dezenter, heller Grau-Verlauf */
-      --body-bg-start:   #f9f9f9;
-      --body-bg-end:     #e0e0e0;
-      /* Karten: Weiß mit feinem, grauem Rahmen */
       --card-background: #ffffff;
       --card-border:     #dcdcdc;
       --text-color:      #333;
-      --link-color:      #ff7e5f;
-      /* Neuer Footer-Hintergrund, damit der Gradient dort nicht sichtbar ist */
-      --footer-bg:       #333;
+      --link-color:      #00AB6F;
     }
+
     * {
       box-sizing: border-box;
     }
+
     body {
       font-family: 'Roboto', sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, var(--body-bg-start), var(--body-bg-end));
+      background: linear-gradient(to bottom right, #00CDFF, #00AB6F);
       color: var(--text-color);
       line-height: 1.6;
     }
+
     header {
-      background: linear-gradient(135deg, var(--header-color-start), var(--header-color-end));
+      background: linear-gradient(to right, #64b5f6, #42a5f5);
       padding: 2rem;
       text-align: center;
       color: #fff;
     }
+
     header h1 {
       font-size: 2.8rem;
       margin: 0;
       letter-spacing: 1px;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     }
+
     main {
       padding: 2rem;
       max-width: 1200px;
@@ -52,6 +49,7 @@
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 2rem;
     }
+
     .card {
       background: var(--card-background);
       border: 1px solid var(--card-border);
@@ -65,10 +63,12 @@
       align-items: center;
       text-align: center;
     }
+
     .card:hover {
       transform: translateY(-5px);
       box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     }
+
     .card h2 {
       font-size: 1.8rem;
       margin-bottom: 1rem;
@@ -77,27 +77,37 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
     .card p {
       font-size: 1rem;
       margin: 0;
     }
+
     a.card-link {
       text-decoration: none;
       color: inherit;
       display: block;
     }
+
     footer {
-      background: var(--footer-bg);
       text-align: center;
-      padding: 1.2rem;
       font-size: 0.9rem;
-      margin-top: 2rem;
-      color: #fff;
+      margin-top: 4rem;
+      padding: 1rem;
+      color: white;
+      font-weight: bold;
     }
+
+    footer a {
+      color: white;
+      text-decoration: underline;
+    }
+
     @media (max-width: 600px) {
       header h1 {
         font-size: 2rem;
       }
+
       .card {
         padding: 1.5rem;
       }
@@ -115,6 +125,12 @@
         <p>Praktische Tools und innovative Ideen, die deinen Alltag effizienter gestalten.</p>
       </div>
     </a>
+    <a class="card-link" href="https://raffaelbauer.ch/Wunschliste/">
+      <div class="card">
+        <h2>Wunschliste</h2>
+        <p>Eine Übersicht meiner Wunschliste mit Geschenkideen und Lieblingsartikeln.</p>
+      </div>
+    </a>
     <a class="card-link" href="https://raffaelbauer.ch/Ausflugsideen/">
       <div class="card">
         <h2>Ausflugsideen</h2>
@@ -127,22 +143,10 @@
         <p>Meine persönlichen Favoriten und handverlesene Tipps aus verschiedenen Bereichen.</p>
       </div>
     </a>
-    <a class="card-link" href="https://raffaelbauer.ch/Wunschliste/">
-      <div class="card">
-        <h2>Wunschliste</h2>
-        <p>Eine Übersicht meiner Wunschliste mit Geschenkideen und Lieblingsartikeln.</p>
-      </div>
-    </a>
     <a class="card-link" href="https://raffaelbauer.ch/Games/">
       <div class="card">
         <h2>Meine Games</h2>
         <p>Informationen und Projekte rund um meine selbst entwickelten und favorisierten Spiele.</p>
-      </div>
-    </a>
-    <a class="card-link" href="https://raffaelbauer.ch/Minecraftserver/">
-      <div class="card">
-        <h2>Minecraft Server</h2>
-        <p>Werde Teil meiner Minecraft-Community und erlebe spannendes Miteinander.</p>
       </div>
     </a>
     <a class="card-link" href="https://raffaelbauer.ch/Socialmedia/">
@@ -160,6 +164,9 @@
   </main>
   <footer>
     <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
+    <p>
+      <a href="https://raffaelbauer.ch/Datenschutz/">Datenschutzbestimmungen</a>
+    </p>
   </footer>
 </body>
 </html>
