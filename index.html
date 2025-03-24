@@ -28,13 +28,13 @@
 
     header {
       background: transparent;
-      padding: 2rem;
+      padding: 2rem 1rem;
       text-align: center;
       color: #fff;
     }
 
     header h1 {
-      font-size: 2.8rem;
+      font-size: 2.2rem;
       margin: 0;
       letter-spacing: 1px;
       text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
@@ -42,26 +42,26 @@
 
     main {
       flex: 1;
-      padding: 2rem;
+      padding: 2rem 1rem;
       max-width: 1200px;
-      margin: 2rem auto;
+      margin: 0 auto;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
     }
 
     .card {
       background: var(--card-background);
       border: 1px solid var(--card-border);
       border-radius: 8px;
-      padding: 2rem;
+      padding: 1.5rem;
       box-shadow: 0 4px 8px rgba(0,0,0,0.05);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      text-align: center;
     }
 
     .card:hover {
@@ -70,16 +70,13 @@
     }
 
     .card h2 {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      margin-bottom: 0.8rem;
       color: var(--link-color);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     .card p {
-      font-size: 1rem;
+      font-size: 0.95rem;
       margin: 0;
     }
 
@@ -97,13 +94,21 @@
       font-weight: bold;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 500px) {
       header h1 {
-        font-size: 2rem;
+        font-size: 1.6rem;
       }
 
       .card {
-        padding: 1.5rem;
+        padding: 1.2rem;
+      }
+
+      .card h2 {
+        font-size: 1.3rem;
+      }
+
+      .card p {
+        font-size: 0.9rem;
       }
     }
   </style>
