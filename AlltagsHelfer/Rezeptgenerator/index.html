@@ -2,9 +2,9 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rezeptgenerator</title>
-  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     * {
@@ -21,7 +21,6 @@
       overflow-x: hidden;
     }
     .container {
-      background: transparent;
       padding: 20px;
       max-width: 900px;
       width: 100%;
@@ -29,7 +28,7 @@
     }
     h1 {
       text-align: center;
-      font-size: 2.2em;
+      font-size: 2.5em;
       margin-bottom: 20px;
       color: #333;
     }
@@ -41,15 +40,14 @@
     }
     input, textarea {
       width: 100%;
-      padding: 12px 15px;
+      padding: 12px;
       margin-top: 8px;
-      background: #fff;
       border: none;
       border-bottom: 1px solid #ccc;
       font-size: 1em;
+      background: #fff;
       color: #333;
       outline: none;
-      transition: border 0.2s ease-in-out;
     }
     input:focus, textarea:focus {
       border-color: #4facfe;
@@ -59,40 +57,28 @@
       flex-wrap: wrap;
       gap: 10px;
       margin-top: 10px;
-      align-items: center;
     }
     .ingredient input {
       flex: 1;
       min-width: 100px;
     }
     .ingredient button {
-      padding: 6px 10px;
       background: #00f2fe;
+      color: white;
       border: none;
+      padding: 8px 12px;
       border-radius: 5px;
-      color: #fff;
       cursor: pointer;
-      transition: background 0.2s ease-in-out;
-      white-space: nowrap;
-    }
-    .ingredient button:hover {
-      background: #00c0e6;
     }
     button {
-      margin-top: 25px;
-      padding: 12px 20px;
       background: #4facfe;
+      color: white;
       border: none;
+      padding: 12px;
       border-radius: 5px;
-      font-size: 1em;
-      font-weight: 700;
-      color: #fff;
-      cursor: pointer;
-      transition: background 0.2s ease-in-out;
+      font-weight: bold;
+      margin-top: 20px;
       width: 100%;
-    }
-    button:hover {
-      background: #00f2fe;
     }
     #imagePreview {
       display: flex;
@@ -121,14 +107,9 @@
     footer a:hover {
       text-decoration: underline;
     }
-
     @media (max-width: 600px) {
       .ingredient {
         flex-direction: column;
-        align-items: stretch;
-      }
-      button {
-        font-size: 1em;
       }
     }
   </style>
@@ -138,32 +119,32 @@
     <h1>Rezeptgenerator</h1>
     <form id="recipeForm">
       <label for="recipeName">Rezeptname:</label>
-      <input type="text" id="recipeName" name="recipeName" required>
+      <input type="text" id="recipeName" required />
 
       <label for="servings">Portionen (optional):</label>
-      <input type="number" id="servings" name="servings" min="1">
+      <input type="number" id="servings" min="1" />
 
       <label for="zeit">Zeit (optional):</label>
-      <textarea id="zeit" name="zeit" rows="4" readonly></textarea>
+      <textarea id="zeit" rows="3" readonly>Gesamtzeit:\nZubereitungszeit:\nKoch-/Backzeit:</textarea>
 
       <label for="nutritional">Nährwerte (optional):</label>
-      <textarea id="nutritional" name="nutritional" rows="3"></textarea>
+      <textarea id="nutritional" rows="2"></textarea>
 
       <label>Zutaten:</label>
       <div id="ingredientsList">
         <div class="ingredient">
           <input type="text" placeholder="Zutat" name="ingredient[]">
-          <input type="text" placeholder="Menge (z. B. g, ml, TL …)" name="amount[]">
+          <input type="text" placeholder="Menge" name="amount[]">
           <button type="button" onclick="this.parentElement.remove()">Entfernen</button>
         </div>
       </div>
       <button type="button" onclick="addIngredient()">Weitere Zutat hinzufügen</button>
 
-      <label for="preparation">Zubereitungsschritte:</label>
-      <textarea id="preparation" name="preparation" rows="5" required></textarea>
+      <label for="preparation">Zubereitung:</label>
+      <textarea id="preparation" rows="6" required></textarea>
 
       <label for="imageUpload">Bilder hochladen (optional):</label>
-      <input type="file" id="imageUpload" name="imageUpload" accept="image/*" multiple>
+      <input type="file" id="imageUpload" accept="image/*" multiple />
       <div id="imagePreview"></div>
 
       <button type="submit">PDF generieren</button>
@@ -176,34 +157,32 @@
   </footer>
 
   <script>
-    const timeTemplate = "Gesamtzeit:\nZubereitungszeit:\nKoch-/Backzeit:";
-    const zeitField = document.getElementById("zeit");
-    zeitField.value = timeTemplate;
-    zeitField.addEventListener("focus", () => zeitField.removeAttribute("readonly"));
-    zeitField.addEventListener("blur", () => {
-      if (zeitField.value.trim() === "") {
-        zeitField.value = timeTemplate;
-        zeitField.setAttribute("readonly", true);
+    document.getElementById("zeit").addEventListener("focus", function () {
+      this.removeAttribute("readonly");
+    });
+    document.getElementById("zeit").addEventListener("blur", function () {
+      if (this.value.trim() === "") {
+        this.value = "Gesamtzeit:\nZubereitungszeit:\nKoch-/Backzeit:";
+        this.setAttribute("readonly", true);
       }
     });
 
     function addIngredient() {
-      const div = document.createElement('div');
-      div.className = 'ingredient';
+      const div = document.createElement("div");
+      div.className = "ingredient";
       div.innerHTML = `
         <input type="text" placeholder="Zutat" name="ingredient[]">
-        <input type="text" placeholder="Menge (z. B. g, ml, TL …)" name="amount[]">
-        <button type="button" onclick="this.parentElement.remove()">Entfernen</button>
-      `;
-      document.getElementById('ingredientsList').appendChild(div);
+        <input type="text" placeholder="Menge" name="amount[]">
+        <button type="button" onclick="this.parentElement.remove()">Entfernen</button>`;
+      document.getElementById("ingredientsList").appendChild(div);
     }
 
     document.getElementById("imageUpload").addEventListener("change", function () {
       const preview = document.getElementById("imagePreview");
       preview.innerHTML = "";
-      Array.from(this.files).forEach(file => {
+      [...this.files].forEach(file => {
         const reader = new FileReader();
-        reader.onload = function (e) {
+        reader.onload = e => {
           const img = document.createElement("img");
           img.src = e.target.result;
           preview.appendChild(img);
@@ -212,135 +191,96 @@
       });
     });
 
-    document.getElementById('recipeForm').addEventListener('submit', function (e) {
+    document.getElementById("recipeForm").addEventListener("submit", function (e) {
       e.preventDefault();
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF("p", "mm", "a4");
       const pageWidth = doc.internal.pageSize.getWidth();
-      let yPos = 20;
+      let y = 20;
 
-      const recipeName = document.getElementById('recipeName').value;
-      const servings = document.getElementById('servings').value;
-      const zeit = document.getElementById('zeit').value;
-      const nutritional = document.getElementById('nutritional').value;
-      const preparation = document.getElementById('preparation').value;
-      const files = document.getElementById('imageUpload').files;
+      const recipeName = document.getElementById("recipeName").value;
+      const servings = document.getElementById("servings").value;
+      const zeit = document.getElementById("zeit").value;
+      const nutritional = document.getElementById("nutritional").value;
+      const preparation = document.getElementById("preparation").value;
 
+      const ingredients = [...document.querySelectorAll('#ingredientsList .ingredient')].map(div => {
+        const inputs = div.querySelectorAll('input');
+        return `• ${inputs[0].value} (${inputs[1].value})`;
+      });
+
+      // Titel
       doc.setFont("helvetica", "bold");
       doc.setFontSize(22);
-      doc.setTextColor(0, 102, 204);
-      doc.text(recipeName, pageWidth / 2, yPos, { align: "center" });
+      doc.text(recipeName, pageWidth / 2, y, { align: "center" });
+      y += 12;
 
-      yPos += 10;
-      doc.setDrawColor(200);
-      doc.line(10, yPos, pageWidth - 10, yPos);
-      yPos += 10;
-
+      // Metadaten
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
-      doc.setTextColor(0, 0, 0);
-
       if (servings) {
-        doc.text(`Portionen: ${servings}`, 10, yPos);
-        yPos += 8;
+        doc.text(`Portionen: ${servings}`, 10, y);
+        y += 7;
       }
-
-      if (zeit && zeit.trim() !== timeTemplate.trim()) {
-        doc.setFont("helvetica", "bold");
-        doc.text("Zeit:", 10, yPos);
-        yPos += 6;
+      if (zeit && zeit.trim() !== "") {
+        doc.text("Zeit:", 10, y);
+        y += 6;
         doc.setFont("helvetica", "normal");
         const lines = doc.splitTextToSize(zeit, pageWidth - 20);
-        doc.text(lines, 10, yPos);
-        yPos += lines.length * 7;
+        doc.text(lines, 10, y);
+        y += lines.length * 6 + 3;
       }
-
       if (nutritional) {
         doc.setFont("helvetica", "bold");
-        doc.text("Nährwerte:", 10, yPos);
-        yPos += 6;
+        doc.text("Nährwerte:", 10, y);
+        y += 6;
         doc.setFont("helvetica", "normal");
         const lines = doc.splitTextToSize(nutritional, pageWidth - 20);
-        doc.text(lines, 10, yPos);
-        yPos += lines.length * 7;
+        doc.text(lines, 10, y);
+        y += lines.length * 6 + 3;
       }
 
-      const ingredientDivs = document.querySelectorAll('#ingredientsList .ingredient');
-      const validIngredients = Array.from(ingredientDivs).map(div => {
-        const inputs = div.querySelectorAll('input');
-        const zutat = inputs[0].value.trim();
-        const menge = inputs[1].value.trim();
-        return zutat && menge ? `• ${zutat} (${menge})` : null;
-      }).filter(Boolean);
+      // Zutaten & Zubereitung in zwei Spalten
+      const leftX = 10, rightX = pageWidth / 2 + 5;
+      const maxY = 260;
+      let leftY = y, rightY = y;
 
-      if (validIngredients.length > 0) {
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(14);
-        doc.text("Zutaten:", 10, yPos);
-        yPos += 8;
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(12);
-        validIngredients.forEach(line => {
-          doc.text(line, 10, yPos);
-          yPos += 6;
-        });
-        yPos += 4;
-      }
+      doc.setFont("helvetica", "bold");
+      doc.text("Zutaten:", leftX, leftY);
+      doc.text("Zubereitung:", rightX, rightY);
+      leftY += 6;
+      rightY += 6;
 
-      if (preparation) {
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(14);
-        doc.text("Zubereitung:", 10, yPos);
-        yPos += 8;
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(12);
-        const lines = doc.splitTextToSize(preparation, pageWidth - 20);
-        doc.text(lines, 10, yPos);
-        yPos += lines.length * 7;
-      }
+      doc.setFont("helvetica", "normal");
+      ingredients.forEach(line => {
+        doc.text(line, leftX, leftY);
+        leftY += 6;
+      });
 
-      const imageDataArray = [];
+      const prepLines = doc.splitTextToSize(preparation, pageWidth / 2 - 15);
+      prepLines.forEach(line => {
+        doc.text(line, rightX, rightY);
+        rightY += 6;
+      });
+
+      y = Math.max(leftY, rightY) + 10;
+
+      // Bilder am Ende groß anzeigen
+      const files = document.getElementById("imageUpload").files;
       if (files.length > 0) {
-        let loaded = 0;
-        Array.from(files).forEach(file => {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            imageDataArray.push(e.target.result);
-            loaded++;
-            if (loaded === files.length) {
-              renderImages();
-            }
-          };
-          reader.readAsDataURL(file);
-        });
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          doc.addImage(e.target.result, 'JPEG', 20, y, pageWidth - 40, 60);
+          doc.setFontSize(10);
+          doc.setTextColor(150);
+          doc.text("Erstellt mit Raffaels Rezeptgenerator", pageWidth / 2, 290, { align: "center" });
+          doc.save(`${recipeName}.pdf`);
+        };
+        reader.readAsDataURL(files[0]);
       } else {
-        renderImages();
-      }
-
-      function renderImages() {
-        if (imageDataArray.length > 0) {
-          yPos += 10;
-          doc.setFont("helvetica", "bold");
-          doc.text("Bilder:", 10, yPos);
-          yPos += 6;
-          let xPos = 10;
-          const imgSize = 40;
-          imageDataArray.forEach(img => {
-            if (xPos + imgSize > pageWidth - 10) {
-              xPos = 10;
-              yPos += imgSize + 10;
-            }
-            doc.addImage(img, 'JPEG', xPos, yPos, imgSize, imgSize);
-            xPos += imgSize + 5;
-          });
-          yPos += imgSize + 10;
-        }
-
-        // PDF-Fußzeile mit Generator-Text
         doc.setFontSize(10);
         doc.setTextColor(150);
         doc.text("Erstellt mit Raffaels Rezeptgenerator", pageWidth / 2, 290, { align: "center" });
-
         doc.save(`${recipeName}.pdf`);
       }
     });
