@@ -1,177 +1,213 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Raffaels Film- und Serienempfehlungen" />
-    <title>Raffaels Film- und Serienempfehlungen</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meine Eigenen Spiele</title>
     <style>
-        * {
+        /* Globale Einstellungen für saubere Breitenberechnung */
+        *, *::before, *::after {
             box-sizing: border-box;
         }
 
-        html, body {
+        body {
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            width: 100%;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            color: #444;
             overflow-x: hidden;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1e1e1e, #3a3a3a);
-            color: #f5f5f5;
-            line-height: 1.6;
             display: flex;
             flex-direction: column;
+            align-items: center;
             min-height: 100vh;
         }
 
         header {
-            background: linear-gradient(135deg, #ff8c00, #ff4500);
-            color: #fff;
+            background-color: #ff6f61;
+            color: white;
             padding: 4rem 2rem;
             text-align: center;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            clip-path: ellipse(60% 100% at 50% 0);
         }
 
         header h1 {
             font-size: 3rem;
             margin: 0;
-            font-weight: 700;
-            letter-spacing: 2px;
-        }
-
-        main {
-            flex: 1;
-            max-width: 1200px;
-            width: 100%;
-            margin: 3rem auto;
-            padding: 0 1rem;
-        }
-
-        .category {
-            background-color: #2c2c2c;
-            border-radius: 15px;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
-            padding: 2rem;
-            margin-bottom: 3rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .category:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
-        }
-
-        .category h2 {
-            font-size: 2.2rem;
-            color: #ff8c00;
-            margin-bottom: 1.5rem;
             text-transform: uppercase;
+            letter-spacing: 2px;
             font-weight: 600;
-            letter-spacing: 1.5px;
+            animation: fadeIn 2s ease-out;
         }
 
-        .category ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .category li {
-            margin-bottom: 2rem;
-            display: flex;
-            flex-direction: column;
-            background: #3a3a3a;
-            padding: 1rem;
-            border-radius: 10px;
-        }
-
-        .category li strong {
-            color: #ff8c00;
-            font-weight: bold;
+        header p {
             font-size: 1.3rem;
-        }
-
-        .category li span {
-            margin-top: 0.4rem;
-            font-size: 1rem;
-        }
-
-        .category a {
-            color: #ff4500;
-            text-decoration: none;
-            font-weight: 600;
-            border: 2px solid #ff4500;
-            padding: 8px 16px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
             margin-top: 1rem;
-            display: inline-block;
-            text-align: center;
-            max-width: 100%;
+            font-style: italic;
         }
 
-        .category a:hover {
-            color: #fff;
-            background-color: #ff4500;
-            border-color: #ff4500;
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            padding: 3rem;
+            width: 100%;
+            max-width: 1200px;
+            flex-grow: 1;
+        }
+
+        .game {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            max-width: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 0.7s ease-out;
+        }
+
+        @keyframes slideIn {
+            0% { transform: translateY(50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .game:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .game h2 {
+            font-size: 1.6rem;
+            color: #ff6f61;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .game h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 5px;
+            background-color: #ff6f61;
+            border-radius: 5px;
+        }
+
+        .game p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .game a {
+            display: inline-block;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            background-color: #ff6f61;
+            padding: 12px 24px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: fit-content;
+        }
+
+        .game a:hover {
+            background-color: #e04e45;
+            transform: scale(1.05);
         }
 
         footer {
+            color: white;
             text-align: center;
-            padding: 2rem 1rem;
-            color: #ffffff;
-            font-size: 1rem;
+            font-size: 0.9rem;
+            width: 100%;
+            margin-top: auto;
             font-weight: bold;
         }
 
         footer a {
-            color: #ffffff;
+            color: white;
             text-decoration: none;
-            font-weight: bold;
         }
 
         footer a:hover {
             text-decoration: underline;
+            color: #ff6f61;
         }
 
-        @media (max-width: 600px) {
+        /* Responsive Optimierungen */
+        @media (max-width: 768px) {
             header h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
 
-            .category h2 {
-                font-size: 1.7rem;
+            header p {
+                font-size: 1.1rem;
             }
 
-            .category li strong {
-                font-size: 1.2rem;
+            section {
+                padding: 2rem 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game {
+                padding: 1.5rem;
             }
 
-            .category li span {
-                font-size: 0.95rem;
+            .game h2 {
+                font-size: 1.4rem;
             }
 
-            .category a {
-                padding: 6px 12px;
-                font-size: 0.9rem;
+            .game p {
+                font-size: 1rem;
+            }
+
+            .game a {
+                font-size: 1rem;
+                padding: 10px 20px;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Raffaels Film- und Serienempfehlungen</h1>
-    </header>
-    <main>
-        <!-- Deine Film- und Serienkategorien bleiben unverändert -->
-        <!-- (Der Inhalt wurde zur besseren Lesbarkeit ausgelassen, kann aber hier 1:1 wieder eingefügt werden) -->
-    </main>
-    <footer>
-        <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
-        <p><a href="https://raffaelbauer.ch/Datenschutz/">Datenschutzbestimmungen</a></p>
-    </footer>
+
+<header>
+    <h1>Meine Eigenen Spiele</h1>
+    <p>Hier stelle ich meine selbst entwickelten Spiele vor</p>
+</header>
+
+<section>
+    <div class="game">
+        <h2>Spiel 1: Eat just unhealthy</h2>
+        <p>„Muss auf Computer oder Laptop gespielt werden. Du startest das Spiel mit der Space-Taste. Du steuerst einen Mund mit den Pfeiltasten. 
+        Für jeden gegessenen Donut und Muffin erhältst du 1 Punkt. Für jedes nicht gegessene Donut und Muffin verlierst du 1 Leben. 
+        Äpfel und Bananen geben dir jeweils 1 Punkt, aber wenn du sie nicht isst, verlierst du ein Leben. 
+        Das Spiel endet, wenn deine Leben auf 0 sinken oder du 50 Punkte erreichst, was einen Sieg bedeutet.“</p>
+        <a href="https://raffaelbauer.ch/Games/Eat-just-unehealthy/">Spiel spielen</a>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
+    <p>
+        <a href="https://raffaelbauer.ch/Datenschutz/">Datenschutzbestimmungen</a>
+    </p>
+</footer>
+
 </body>
 </html>
