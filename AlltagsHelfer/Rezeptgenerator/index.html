@@ -125,7 +125,7 @@
       <input type="number" id="servings" min="1" />
 
       <label for="zeit">Zeit (optional):</label>
-      <textarea id="zeit" rows="3" readonly>Gesamtzeit:\nZubereitungszeit:\nKoch-/Backzeit:</textarea>
+      <textarea id="zeit" rows="3" readonly></textarea>
 
       <label for="nutritional">Nährwerte (optional):</label>
       <textarea id="nutritional" rows="2"></textarea>
@@ -157,13 +157,18 @@
   </footer>
 
   <script>
-    document.getElementById("zeit").addEventListener("focus", function () {
-      this.removeAttribute("readonly");
+    const zeitField = document.getElementById("zeit");
+    const zeitTemplate = "Gesamtzeit:\nZubereitungszeit:\nKoch-/Backzeit:";
+    zeitField.value = zeitTemplate;
+
+    zeitField.addEventListener("focus", () => {
+      zeitField.removeAttribute("readonly");
     });
-    document.getElementById("zeit").addEventListener("blur", function () {
-      if (this.value.trim() === "") {
-        this.value = "Gesamtzeit:\nZubereitungszeit:\nKoch-/Backzeit:";
-        this.setAttribute("readonly", true);
+
+    zeitField.addEventListener("blur", () => {
+      if (zeitField.value.trim() === "") {
+        zeitField.value = zeitTemplate;
+        zeitField.setAttribute("readonly", true);
       }
     });
 
@@ -225,7 +230,6 @@
       if (zeit && zeit.trim() !== "") {
         doc.text("Zeit:", 10, y);
         y += 6;
-        doc.setFont("helvetica", "normal");
         const lines = doc.splitTextToSize(zeit, pageWidth - 20);
         doc.text(lines, 10, y);
         y += lines.length * 6 + 3;
@@ -240,9 +244,8 @@
         y += lines.length * 6 + 3;
       }
 
-      // Zutaten & Zubereitung in zwei Spalten
+      // Zwei Spalten: Zutaten / Zubereitung
       const leftX = 10, rightX = pageWidth / 2 + 5;
-      const maxY = 260;
       let leftY = y, rightY = y;
 
       doc.setFont("helvetica", "bold");
@@ -265,7 +268,7 @@
 
       y = Math.max(leftY, rightY) + 10;
 
-      // Bilder am Ende groß anzeigen
+      // Erstes Bild groß darstellen
       const files = document.getElementById("imageUpload").files;
       if (files.length > 0) {
         const reader = new FileReader();
