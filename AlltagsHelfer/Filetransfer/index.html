@@ -17,14 +17,18 @@
             justify-content: flex-start;
             min-height: 100vh;
             text-align: center;
+            overflow-x: hidden;
         }
+
         header {
             padding: 30px;
         }
+
         h1 {
             color: #007acc;
             font-size: 2.5rem;
         }
+
         #uploadBox {
             border: 2px dashed #007bff;
             padding: 40px;
@@ -34,16 +38,20 @@
             background: white;
             transition: 0.3s;
         }
+
         #uploadBox:hover {
             background: #f0f8ff;
         }
+
         #fileInput {
             display: none;
         }
+
         #progressContainer {
             margin-top: 20px;
             display: none;
         }
+
         #progressBar {
             width: 100%;
             height: 20px;
@@ -52,39 +60,49 @@
             overflow: hidden;
             margin-top: 10px;
         }
+
         #progressFill {
             height: 100%;
             width: 0;
             background: #007bff;
             transition: width 0.3s;
         }
+
         #progressText, #timeLeft {
             margin-top: 10px;
             font-weight: bold;
         }
+
         #uploadAlmostDone {
             color: green;
             margin-top: 10px;
             display: none;
         }
+
         #warning {
             color: red;
             margin-top: 10px;
             display: none;
         }
+
         #linkBox {
             margin-top: 20px;
             display: none;
+            width: 90%;
+            max-width: 600px;
         }
+
         #downloadLink {
             word-break: break-all;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             background: white;
-            width: 80%;
+            width: 100%;
+            box-sizing: border-box;
             text-align: center;
         }
+
         #copyButton {
             background: #007acc;
             color: white;
@@ -94,14 +112,17 @@
             border-radius: 8px;
             margin-top: 10px;
         }
+
         #copyButton:hover {
             background: #005ea6;
         }
+
         #copySuccess {
             color: green;
             margin-top: 10px;
             display: none;
         }
+
         footer {
             width: 100%;
             text-align: center;
@@ -110,6 +131,7 @@
             color: #fff;
             font-weight: bold;
         }
+
         footer a {
             color: #fff;
             text-decoration: none;
@@ -120,9 +142,11 @@
     <header>
         <h1>Einfach Dateien hochladen & teilen</h1>
     </header>
+
     <div id="uploadBox" onclick="document.getElementById('fileInput').click();">
         <p>Klicke hier oder ziehe eine Datei hinein</p>
     </div>
+
     <input type="file" id="fileInput">
     
     <div id="progressContainer">
@@ -183,21 +207,23 @@
                     let response = JSON.parse(xhr.responseText);
                     let downloadURL = response.url;
 
-                    // ✅ Link anzeigen
                     document.getElementById("progressContainer").style.display = "none";
                     document.getElementById("linkBox").style.display = "block";
                     document.getElementById("downloadLink").value = downloadURL;
 
-                    // ✅ Automatischen Download starten
                     setTimeout(() => {
                         let link = document.createElement("a");
                         link.href = downloadURL;
-                        link.setAttribute("download", file.name); // Erzwingt den Download
+                        link.setAttribute("download", file.name);
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
                     }, 2000);
                 }
+            };
+
+            xhr.onerror = function() {
+                alert("❌ Fehler beim Upload. Bitte später erneut versuchen.");
             };
 
             xhr.send(formData);
@@ -220,7 +246,7 @@
     <footer>
         <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
         <p>
-            <a href="https://raffaelbauer.github.io/Datenschutzerklaerung/">Datenschutzbestimmungen</a>
+            <a href="https://raffaelbauer.ch/Datenschutz/">Datenschutzbestimmungen</a>
         </p>
     </footer>
 </body>
