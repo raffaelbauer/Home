@@ -1,213 +1,759 @@
 <!DOCTYPE html>
 <html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>3D Sanduhr Timer</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sanduhr</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-      body {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        background: linear-gradient(135deg, #d4a373, #ffe8d6);
-        font-family: 'Arial', sans-serif;
-        overflow-x: hidden;
-      }
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #e0eafc, #cfdef3);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      transition: background 0.5s ease;
+    }
 
-      h1 {
-        margin-top: 30px;
-        font-size: 2em;
-        color: #5e412f;
-        text-align: center;
-      }
+    body.night-mode {
+      background: linear-gradient(135deg, #2c3e50, #1a1a2e);
+    }
 
-      #sanduhr-container {
-        margin: 20px auto;
-        width: 90%;
-        max-width: 500px;
-        height: auto;
-      }
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      padding: 25px;
+      width: 90%;
+      max-width: 380px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
 
-      canvas {
-        width: 100% !important;
-        height: auto !important;
-      }
+    .night-mode .container {
+      background: #2d3436;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
 
-      .controls {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 30px;
-        width: 100%;
-        padding: 0 20px;
-      }
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
 
-      input[type="number"] {
-        padding: 10px;
-        font-size: 18px;
-        width: 100%;
-        max-width: 250px;
-        border: 2px solid #5e412f;
-        border-radius: 5px;
-      }
+    .night-mode h1 {
+      color: #f5f5f5;
+    }
 
-      button {
-        padding: 12px 20px;
-        font-size: 18px;
-        background-color: #5e412f;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-      }
+    .hourglass-container {
+      width: 200px;
+      height: 320px;
+      margin: 0 auto 25px;
+      position: relative;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+    
+    .hourglass-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 1.5s;
+      transform-style: preserve-3d;
+    }
+    
+    .flipping .hourglass-inner {
+      transform: rotateX(180deg);
+    }
 
-      button:hover {
-        background-color: #7a5739;
-      }
+    .glass {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 140px;
+      height: 260px;
+      overflow: visible;
+    }
+    
+    .glass-outline {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: #333;
+      stroke-width: 3px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: stroke 0.3s ease;
+    }
 
+    .night-mode .glass-outline {
+      stroke: #dfe6e9;
+    }
+
+    .sand-top, .sand-bottom {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #f39c12;
+      transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      clip-path: none;
+    }
+
+    .night-mode .sand-top, .night-mode .sand-bottom {
+      background-color: #fdcb6e;
+    }
+
+    .sand-top {
+      top: 23px;
+      height: 90px;
+      width: 130px;
+      clip-path: polygon(0 0, 100% 0, 65% 100%, 35% 100%);
+      z-index: 2;
+    }
+
+    .sand-bottom {
+      bottom: 23px;
+      height: 0px;
+      width: 130px;
+      clip-path: polygon(35% 0, 65% 0, 100% 100%, 0 100%);
+      z-index: 1;
+    }
+
+    .sand-particles {
+      position: absolute;
+      top: 110px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 40px;
+      z-index: 3;
+      display: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background-color: #f39c12;
+      border-radius: 50%;
+      opacity: 0;
+      box-shadow: 0 0 1px rgba(243, 156, 18, 0.3);
+    }
+
+    .night-mode .particle {
+      background-color: #fdcb6e;
+      box-shadow: 0 0 1px rgba(253, 203, 110, 0.3);
+    }
+
+    .timer-display {
+      font-size: 2.6rem;
+      font-weight: bold;
+      margin: 20px 0;
+      color: #333;
+      font-family: 'Courier New', monospace;
+      transition: color 0.3s ease;
+    }
+
+    .night-mode .timer-display {
+      color: #f5f5f5;
+    }
+
+    .time-inputs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .input-group {
+      display: flex;
+      flex: 1;
+      min-width: 80px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #ddd;
+    }
+
+    .night-mode .input-group {
+      border-color: #4b6584;
+    }
+
+    input {
+      flex: 1;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      outline: none;
+      background-color: #f9f9f9;
+      transition: background-color 0.3s ease;
+      text-align: center;
+    }
+
+    .night-mode input {
+      background-color: #353b48;
+      color: #f5f5f5;
+    }
+
+    input:focus {
+      background-color: #fff;
+    }
+
+    .night-mode input:focus {
+      background-color: #2f3640;
+    }
+
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+    
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .time-label {
+      padding: 12px;
+      background-color: #f1f2f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 60px;
+      font-weight: 500;
+      color: #333;
+      transition: all 0.3s ease;
+    }
+
+    .night-mode .time-label {
+      background-color: #4b6584;
+      color: #f5f5f5;
+    }
+
+    .settings {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .sound-toggle {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      color: #333;
+      transition: color 0.3s ease;
+    }
+
+    .night-mode .sound-toggle {
+      color: #f5f5f5;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 24px;
+      margin-right: 8px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #4CAF50;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(16px);
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      flex: 1;
+      padding: 14px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    button:hover {
+      background-color: #43a047;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    #reset-button {
+      background-color: #e74c3c;
+    }
+
+    #reset-button:hover {
+      background-color: #c0392b;
+    }
+
+    #theme-toggle {
+      background-color: #3498db;
+      flex: 0.5;
+    }
+
+    #theme-toggle:hover {
+      background-color: #2980b9;
+    }
+
+    .completed {
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    /* Media queries für responsive Design */
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px 15px;
+      }
+      
+      .hourglass-container {
+        width: 180px;
+        height: 300px;
+      }
+      
+      .glass {
+        width: 130px;
+        height: 240px;
+      }
+      
+      .sand-top, .sand-bottom {
+        width: 110px;
+      }
+      
       .timer-display {
-        font-size: 28px;
-        font-weight: bold;
-        color: #5e412f;
+        font-size: 2.4rem;
       }
-
-      footer {
-        text-align: center;
-        margin-top: auto;
-        padding: 20px;
-        font-weight: bold;
-        color: white;
+      
+      button {
+        padding: 12px;
       }
-
-      footer a {
-        color: white;
-        text-decoration: underline;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>3D Sanduhr Timer</h1>
-    <div class="controls">
-      <input type="number" id="timeInput" placeholder="Zeit in Sekunden" min="1" />
-      <button onclick="startTimer()">Timer starten</button>
-      <div class="timer-display" id="timerDisplay">00:00</div>
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Sanduhr</h1>
+    <div class="hourglass-container" id="hourglass-container">
+      <div class="hourglass-inner" id="hourglass-inner">
+        <div class="glass">
+          <svg class="glass-outline" viewBox="0 0 140 260" preserveAspectRatio="none">
+            <path d="M5,5 L135,5 L135,18 L70,110 L70,150 L135,242 L135,255 L5,255 L5,242 L70,150 L70,110 L5,18 Z"></path>
+          </svg>
+        </div>
+        <div class="sand-top" id="sand-top"></div>
+        <div class="sand-bottom" id="sand-bottom"></div>
+        <div class="sand-particles" id="sand-particles"></div>
+      </div>
     </div>
-    <div id="sanduhr-container"></div>
-    <footer>
-      <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
-      <p>
-        <a href="https://raffaelbauer.ch/Datenschutz/">Datenschutzbestimmungen</a>
-      </p>
-    </footer>
-    <script>
-      let scene, camera, renderer, topSand, bottomSand, fallingSandParticles, hourglassFrame;
-      let countdown, maxTime;
+    <div class="timer-display" id="timer">00:00</div>
+    
+    <div class="settings">
+      <label class="sound-toggle">
+        <span class="switch">
+          <input type="checkbox" id="sound-toggle">
+          <span class="slider"></span>
+        </span>
+        Sound
+      </label>
+    </div>
+    
+    <div class="time-inputs">
+      <div class="input-group">
+        <span class="time-label">Std</span>
+        <input type="number" id="hours-input" placeholder="0" value="0" min="0" max="23"/>
+      </div>
+      <div class="input-group">
+        <span class="time-label">Min</span>
+        <input type="number" id="minutes-input" placeholder="0" value="1" min="0" max="59"/>
+      </div>
+      <div class="input-group">
+        <span class="time-label">Sek</span>
+        <input type="number" id="seconds-input" placeholder="0" value="0" min="0" max="59"/>
+      </div>
+    </div>
+    
+    <div class="buttons">
+      <button id="start-button">Start</button>
+      <button id="reset-button">Reset</button>
+      <button id="theme-toggle">🌓</button>
+    </div>
+  </div>
 
-      function init3D() {
-        scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000); // Seitenverhältnis wird später angepasst
-        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        const container = document.getElementById("sanduhr-container");
-        const size = container.clientWidth;
-        renderer.setSize(size, size);
-        container.appendChild(renderer.domElement);
+  <script>
+    (function() {
+      const hoursInput = document.getElementById('hours-input');
+      const minutesInput = document.getElementById('minutes-input');
+      const secondsInput = document.getElementById('seconds-input');
+      const startButton = document.getElementById('start-button');
+      const resetButton = document.getElementById('reset-button');
+      const timerDisplay = document.getElementById('timer');
+      const sandTop = document.getElementById('sand-top');
+      const sandBottom = document.getElementById('sand-bottom');
+      const sandParticles = document.getElementById('sand-particles');
+      const themeToggle = document.getElementById('theme-toggle');
+      const soundToggle = document.getElementById('sound-toggle');
+      const body = document.body;
+      const container = document.querySelector('.container');
+      const hourglassContainer = document.getElementById('hourglass-container');
+      const hourglassInner = document.getElementById('hourglass-inner');
 
-        // Rahmen
-        const frameMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513, metalness: 0.3, roughness: 0.6 });
-        hourglassFrame = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 6, 32), frameMaterial);
-        scene.add(hourglassFrame);
+      let timerInterval;
+      let isTimerRunning = false;
+      let originalTime = 0;
+      let remaining = 0;
+      let particles = [];
+      let soundEnabled = false;
+      let isFlipping = false;
+      
+      // Sound-Effekte
+      const tickSound = new Audio('data:audio/wav;base64,UklGRpQFAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YXAFAACAgICAgICAgICAgICAgICAgICAgICAgIDAwMDAwMDAwMDAwMDA38/Pz9TU1NTU1N7e3t7e3v//////////////////////////////////////////////////prj/AABHRUREREREVlZWVlZWbW1tbW1te3t7e3t7i4uLi4uLpqampqamt7e3t7e32NjY2NjY////////////////////////prj/AAA6Ojo6OjpJSUlJSUlcXFxcXFxra2tra2t+fn5+fn6UlJSUlJSjo6Ojo6O6urq6urrV1dXV1dXu7u7u7u7///////////////////////8=');
+      const completeSound = new Audio('data:audio/wav;base64,UklGRkQKAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YSAKAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA=');
 
-        // Sand
-        const sandMaterial = new THREE.MeshStandardMaterial({ color: 0xFFD700 });
-        topSand = new THREE.Mesh(new THREE.ConeGeometry(1.2, 2, 32), sandMaterial);
-        topSand.position.y = 2;
-        scene.add(topSand);
-
-        bottomSand = new THREE.Mesh(new THREE.ConeGeometry(1.2, 2, 32), sandMaterial);
-        bottomSand.position.y = -2;
-        bottomSand.rotation.x = Math.PI;
-        scene.add(bottomSand);
-
-        // Partikel
-        const particleGeometry = new THREE.BufferGeometry();
-        const positions = new Float32Array(300);
-        for (let i = 0; i < positions.length; i += 3) {
-          positions[i] = (Math.random() - 0.5) * 0.2;
-          positions[i + 1] = Math.random();
-          positions[i + 2] = (Math.random() - 0.5) * 0.2;
+      // Partikel für die Sandanimation erstellen
+      function createParticles() {
+        sandParticles.innerHTML = '';
+        particles = [];
+        
+        for (let i = 0; i < 30; i++) {
+          const particle = document.createElement('div');
+          particle.className = 'particle';
+          sandParticles.appendChild(particle);
+          particles.push({
+            element: particle,
+            x: Math.random() * 3 - 1.5,
+            speed: 0.8 + Math.random() * 2,
+            size: 1 + Math.random() * 1
+          });
         }
-        particleGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-        const particleMaterial = new THREE.PointsMaterial({ color: 0xFFD700, size: 0.05 });
-        fallingSandParticles = new THREE.Points(particleGeometry, particleMaterial);
-        fallingSandParticles.position.y = 1;
-        scene.add(fallingSandParticles);
-
-        const light = new THREE.PointLight(0xffffff, 1.2);
-        light.position.set(5, 10, 10);
-        scene.add(light);
-
-        camera.position.z = 8;
-        animate();
       }
 
-      function animate() {
-        requestAnimationFrame(animate);
-        renderer.render(scene, camera);
+      // Partikel realistischer animieren
+      function animateParticles() {
+        particles.forEach((particle, index) => {
+          // Variiere die Position und Größe für mehr Realismus
+          const top = (index % 10) * 4;
+          const left = particle.x;
+          const size = particle.size;
+          
+          particle.element.style.top = `${top}px`;
+          particle.element.style.left = `${2 + left}px`;
+          particle.element.style.width = `${size}px`;
+          particle.element.style.height = `${size}px`;
+          particle.element.style.opacity = 0;
+          
+          // Verzögerte Animation für jeden Partikel
+          setTimeout(() => {
+            particle.element.style.opacity = 0.9;
+            
+            // Physikbasierte Animation - Partikel beschleunigen nach unten
+            const fallDuration = 300 + Math.random() * 150;
+            particle.element.style.transition = `top ${fallDuration}ms cubic-bezier(0.4, 0.0, 1, 1), opacity 150ms`;
+            
+            // Animiere nach unten
+            setTimeout(() => {
+              particle.element.style.top = `${40 - size}px`;
+              
+              // Verblassen am Ende
+              setTimeout(() => {
+                particle.element.style.opacity = 0;
+              }, fallDuration - 50);
+            }, 20);
+          }, index * 30);
+        });
       }
 
+      // Timer-Anzeige aktualisieren
+      function updateDisplay(seconds) {
+        const hrs = Math.floor(seconds / 3600);
+        const min = Math.floor((seconds % 3600) / 60);
+        const sec = seconds % 60;
+        
+        if (hrs > 0) {
+          timerDisplay.textContent = `${hrs.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+        } else {
+          timerDisplay.textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+        }
+      }
+
+      // Gesamtzeit in Sekunden berechnen
+      function calculateTotalSeconds() {
+        const hours = parseInt(hoursInput.value) || 0;
+        const minutes = parseInt(minutesInput.value) || 0;
+        const seconds = parseInt(secondsInput.value) || 0;
+        
+        return (hours * 3600) + (minutes * 60) + seconds;
+      }
+      
+      // Timer starten
       function startTimer() {
-        const input = document.getElementById("timeInput");
-        let seconds = parseInt(input.value);
-        if (isNaN(seconds) || seconds <= 0) {
-          alert("Bitte eine gültige Zeit eingeben!");
+        if (isTimerRunning) return;
+        
+        originalTime = calculateTotalSeconds();
+        if (originalTime <= 0) {
+          alert('Bitte gültige Zeit eingeben!');
           return;
         }
 
-        maxTime = seconds;
-        const timerDisplay = document.getElementById("timerDisplay");
-        if (countdown) clearInterval(countdown);
+        isTimerRunning = true;
+        startButton.textContent = 'Pause';
+        startButton.blur(); // Remove focus to prevent spacebar triggering
+        remaining = originalTime;
+        
+        updateDisplay(remaining);
+        sandTop.style.height = '90px';
+        sandBottom.style.height = '0px';
+        sandParticles.style.display = 'block';
+        
+        // Container-Klasse entfernen, falls gesetzt
+        container.classList.remove('completed');
+        
+        animateParticles();
+        
+        if (soundEnabled) {
+          tickSound.play();
+        }
+        
+        startTimerInterval();
+      }
 
-        topSand.scale.y = 1;
-        bottomSand.scale.y = 0;
+      function startTimerInterval() {
+        timerInterval = setInterval(() => {
+          remaining--;
+          
+          if (soundEnabled && remaining > 0) {
+            tickSound.currentTime = 0;
+            tickSound.play();
+          }
 
-        countdown = setInterval(() => {
-          if (seconds > 0) {
-            const minutes = Math.floor(seconds / 60);
-            const secs = seconds % 60;
-            timerDisplay.innerText = `${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-            seconds--;
+          const progress = (originalTime - remaining) / originalTime;
+          sandTop.style.height = `${90 * (1 - progress)}px`;
+          sandBottom.style.height = `${90 * progress}px`;
 
-            const progress = 1 - seconds / maxTime;
-            topSand.scale.y = Math.max(0.01, 1 - progress);
-            bottomSand.scale.y = Math.min(1, progress);
-            fallingSandParticles.position.y -= 0.03;
-          } else {
-            clearInterval(countdown);
-            timerDisplay.innerText = "00:00";
-            alert("Zeit abgelaufen!");
+          // Sandpartikel periodisch animieren
+          if (remaining % 2 === 0) {
+            animateParticles();
+          }
+
+          updateDisplay(remaining);
+
+          if (remaining <= 0) {
+            clearInterval(timerInterval);
+            
+            sandTop.style.height = '0px';
+            sandBottom.style.height = '90px';
+            sandParticles.style.display = 'none';
+            
+            container.classList.add('completed');
+            startButton.textContent = 'Start';
+            isTimerRunning = false;
+            
+            if (soundEnabled) {
+              completeSound.play();
+            }
+            
+            setTimeout(() => {
+              if (!isTimerRunning) {
+                alert('Zeit abgelaufen!');
+              }
+            }, 500);
           }
         }, 1000);
       }
 
-      window.addEventListener("resize", () => {
-        const container = document.getElementById("sanduhr-container");
-        const size = container.clientWidth;
-        renderer.setSize(size, size);
-        camera.aspect = 1;
-        camera.updateProjectionMatrix();
+      // Timer pausieren
+      function pauseTimer() {
+        clearInterval(timerInterval);
+        sandParticles.style.display = 'none';
+        startButton.textContent = 'Fortsetzen';
+        isTimerRunning = false;
+      }
+      
+      // Sanduhr umdrehen
+      function flipHourglass() {
+        if (isFlipping || !isTimerRunning) return;
+        
+        isFlipping = true;
+        
+        // Timer pausieren während des Drehens
+        clearInterval(timerInterval);
+        sandParticles.style.display = 'none';
+        
+        // Drehanimation starten
+        hourglassInner.classList.add('flipping');
+        
+        // Nach der Animation
+        setTimeout(() => {
+          // Sandanzeige umkehren
+          const tempHeight = sandTop.style.height;
+          sandTop.style.height = sandBottom.style.height;
+          sandBottom.style.height = tempHeight;
+          
+          // Animation beenden und Timer fortsetzen
+          hourglassInner.classList.remove('flipping');
+          
+          if (isTimerRunning) {
+            sandParticles.style.display = 'block';
+            animateParticles();
+            startTimerInterval();
+          }
+          
+          isFlipping = false;
+        }, 1500);
+      }
+
+      // Timer zurücksetzen
+      function resetTimer() {
+        clearInterval(timerInterval);
+        isTimerRunning = false;
+        startButton.textContent = 'Start';
+        
+        container.classList.remove('completed');
+        
+        sandTop.style.height = '90px';
+        sandBottom.style.height = '0px';
+        sandParticles.style.display = 'none';
+        
+        remaining = originalTime = calculateTotalSeconds();
+        updateDisplay(remaining);
+      }
+
+      // Zwischen Tag- und Nachtmodus umschalten
+      function toggleTheme() {
+        body.classList.toggle('night-mode');
+      }
+
+      // Sound ein-/ausschalten
+      function toggleSound() {
+        soundEnabled = soundToggle.checked;
+      }
+
+      // Event-Listener
+      hourglassContainer.addEventListener('click', flipHourglass);
+      
+      startButton.addEventListener('click', () => {
+        if (isTimerRunning) {
+          pauseTimer();
+        } else {
+          startTimer();
+        }
       });
 
-      init3D();
-    </script>
-  </body>
+      resetButton.addEventListener('click', resetTimer);
+      themeToggle.addEventListener('click', toggleTheme);
+      soundToggle.addEventListener('change', toggleSound);
+
+      // Event-Listener für die Eingabefelder
+      [hoursInput, minutesInput, secondsInput].forEach(input => {
+        input.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            resetTimer();
+            startTimer();
+          }
+        });
+        
+        // Einschränkung der Eingabewerte
+        input.addEventListener('input', () => {
+          if (input.value < 0) {
+            input.value = 0;
+          } else if (input === hoursInput && input.value > 23) {
+            input.value = 23;
+          } else if ((input === minutesInput || input === secondsInput) && input.value > 59) {
+            input.value = 59;
+          }
+          
+          updateDisplay(calculateTotalSeconds());
+        });
+      });
+
+      // Tastatursteuerung
+      document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+          e.preventDefault();
+          if (isTimerRunning) {
+            pauseTimer();
+          } else {
+            startTimer();
+          }
+        } else if (e.code === 'KeyR') {
+          resetTimer();
+        } else if (e.code === 'KeyT') {
+          toggleTheme();
+        } else if (e.code === 'KeyF') {
+          flipHourglass();
+        }
+      });
+
+      // Initialisierung
+      createParticles();
+      updateDisplay(calculateTotalSeconds());
+    })();
+  </script>
+</body>
 </html>
