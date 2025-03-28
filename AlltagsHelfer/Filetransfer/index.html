@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Datei-Transfer</title>
-    <!-- Bisherige Styling-Einstellungen bleiben unverändert -->
+    <style>
+        /* Bisheriges Styling bleibt unverändert */
+    </style>
 </head>
 <body>
     <!-- Bisheriger HTML-Inhalt bleibt gleich -->
@@ -50,19 +52,17 @@
                     let response = JSON.parse(xhr.responseText);
                     let downloadURL = response.url;
 
-                    // ✅ Link anzeigen
+                    // Link anzeigen
                     document.getElementById("progressContainer").style.display = "none";
                     document.getElementById("linkBox").style.display = "block";
-                    document.getElementById("downloadLink").value = downloadURL;
-
-                    // Änderung: Erweiterung der Download-Logik
-                    document.getElementById("downloadLink").addEventListener("click", function() {
-                        // Erstelle einen temporären Link, der den Download direkt startet
-                        let link = document.createElement("a");
-                        link.href = downloadURL;
-                        link.setAttribute("download", ""); // Erzwingt den Download
-                        link.click(); // Startet den Download
-                    });
+                    
+                    // Direkter Download-Link
+                    let downloadLink = document.getElementById("downloadLink");
+                    downloadLink.value = downloadURL;
+                    downloadLink.onclick = function() {
+                        // Trigger direkter Download
+                        window.location.href = downloadURL;
+                    };
                 }
             };
 
@@ -72,6 +72,11 @@
         // Bisheriger Copy-Button-Code bleibt unverändert
     </script>
 
-    <!-- Bisheriger Footer bleibt unverändert -->
+    <footer>
+        <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
+        <p>
+            <a href="https://raffaelbauer.github.io/Datenschutzerklaerung/">Datenschutzbestimmungen</a>
+        </p>
+    </footer>
 </body>
 </html>
