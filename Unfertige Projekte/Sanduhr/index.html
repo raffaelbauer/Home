@@ -6,78 +6,144 @@
     <title>3D Sanduhr Timer</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
       body {
+        min-height: 100vh;
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
-        height: 100vh;
-        background-color: #f0f0f0;
-        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #d4a373, #ffe8d6);
+        font-family: 'Arial', sans-serif;
+        overflow-x: hidden;
       }
+
+      h1 {
+        margin-top: 30px;
+        font-size: 2em;
+        color: #5e412f;
+        text-align: center;
+      }
+
+      #sanduhr-container {
+        margin: 20px auto;
+        width: 90%;
+        max-width: 500px;
+        height: auto;
+      }
+
       canvas {
-        display: block;
+        width: 100% !important;
+        height: auto !important;
       }
+
       .controls {
-        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 30px;
+        width: 100%;
+        padding: 0 20px;
       }
-      .timer-display {
-        font-size: 24px;
-        margin-top: 10px;
+
+      input[type="number"] {
+        padding: 10px;
+        font-size: 18px;
+        width: 100%;
+        max-width: 250px;
+        border: 2px solid #5e412f;
+        border-radius: 5px;
       }
+
       button {
-        padding: 10px 15px;
-        font-size: 16px;
+        padding: 12px 20px;
+        font-size: 18px;
+        background-color: #5e412f;
+        color: white;
+        border: none;
+        border-radius: 5px;
         cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #7a5739;
+      }
+
+      .timer-display {
+        font-size: 28px;
+        font-weight: bold;
+        color: #5e412f;
+      }
+
+      footer {
+        text-align: center;
+        margin-top: auto;
+        padding: 20px;
+        font-weight: bold;
+        color: white;
+      }
+
+      footer a {
+        color: white;
+        text-decoration: underline;
       }
     </style>
   </head>
   <body>
     <h1>3D Sanduhr Timer</h1>
-    <input type="number" id="timeInput" placeholder="Zeit in Sekunden" min="1" />
-    <button onclick="startTimer()">Start</button>
-    <div class="timer-display" id="timerDisplay">00:00</div>
+    <div class="controls">
+      <input type="number" id="timeInput" placeholder="Zeit in Sekunden" min="1" />
+      <button onclick="startTimer()">Timer starten</button>
+      <div class="timer-display" id="timerDisplay">00:00</div>
+    </div>
     <div id="sanduhr-container"></div>
     <footer>
       <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
       <p>
-        <a href="https://raffaelbauer.github.io/Datenschutzerklaerung/">
-          Datenschutzbestimmungen</a>
+        <a href="https://raffaelbauer.ch/Datenschutz/">Datenschutzbestimmungen</a>
       </p>
     </footer>
     <script>
       let scene, camera, renderer, topSand, bottomSand, fallingSandParticles, hourglassFrame;
+      let countdown, maxTime;
 
       function init3D() {
         scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(500, 500);
-        document.getElementById("sanduhr-container").appendChild(renderer.domElement);
+        camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000); // Seitenverhältnis wird später angepasst
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        const container = document.getElementById("sanduhr-container");
+        const size = container.clientWidth;
+        renderer.setSize(size, size);
+        container.appendChild(renderer.domElement);
 
-        // Sanduhr-Rahmen
-        const frameGeometry = new THREE.CylinderGeometry(1.5, 1.5, 6, 32);
-        const frameMaterial = new THREE.MeshStandardMaterial({
-          color: 0x8B4513,
-          metalness: 0.3,
-          roughness: 0.6,
-        });
-        hourglassFrame = new THREE.Mesh(frameGeometry, frameMaterial);
+        // Rahmen
+        const frameMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513, metalness: 0.3, roughness: 0.6 });
+        hourglassFrame = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 6, 32), frameMaterial);
         scene.add(hourglassFrame);
 
-        // Oberer Sand
+        // Sand
         const sandMaterial = new THREE.MeshStandardMaterial({ color: 0xFFD700 });
-        const topSandGeometry = new THREE.ConeGeometry(1.2, 2, 32);
-        topSand = new THREE.Mesh(topSandGeometry, sandMaterial);
+        topSand = new THREE.Mesh(new THREE.ConeGeometry(1.2, 2, 32), sandMaterial);
         topSand.position.y = 2;
         scene.add(topSand);
 
-        // Fallender Sand als Partikel
+        bottomSand = new THREE.Mesh(new THREE.ConeGeometry(1.2, 2, 32), sandMaterial);
+        bottomSand.position.y = -2;
+        bottomSand.rotation.x = Math.PI;
+        scene.add(bottomSand);
+
+        // Partikel
         const particleGeometry = new THREE.BufferGeometry();
         const positions = new Float32Array(300);
         for (let i = 0; i < positions.length; i += 3) {
           positions[i] = (Math.random() - 0.5) * 0.2;
-          positions[i + 1] = Math.random() * 2 - 1;
+          positions[i + 1] = Math.random();
           positions[i + 2] = (Math.random() - 0.5) * 0.2;
         }
         particleGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
@@ -86,14 +152,6 @@
         fallingSandParticles.position.y = 1;
         scene.add(fallingSandParticles);
 
-        // Unterer Sand
-        const bottomSandGeometry = new THREE.ConeGeometry(1.2, 2, 32);
-        bottomSand = new THREE.Mesh(bottomSandGeometry, sandMaterial);
-        bottomSand.position.y = -2;
-        bottomSand.rotation.x = Math.PI;
-        scene.add(bottomSand);
-
-        // Licht
         const light = new THREE.PointLight(0xffffff, 1.2);
         light.position.set(5, 10, 10);
         scene.add(light);
@@ -108,24 +166,30 @@
       }
 
       function startTimer() {
-        let seconds = parseInt(document.getElementById("timeInput").value);
+        const input = document.getElementById("timeInput");
+        let seconds = parseInt(input.value);
         if (isNaN(seconds) || seconds <= 0) {
           alert("Bitte eine gültige Zeit eingeben!");
           return;
         }
+
+        maxTime = seconds;
         const timerDisplay = document.getElementById("timerDisplay");
-        const countdown = setInterval(() => {
+        if (countdown) clearInterval(countdown);
+
+        topSand.scale.y = 1;
+        bottomSand.scale.y = 0;
+
+        countdown = setInterval(() => {
           if (seconds > 0) {
             const minutes = Math.floor(seconds / 60);
             const secs = seconds % 60;
-            timerDisplay.innerText = `${minutes.toString().padStart(2, "0")}:${secs
-              .toString()
-              .padStart(2, "0")}`;
+            timerDisplay.innerText = `${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
             seconds--;
 
-            // Sand Animation
-            topSand.scale.y = Math.max(0, 1 - seconds / 60);
-            bottomSand.scale.y = Math.min(1, seconds / 60);
+            const progress = 1 - seconds / maxTime;
+            topSand.scale.y = Math.max(0.01, 1 - progress);
+            bottomSand.scale.y = Math.min(1, progress);
             fallingSandParticles.position.y -= 0.03;
           } else {
             clearInterval(countdown);
@@ -134,6 +198,14 @@
           }
         }, 1000);
       }
+
+      window.addEventListener("resize", () => {
+        const container = document.getElementById("sanduhr-container");
+        const size = container.clientWidth;
+        renderer.setSize(size, size);
+        camera.aspect = 1;
+        camera.updateProjectionMatrix();
+      });
 
       init3D();
     </script>
