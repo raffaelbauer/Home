@@ -1,148 +1,709 @@
 <!DOCTYPE HTML>
 <html lang="de">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
-  <title>Online virtueller Würfel: 7 Würfel mit 9 Seiten</title>
-  <meta name="description" content="Virtueller online Würfel" />
-  <meta name="keywords" content="online, virtuel, Würfel, Wuerfel, 1d6, ergebnisse" />
-  <meta name="theme-color" content="#e6fddb">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Würfel – Schnell und einfach</title>
+  <meta name="description" content="Virtueller Würfel zum Online-Würfeln. Einfach, schnell und visuell – für Spiele, Entscheidungen oder Zufallsergebnisse mit beliebig vielen Seiten.">
+  <meta name="keywords" content="Online Würfel, virtueller Würfel, Würfeln, Zufall, 3D-Würfel, D6, D20, D100, unendliche Seiten, D&D">
+  <meta name="theme-color" content="#4285F4">
+  <meta property="og:title" content="Online Würfel – Schnell & visuell">
+  <meta property="og:description" content="Würfle online mit beliebig vielen Seiten, von 2 bis unendlich. Einfach und interaktiv."
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://raffaelbauer.ch">
+  <meta property="og:image" content="https://raffaelbauer.ch/assets/wuerfel-preview.png">
+
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-    table.settings { margin: auto; margin-bottom: 20px; }
-    table.settings td { padding: 5px; }
-    /* Würfel im Karten-Stil (für Seiten != 6) */
-    .dice-card {
-      display: inline-block; width: 60px; height: 60px; margin: 10px;
-      border: 2px solid #000; line-height: 60px; font-size: 24px; font-weight: bold;
-      color: #fff; background: linear-gradient(45deg, #ff9999, #ffcc99);
-      animation: flipCard 1s ease-out;
+    * {
+      box-sizing: border-box;
     }
-    @keyframes flipCard {
-      from { transform: rotateY(0deg); opacity: 0; }
-      to { transform: rotateY(360deg); opacity: 1; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      background: linear-gradient(135deg, #f5f5f5, #e8f0fe, #c6dafc);
+      color: #202124;
+      height: 100%;
+      overflow-x: hidden;
     }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 400;
+      color: #4285F4;
+      margin-bottom: 20px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 30px;
+      width: 100%;
+    }
+
+    .control-group {
+      background: white;
+      border-radius: 24px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    }
+
+    label {
+      margin-right: 8px;
+      font-size: 14px;
+      color: #5f6368;
+    }
+
+    input, select {
+      border: none;
+      font-size: 16px;
+      text-align: center;
+      width: 60px;
+      color: #202124;
+      -moz-appearance: textfield;
+      outline: none;
+    }
+
+    input::-webkit-inner-spin-button,
+    input::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .roll-button {
+      background-color: #4285F4;
+      color: white;
+      padding: 10px 24px;
+      border: none;
+      border-radius: 24px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .roll-button:hover {
+      background-color: #1a73e8;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    }
+
+    .roll-button:active {
+      background-color: #1967d2;
+      transform: scale(0.98);
+    }
+
+    .dice-area {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin: 20px 0;
+      min-height: 180px;
+      perspective: 1000px;
+    }
+
     /* 3D-Würfel für 6 Seiten */
-    .scene { width: 60px; height: 60px; perspective: 300px; display: inline-block; margin: 10px; }
+    .dice-container {
+      width: 80px;
+      height: 80px;
+      margin: 10px;
+      perspective: 1000px;
+    }
+
     .dice-cube {
-      width: 60px; height: 60px; position: relative; transform-style: preserve-3d;
-      animation: rollCube 1s ease-out;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      cursor: pointer;
     }
-    .dice-cube div {
-      position: absolute; width: 60px; height: 60px; border: 2px solid #000;
-      line-height: 60px; font-size: 24px; font-weight: bold; color: #fff;
+
+    .cube-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: white;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 500;
+      font-size: 32px;
+      backface-visibility: hidden;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+      color: #202124;
     }
-    .face1 { background: #ff9999; transform: rotateY(0deg) translateZ(30px); }
-    .face2 { background: #99ff99; transform: rotateY(90deg) translateZ(30px); }
-    .face3 { background: #9999ff; transform: rotateX(90deg) translateZ(30px); }
-    .face4 { background: #ffff99; transform: rotateX(-90deg) translateZ(30px); }
-    .face5 { background: #ff99ff; transform: rotateY(-90deg) translateZ(30px); }
-    .face6 { background: #99ffff; transform: rotateY(180deg) translateZ(30px); }
-    @keyframes rollCube {
-      from { transform: rotateX(0deg) rotateY(0deg); }
-      to { transform: rotateX(720deg) rotateY(720deg); }
+
+    /* Standard-Würfel (für andere Seiten) */
+    .standard-dice {
+      width: 80px;
+      height: 80px;
+      background: white;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: 500;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      color: #202124;
+    }
+
+    .standard-dice::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: #4285F4;
+      opacity: 0.8;
+    }
+
+    /* Positionierung der Würfelflächen */
+    .cube-face-1 { transform: rotateY(0deg) translateZ(40px); }
+    .cube-face-2 { transform: rotateY(90deg) translateZ(40px); }
+    .cube-face-3 { transform: rotateX(90deg) translateZ(40px); }
+    .cube-face-4 { transform: rotateX(-90deg) translateZ(40px); }
+    .cube-face-5 { transform: rotateY(-90deg) translateZ(40px); }
+    .cube-face-6 { transform: rotateY(180deg) translateZ(40px); }
+
+    /* Subtile Akzente für die Würfelkanten */
+    .cube-face::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: #4285F4;
+      opacity: 0.8;
+      border-radius: 10px 10px 0 0;
+    }
+
+    /* Animation für Würfelwurf mit realistischen Physik-Eigenschaften */
+    .dice-animation {
+      animation: diceThrow 1.5s ease-out forwards;
+    }
+
+    @keyframes diceThrow {
+      0% {
+        transform: translateY(-100px) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+      }
+      20% {
+        transform: translateY(50px) rotateX(180deg) rotateY(90deg) rotateZ(180deg);
+      }
+      40% {
+        transform: translateY(-30px) rotateX(360deg) rotateY(180deg) rotateZ(90deg);
+      }
+      60% {
+        transform: translateY(15px) rotateX(540deg) rotateY(270deg) rotateZ(180deg);
+      }
+      80% {
+        transform: translateY(-5px) rotateX(720deg) rotateY(360deg) rotateZ(270deg);
+      }
+      100% {
+        transform: translateY(0) rotateX(720deg) rotateY(360deg) rotateZ(360deg);
+      }
+    }
+
+    /* Animation für 2D-Würfel */
+    .standard-animation {
+      animation: standardDiceThrow 1.2s ease-out forwards;
+    }
+
+    @keyframes standardDiceThrow {
+      0% {
+        transform: translateY(-100px) rotateZ(0deg) scale(0.8);
+        opacity: 0.5;
+      }
+      20% {
+        transform: translateY(30px) rotateZ(180deg) scale(1.1);
+      }
+      40% {
+        transform: translateY(-15px) rotateZ(270deg) scale(0.9);
+      }
+      60% {
+        transform: translateY(8px) rotateZ(330deg) scale(1.05);
+      }
+      80% {
+        transform: translateY(-3px) rotateZ(350deg) scale(0.98);
+      }
+      100% {
+        transform: translateY(0) rotateZ(360deg) scale(1);
+        opacity: 1;
+      }
+    }
+
+    .result-container {
+      font-size: 24px;
+      font-weight: 500;
+      margin: 15px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sum {
+      font-size: 40px;
+      color: #4285F4;
+      margin-left: 8px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    /* Animation für die Summe */
+    .sum-animation {
+      animation: sumUpdate 0.5s ease-out;
+    }
+
+    @keyframes sumUpdate {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    footer {
+      background: transparent;
+      padding: 20px;
+      text-align: center;
+      font-weight: bold;
+      color: white;
+      margin-top: 30px;
+    }
+
+    footer p {
+      margin: 5px 0;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Würfelpunkte für echte Würfel */
+    .dot {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #202124;
+      border-radius: 50%;
+    }
+
+    /* Positionierung der Punkte für jede Würfelseite */
+    /* Für 1 */
+    .cube-face-1 .dots .dot:nth-child(1) {
+      transform: translate(0, 0);
+    }
+
+    /* Für 2 */
+    .cube-face-2 .dots .dot:nth-child(1) {
+      transform: translate(-20px, -20px);
+    }
+    .cube-face-2 .dots .dot:nth-child(2) {
+      transform: translate(20px, 20px);
+    }
+
+    /* Für 3 */
+    .cube-face-3 .dots .dot:nth-child(1) {
+      transform: translate(-20px, -20px);
+    }
+    .cube-face-3 .dots .dot:nth-child(2) {
+      transform: translate(0, 0);
+    }
+    .cube-face-3 .dots .dot:nth-child(3) {
+      transform: translate(20px, 20px);
+    }
+
+    /* Für 4 */
+    .cube-face-4 .dots .dot:nth-child(1) {
+      transform: translate(-20px, -20px);
+    }
+    .cube-face-4 .dots .dot:nth-child(2) {
+      transform: translate(20px, -20px);
+    }
+    .cube-face-4 .dots .dot:nth-child(3) {
+      transform: translate(-20px, 20px);
+    }
+    .cube-face-4 .dots .dot:nth-child(4) {
+      transform: translate(20px, 20px);
+    }
+
+    /* Für 5 */
+    .cube-face-5 .dots .dot:nth-child(1) {
+      transform: translate(-20px, -20px);
+    }
+    .cube-face-5 .dots .dot:nth-child(2) {
+      transform: translate(20px, -20px);
+    }
+    .cube-face-5 .dots .dot:nth-child(3) {
+      transform: translate(0, 0);
+    }
+    .cube-face-5 .dots .dot:nth-child(4) {
+      transform: translate(-20px, 20px);
+    }
+    .cube-face-5 .dots .dot:nth-child(5) {
+      transform: translate(20px, 20px);
+    }
+
+    /* Für 6 */
+    .cube-face-6 .dots .dot:nth-child(1) {
+      transform: translate(-20px, -20px);
+    }
+    .cube-face-6 .dots .dot:nth-child(2) {
+      transform: translate(20px, -20px);
+    }
+    .cube-face-6 .dots .dot:nth-child(3) {
+      transform: translate(-20px, 0);
+    }
+    .cube-face-6 .dots .dot:nth-child(4) {
+      transform: translate(20px, 0);
+    }
+    .cube-face-6 .dots .dot:nth-child(5) {
+      transform: translate(-20px, 20px);
+    }
+    .cube-face-6 .dots .dot:nth-child(6) {
+      transform: translate(20px, 20px);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .controls {
+        flex-direction: column;
+      }
+
+      .dice-container, .standard-dice {
+        width: 65px;
+        height: 65px;
+      }
+
+      .standard-dice, .cube-face {
+        font-size: 26px;
+      }
+
+      .cube-face-1 { transform: rotateY(0deg) translateZ(32.5px); }
+      .cube-face-2 { transform: rotateY(90deg) translateZ(32.5px); }
+      .cube-face-3 { transform: rotateX(90deg) translateZ(32.5px); }
+      .cube-face-4 { transform: rotateX(-90deg) translateZ(32.5px); }
+      .cube-face-5 { transform: rotateY(-90deg) translateZ(32.5px); }
+      .cube-face-6 { transform: rotateY(180deg) translateZ(32.5px); }
+
+      .sum {
+        font-size: 32px;
+      }
+      
+      .dot {
+        width: 8px;
+        height: 8px;
+      }
     }
   </style>
 </head>
 <body>
-  <div align="center">
-    <form id="diceForm" onsubmit="event.preventDefault(); rollDice();">
-      <h1>Würfel online!</h1>
-      <table class="settings">
-        <tr>
-          <td>Anzahl der Seiten:</td>
-          <td><input type="number" min="2" style="width:45px;text-align:center;" id="sides" value="9"></td>
-          <td>(Minimal 2. Bis zu 9 Seiten mit Punkten.)</td>
-        </tr>
-        <tr>
-          <td>Anzahl der Würfel:</td>
-          <td>
-            <select id="diceCount" style="width:45px;">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7" selected>7</option>
-            </select>
-          </td>
-          <td><input type="button" value="Werfen" onclick="rollDice()"></td>
-        </tr>
-      </table>
-    </form>
-    <div id="diceArea"></div>
-    <br>
-    Wurfelergebnisse: <span id="sum">0</span>
-    <br><br>
-    <button onclick="rollDice()">Wieder werfen!</button>
-  </div>
-  
+  <main>
+    <h1>Online Würfel</h1>
+    <div class="controls">
+      <div class="control-group">
+        <label for="sides">Seiten:</label>
+        <input type="number" id="sides" min="2" value="6">
+      </div>
+      <div class="control-group">
+        <label for="diceCount">Anzahl:</label>
+        <select id="diceCount">
+          <option value="1">1</option>
+          <option value="2" selected>2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+      </div>
+      <button class="roll-button" onclick="rollDice()">Würfeln</button>
+    </div>
+
+    <div id="diceArea" class="dice-area"></div>
+
+    <div class="result-container">
+      <span>Ergebnis:</span>
+      <span id="sum" class="sum">0</span>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
+    <p>
+      <a href="https://raffaelbauer.ch/Datenschutz/">Datenschutzbestimmungen</a>
+    </p>
+  </footer>
+
   <script>
+    // Globale Variable für die aktuelle Gesamtsumme
+    let currentTotal = 0;
+    
+    // Einstellungsoption: Verwende Punkte statt Zahlen für 6-seitige Würfel
+    const useDots = true;
+    
+    // Funktion zum Würfeln
     function rollDice() {
       const sides = parseInt(document.getElementById('sides').value);
       const diceCount = parseInt(document.getElementById('diceCount').value);
       const diceArea = document.getElementById('diceArea');
-      diceArea.innerHTML = "";
-      let total = 0;
       
-      for(let i = 0; i < diceCount; i++) {
-        const result = Math.floor(Math.random() * sides) + 1;
-        total += result;
-        if(sides === 6) {
-          // 3D-Würfel mit Animation
-          const scene = document.createElement('div');
-          scene.className = 'scene';
-          const cube = document.createElement('div');
-          cube.className = 'dice-cube';
-          // Erstelle die 6 Würfelseiten
-          const faces = [
-            { class: 'face1', value: 1 },
-            { class: 'face2', value: 2 },
-            { class: 'face3', value: 3 },
-            { class: 'face4', value: 4 },
-            { class: 'face5', value: 5 },
-            { class: 'face6', value: 6 }
-          ];
-          faces.forEach(face => {
-            const faceDiv = document.createElement('div');
-            faceDiv.className = face.class;
-            faceDiv.textContent = face.value;
-            cube.appendChild(faceDiv);
-          });
-          // Nach der Animation wird der Würfel korrekt ausgerichtet
-          setTimeout(() => {
-            let finalRotation = '';
-            switch(result) {
-              case 1: finalRotation = 'rotateX(0deg) rotateY(0deg)'; break;
-              case 2: finalRotation = 'rotateX(0deg) rotateY(-90deg)'; break;
-              case 3: finalRotation = 'rotateX(90deg) rotateY(0deg)'; break;
-              case 4: finalRotation = 'rotateX(-90deg) rotateY(0deg)'; break;
-              case 5: finalRotation = 'rotateX(0deg) rotateY(90deg)'; break;
-              case 6: finalRotation = 'rotateX(0deg) rotateY(180deg)'; break;
-              default: finalRotation = 'rotateX(0deg) rotateY(0deg)';
-            }
-            cube.style.animation = "none";
-            cube.style.transform = finalRotation;
-          }, 1000);
-          scene.appendChild(cube);
-          diceArea.appendChild(scene);
-        } else {
-          // Würfel als Karten-Stil mit Animation für andere Seitenzahlen
-          const card = document.createElement('div');
-          card.className = 'dice-card';
-          card.textContent = result;
-          diceArea.appendChild(card);
-        }
+      // Stelle sicher, dass die Anzahl der Seiten mindestens 2 ist
+      const validSides = Math.max(sides, 2);
+      if (sides !== validSides) {
+        document.getElementById('sides').value = validSides;
       }
-      document.getElementById('sum').textContent = total;
+      
+      // Zurücksetzen der Summe
+      currentTotal = 0;
+      
+      // Leeren des Würfelbereichs mit sanfter Animation
+      const oldDice = Array.from(diceArea.children);
+      oldDice.forEach(dice => {
+        dice.style.transition = 'transform 0.3s, opacity 0.3s';
+        dice.style.transform = 'scale(0.8)';
+        dice.style.opacity = '0';
+      });
+      
+      setTimeout(() => {
+        diceArea.innerHTML = "";
+        
+        // Erstelle und würfle alle Würfel
+        const results = [];
+        
+        // Generiere alle Ergebnisse zuerst
+        for (let i = 0; i < diceCount; i++) {
+          const result = Math.floor(Math.random() * validSides) + 1;
+          results.push(result);
+          currentTotal += result;
+        }
+        
+        // Würfel mit Verzögerung hinzufügen für sequentiellen Effekt
+        for (let i = 0; i < diceCount; i++) {
+          setTimeout(() => {
+            if (validSides === 6) {
+              // 3D-Würfel für 6 Seiten
+              createCubeDice(results[i], i, diceArea);
+            } else {
+              // Standard-Würfel für andere Seitenzahlen
+              createStandardDice(results[i], i, validSides, diceArea);
+            }
+            
+            // Aktualisiere die Summe nach dem letzten Würfel
+            if (i === diceCount - 1) {
+              setTimeout(() => {
+                updateSum();
+              }, 800); // Warte, bis die Würfel-Animation abgeschlossen ist
+            }
+          }, i * 150); // Verzögerung zwischen den Würfeln
+        }
+      }, oldDice.length > 0 ? 300 : 0);
     }
+    
+    // Funktion zum Erstellen eines Standard-Würfels (nicht 6-seitig)
+    function createStandardDice(result, index, sides, container) {
+      const dice = document.createElement('div');
+      dice.className = 'standard-dice';
+      
+      // Füge die Animation mit Verzögerung hinzu
+      setTimeout(() => {
+        dice.classList.add('standard-animation');
+        
+        // Nach der Animation Wert setzen
+        setTimeout(() => {
+          dice.textContent = result;
+        }, 600); // Zeige Ergebnis etwa in der Mitte der Animation
+      }, 50);
+      
+      // Event-Listener für das erneute Würfeln dieses einzelnen Würfels
+      dice.addEventListener('click', function() {
+        if (this.classList.contains('standard-animation')) return; // Verhindere Klicks während der Animation
+        
+        // Aktuelle Summe reduzieren
+        currentTotal -= result;
+        
+        // Entferne alle Klassen für saubere Animation
+        this.className = 'standard-dice';
+        this.textContent = '';
+        
+        // Neues Ergebnis würfeln
+        const newResult = Math.floor(Math.random() * sides) + 1;
+        
+        // Animation hinzufügen
+        setTimeout(() => {
+          this.classList.add('standard-animation');
+          
+          // Nach der Animation Wert setzen
+          setTimeout(() => {
+            this.textContent = newResult;
+            currentTotal += newResult;
+            updateSum();
+          }, 600);
+        }, 50);
+      });
+      
+      container.appendChild(dice);
+    }
+    
+    // Funktion zum Erstellen eines 3D-Würfels (6-seitig)
+    function createCubeDice(result, index, container) {
+      const diceContainer = document.createElement('div');
+      diceContainer.className = 'dice-container';
+      
+      const cube = document.createElement('div');
+      cube.className = 'dice-cube';
+      
+      // Erstellen aller 6 Würfelflächen
+      for (let i = 1; i <= 6; i++) {
+        const face = document.createElement('div');
+        face.className = `cube-face cube-face-${i}`;
+        
+        if (useDots) {
+          // Erstelle Punkte statt Zahlen
+          const dotsContainer = document.createElement('div');
+          dotsContainer.className = 'dots';
+          
+          // Füge entsprechende Anzahl von Punkten hinzu
+          for (let j = 0; j < i; j++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot';
+            dotsContainer.appendChild(dot);
+          }
+          
+          face.appendChild(dotsContainer);
+        } else {
+          // Verwende Zahlen
+          face.textContent = i;
+        }
+        
+        cube.appendChild(face);
+      }
+      
+      // Animation starten
+      setTimeout(() => {
+        cube.classList.add('dice-animation');
+        
+        // Nach der Animation die korrekte Seite zeigen
+        setTimeout(() => {
+          // Entferne die Animation-Klasse
+          cube.classList.remove('dice-animation');
+          
+          // Setze die finale Rotation basierend auf dem Ergebnis
+          let finalRotation = '';
+          switch(result) {
+            case 1: finalRotation = 'rotateX(0deg) rotateY(0deg)'; break;
+            case 2: finalRotation = 'rotateX(0deg) rotateY(90deg)'; break;
+            case 3: finalRotation = 'rotateX(-90deg) rotateY(0deg)'; break;
+            case 4: finalRotation = 'rotateX(90deg) rotateY(0deg)'; break;
+            case 5: finalRotation = 'rotateX(0deg) rotateY(-90deg)'; break;
+            case 6: finalRotation = 'rotateX(0deg) rotateY(180deg)'; break;
+          }
+          cube.style.transform = finalRotation;
+        }, 1500);
+      }, 50);
+      
+      // Event-Listener für das erneute Würfeln dieses einzelnen Würfels
+      cube.addEventListener('click', function() {
+        if (this.classList.contains('dice-animation')) return; // Verhindere Klicks während der Animation
+        
+        // Aktuelle Summe reduzieren
+        currentTotal -= result;
+        
+        // Entferne den aktuellen Rotationsstil
+        this.style.transform = '';
+        
+        // Neues zufälliges Ergebnis
+        const newResult = Math.floor(Math.random() * 6) + 1;
+        
+        // Animation starten
+        this.classList.add('dice-animation');
+        
+        // Nach der Animation die korrekte Seite zeigen
+        setTimeout(() => {
+          // Entferne die Animation-Klasse
+          this.classList.remove('dice-animation');
+          
+          // Setze die finale Rotation basierend auf dem Ergebnis
+          let finalRotation = '';
+          switch(newResult) {
+            case 1: finalRotation = 'rotateX(0deg) rotateY(0deg)'; break;
+            case 2: finalRotation = 'rotateX(0deg) rotateY(90deg)'; break;
+            case 3: finalRotation = 'rotateX(-90deg) rotateY(0deg)'; break;
+            case 4: finalRotation = 'rotateX(90deg) rotateY(0deg)'; break;
+            case 5: finalRotation = 'rotateX(0deg) rotateY(-90deg)'; break;
+            case 6: finalRotation = 'rotateX(0deg) rotateY(180deg)'; break;
+          }
+          this.style.transform = finalRotation;
+          
+          // Aktualisiere die Summe
+          currentTotal += newResult;
+          updateSum();
+        }, 1500);
+      });
+      
+      diceContainer.appendChild(cube);
+      container.appendChild(diceContainer);
+    }
+    
+    // Funktion zum Aktualisieren der Summenanzeige mit Animation
+    function updateSum() {
+      const sumElement = document.getElementById('sum');
+      
+      // Entferne vorherige Animation, falls vorhanden
+      sumElement.classList.remove('sum-animation');
+      
+      // Triggere Reflow
+      void sumElement.offsetWidth;
+      
+      // Füge Animation hinzu und aktualisiere Wert
+      sumElement.classList.add('sum-animation');
+      sumElement.textContent = currentTotal;
+    }
+    
+    // Automatisch beim Laden der Seite würfeln
+    window.onload = function() {
+      setTimeout(rollDice, 300);
+    };
+    
+    // Event-Listener für Tastendruck (Leertaste zum Würfeln)
+    document.addEventListener('keydown', function(event) {
+      if (event.code === 'Space') {
+        event.preventDefault();
+        rollDice();
+      }
+    });
   </script>
-  <footer>
-    <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
-    <p>
-      <a href="https://raffaelbauer.github.io/Impressum/">Impressum</a> | 
-      <a href="https://raffaelbauer.github.io/Datenschutzbestimmungen/">Datenschutzbestimmungen</a>
-    </p>
-  </footer>
 </body>
+</html>
