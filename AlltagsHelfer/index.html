@@ -4,148 +4,194 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alltagshelfer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
-        }
-        body {
-            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #4facfe, #00f2fe);
             color: #333;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
             min-height: 100vh;
             overflow-x: hidden;
         }
-        header {
+        
+        .container {
             max-width: 850px;
-            background: transparent;
             width: 100%;
-            text-align: center;
-            padding: 30px;
-            margin: 20px auto;
+            margin: 0 auto;
+            padding: 0 20px;
         }
+        
+        header {
+            text-align: center;
+            padding: 40px 0 20px;
+        }
+        
         header h1 {
-            margin: 0;
             font-size: 2.5rem;
             color: #007acc;
+            margin-bottom: 10px;
         }
+        
         header p {
-            margin: 10px 0 0;
             font-size: 1.2rem;
+            line-height: 1.6;
         }
-        section {
-            max-width: 850px;
-            width: 100%;
-            padding: 0 30px;
-            margin: 20px auto;
+        
+        main {
+            flex: 1;
+            padding: 20px 0 40px;
         }
+        
+        .website-list {
+            display: grid;
+            gap: 30px;
+        }
+        
         .website {
-            background: transparent;
-            padding: 20px;
-            margin: 20px 0;
-            transition: transform 0.3s ease-in-out;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+        
         .website:hover {
             transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         }
+        
         .website h2 {
-            margin: 0 0 10px;
             font-size: 1.8rem;
             color: #007acc;
+            margin-bottom: 15px;
             border-bottom: 2px solid #007acc;
-            padding-bottom: 5px;
+            padding-bottom: 8px;
         }
+        
         .website p {
             font-size: 1rem;
             line-height: 1.6;
+            margin-bottom: 20px;
         }
+        
         .website a {
             display: inline-block;
-            margin-top: 10px;
             text-decoration: none;
             background: #007acc;
             color: #fff;
-            padding: 10px 15px;
-            border-radius: 8px;
-            transition: background 0.3s ease;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background 0.3s ease, transform 0.2s ease;
         }
+        
         .website a:hover {
             background: #005ea6;
+            transform: translateY(-2px);
         }
+        
         footer {
-            width: 100%;
             text-align: center;
-            padding: 10px;
+            padding: 20px 0;
             margin-top: auto;
             color: #fff;
             font-weight: bold;
-            background: transparent;
         }
+        
+        footer p {
+            margin-bottom: 5px;
+        }
+        
         footer a {
             color: #fff;
             text-decoration: none;
         }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
         @media (max-width: 600px) {
             header {
-                padding: 20px;
-                margin: 10px auto;
+                padding: 30px 0 15px;
             }
+            
             header h1 {
                 font-size: 2rem;
             }
+            
             header p {
                 font-size: 1rem;
             }
-            section {
-                padding: 0 15px;
-                margin: 10px auto;
-            }
+            
             .website {
-                padding: 15px;
-                margin: 15px 0;
+                padding: 20px;
             }
+            
             .website h2 {
                 font-size: 1.5rem;
             }
-            .website p {
-                font-size: 0.9rem;
-            }
+            
             .website a {
-                padding: 8px 12px;
-                font-size: 0.9rem;
+                padding: 8px 15px;
+                font-size: 0.95rem;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Alltagshelfer</h1>
-        <p>Hier befindet sich eine Ansammlung von Websites, die Raffael erstellt hat, um euren Alltag zu verbessern.</p>
-    </header>
-    <section>
-        <div class="website">
-            <h2>Rezeptgenerator</h2>
-            <p>Gebt einfach den Titel des Rezepts, die Menge der Zutaten und die Zubereitung ein. Optional könnt ihr auch ein Bild hochladen – anschließend erstellt die Seite automatisch ein PDF mit einem leckeren Rezept.</p>
-            <a href="https://raffaelbauer.ch/AlltagsHelfer/Rezeptgenerator/">Website besuchen</a>
-        </div>
-        <div class="website">
-            <h2>Countdown</h2>
-            <p>Gebt ein Datum ein und erhaltet einen einzigartigen Link, den ihr euren Freunden, Verwandten und Bekannten schicken könnt. Beim Anklicken zeigt die Seite exakt an, wie lange es noch dauert, bis das gewünschte Datum erreicht ist.</p>
-            <a href="https://raffaelbauer.ch/AlltagsHelfer/Countdown/">Website besuchen</a>
-        </div>
-        <div class="website">
-            <h2>HTML Viewer</h2>
-            <p>Fügt euren programmierten HTML-Code ein und seht ihn in Echtzeit dargestellt. Ihr könnt interaktiv damit umgehen, Links anklicken und vieles mehr – ideal zum Programmierenlernen und Aktualisieren eurer eigenen Webseite.</p>
-            <a href="https://raffaelbauer.ch/AlltagsHelfer/HTML-Viewer/">Website besuchen</a>
-        </div>
-        <div class="website">
-            <h2>Filetransfer</h2>
-            <p>Einfach und schnell Dateien zwischen Geräten übertragen, ohne komplizierte Einrichtungen oder Anmeldungen. Ideal für den schnellen Austausch von Dokumenten, Bildern und anderen Dateien.</p>
-            <a href="https://raffaelbauer.ch/AlltagsHelfer/Filetransfer/">Website besuchen</a>
-        </div>
-    </section>
+    <div class="container">
+        <header>
+            <h1>Alltagshelfer</h1>
+            <p>Hier befindet sich eine Ansammlung von Websites, die Raffael erstellt hat, um euren Alltag zu verbessern.</p>
+        </header>
+        
+        <main>
+            <div class="website-list">
+                <div class="website">
+                    <h2>Rezeptgenerator</h2>
+                    <p>Gebt einfach den Titel des Rezepts, die Menge der Zutaten und die Zubereitung ein. Optional könnt ihr auch ein Bild hochladen – anschließend erstellt die Seite automatisch ein PDF mit einem leckeren Rezept.</p>
+                    <a href="https://raffaelbauer.ch/AlltagsHelfer/Rezeptgenerator/">Website besuchen</a>
+                </div>
+                
+                <div class="website">
+                    <h2>Countdown</h2>
+                    <p>Gebt ein Datum ein und erhaltet einen einzigartigen Link, den ihr euren Freunden, Verwandten und Bekannten schicken könnt. Beim Anklicken zeigt die Seite exakt an, wie lange es noch dauert, bis das gewünschte Datum erreicht ist.</p>
+                    <a href="https://raffaelbauer.ch/AlltagsHelfer/Countdown/">Website besuchen</a>
+                </div>
+                
+                <div class="website">
+                    <h2>HTML Viewer</h2>
+                    <p>Fügt euren programmierten HTML-Code ein und seht ihn in Echtzeit dargestellt. Ihr könnt interaktiv damit umgehen, Links anklicken und vieles mehr – ideal zum Programmierenlernen und Aktualisieren eurer eigenen Webseite.</p>
+                    <a href="https://raffaelbauer.ch/AlltagsHelfer/HTML-Viewer/">Website besuchen</a>
+                </div>
+                
+                <div class="website">
+                    <h2>Filetransfer</h2>
+                    <p>Einfach und schnell Dateien zwischen Geräten übertragen, ohne komplizierte Einrichtungen oder Anmeldungen. Ideal für den schnellen Austausch von Dokumenten, Bildern und anderen Dateien.</p>
+                    <a href="https://raffaelbauer.ch/AlltagsHelfer/Filetransfer/">Website besuchen</a>
+                </div>
+                
+                <div class="website">
+                    <h2>Würfel</h2>
+                    <p>Ein virtueller Würfel für Brettspiele, Rollenspiele oder andere Anwendungen. Einfach zu bedienen, ohne Installation und immer zur Hand, wenn ihr einen Würfel braucht.</p>
+                    <a href="https://raffaelbauer.ch/AlltagsHelfer/Würfel/">Website besuchen</a>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
+        <p><a href="https://raffaelbauer.ch/Datenschutz/">Datenschutzbestimmungen</a></p>
+    </footer>
+</body>
+</html>
