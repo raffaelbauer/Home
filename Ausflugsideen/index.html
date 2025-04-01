@@ -3,27 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ausflugsideen</title>
+    <title>Ausflugsideen | Raffael Bauer</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         html, body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
             color: #222;
+            min-height: 100vh;
+        }
+        
+        body {
+            background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         header {
             background: #ff6f61;
             color: white;
-            padding: 3rem 2rem;
+            padding: 3rem 1rem;
             text-align: center;
             border-bottom: 5px solid #fff;
             border-radius: 0 0 30px 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         header h1 {
@@ -34,11 +40,14 @@
         }
 
         main {
-            padding: 2rem;
+            padding: 2rem 1rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             flex-grow: 1;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
         nav {
@@ -54,10 +63,13 @@
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1.5rem;
             justify-items: center;
+            width: 100%;
         }
 
         nav ul li {
             width: 100%;
+            display: flex;
+            justify-content: center;
         }
 
         .europa-park {
@@ -67,7 +79,12 @@
             font-weight: bold;
             border: 3px solid #ffeb3b;
             position: relative;
-            padding: 2rem;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 280px;
+            box-sizing: border-box;
+            border-radius: 15px;
+            transition: transform 0.3s ease, background 0.3s ease;
         }
 
         .europa-park::before {
@@ -78,11 +95,12 @@
             transform: translateX(-50%);
             background: #ffd700;
             color: black;
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: bold;
             padding: 5px 15px;
             border-radius: 15px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
         }
 
         .europa-park:hover {
@@ -100,10 +118,11 @@
             background-color: #ff6f61;
             border-radius: 15px;
             transition: transform 0.3s ease, background-color 0.3s ease;
-            padding: 1.5rem;
+            padding: 1.5rem 1rem;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 90%;
-            margin: auto;
+            width: 100%;
+            max-width: 280px;
+            box-sizing: border-box;
         }
 
         nav ul li a:hover {
@@ -115,8 +134,10 @@
             color: white;
             font-weight: bold;
             text-align: center;
-            padding: 2rem;
+            padding: 2rem 1rem;
             margin-top: auto;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         footer a {
@@ -127,6 +148,20 @@
 
         footer a:hover {
             text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            nav ul {
+                grid-template-columns: 1fr;
+            }
+            
+            .europa-park, nav ul li a {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
@@ -145,19 +180,20 @@
                 <li><a href="https://www.tripadvisor.ch/Attraction_Review-g188049-d10020551-Reviews-Basel_Autumn_Fair-Basel.html">Basler Herbstmesse</a></li>
                 <li><a href="https://www.bernaqua.ch">Bernaqua</a></li>
                 <li><a href="https://www.tripadvisor.ch/Attraction_Review-g188049-d2147213-Reviews-Dreilaendereck_Border_Triangle-Basel.html">Dreiländereck Basel</a></li>
+                <li><a href="https://www.erlebnisflugplatz.ch/default.shtml">Erlebnisflugplatz Sitterdorf</a></li>
                 <li><a href="https://eulenzeit.ch/Veranstaltungen/">Eulenwanderung Häggendorf</a></li>
                 <li><a href="https://flyandrace.ch">Fly and Race Simulation</a></li>
                 <li><a href="https://www.sbb.ch/de/freizeit-ferien/ideen/angebot.html/zuege/fonduefahrt-roter-doppelpfeil">Fonduefahrt im Roten Doppelpfeil «Churchill»</a></li>
                 <li><a href="https://www.grimselwelt.ch/bahnen/gelmerbahn/">Gelmerbahn</a></li>
                 <li><a href="https://www.jungfrau.ch/de-ch/grindelwaldfirst/">Grindelwald First</a></li>
+                <li><a href="https://www.tripadvisor.ch/Attraction_Review-g5123304-d2643351-Reviews-Museum_Fur_Musikautomaten-Seewen.html">Museum für Musikautomaten Seewen</a></li>
                 <li><a href="https://www.blausee.ch/de/naturpark/">Naturpark Blausee</a></li>
                 <li><a href="https://pfingstegg.ch">Pfingstegg</a></li>
                 <li><a href="https://www.sbb.ch/de/freizeit-ferien/ideen/angebot.html/tagesausflug/ramseier-erlebniswelt">Ramseier Erlebniswelt</a></li>
                 <li><a href="https://www.salz.ch/de/standorte/besuchen-sie-das-salzbergwerk-bex">Salzwerk Bex</a></li>
+                <li><a href="https://so.pizza">So Pizza</a></li>
                 <li><a href="https://www.technorama.ch">Technorama Winterthur</a></li>
-                <li><a href="https://www.tripadvisor.ch/Attraction_Review-g5123304-d2643351-Reviews-Museum_Fur_Musikautomaten-Seewen.html">Museum für Musikautomaten Seewen</a></li>
                 <li><a href="https://www.tripadvisor.ch/Attraction_Review-g188064-d244427-Reviews-Museum_of_Transport-Lucerne.html">Verkehrshaus Luzern</a></li>
-                <li><a href="https://www.erlebnisflugplatz.ch/default.shtml">Erlebnisflugplatz Sitterdorf</a></li>
             </ul>
         </nav>
     </main>
