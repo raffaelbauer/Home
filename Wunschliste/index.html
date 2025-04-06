@@ -29,6 +29,16 @@
             font-size: 16px;
             font-style: italic;
         }
+        
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 28px;
+            }
+            
+            header p.subtitle {
+                font-size: 14px;
+            }
+        }
         main {
             max-width: 800px;
             margin: 30px auto;
@@ -36,6 +46,74 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (max-width: 600px) {
+            main {
+                margin: 15px 10px;
+                padding: 15px;
+            }
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        @media (max-width: 600px) {
+            .legend {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .legend-item {
+                width: 100%;
+            }
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+        .priority-icon {
+            display: inline-block;
+            margin-right: 5px;
+            font-size: 18px;
+        }
+        .filters {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            background-color: #e3f2fd;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .filter-btn:hover {
+            background-color: #bbdefb;
+        }
+        .filter-btn.active {
+            background-color: #007bff;
+            color: white;
+        }
+        .section-title {
+            margin: 25px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #007bff;
+            color: #007bff;
         }
         ul {
             list-style-type: none;
@@ -48,9 +126,20 @@
             display: flex;
             align-items: center;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
         }
         li:hover {
             background-color: #bbdefb;
+            transform: translateY(-2px);
+        }
+        .priority-high {
+            border-left: 5px solid #ff5252;
+        }
+        .priority-medium {
+            border-left: 5px solid #ffb74d;
+        }
+        .priority-low {
+            border-left: 5px solid #4caf50;
         }
         a.list-item {
             display: flex;
@@ -63,13 +152,63 @@
             font-size: 18px;
             font-weight: bold;
         }
+        
+        @media (max-width: 600px) {
+            a.list-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .item-right {
+                align-self: flex-end;
+            }
+            
+            .price {
+                font-size: 16px;
+            }
+        }
         a.list-item:hover {
             text-decoration: underline;
         }
-        a.list-item span:first-child::before {
-            content: "🎁 ";
+        .item-left {
+            display: flex;
+            align-items: center;
         }
-        button {
+        .item-left::before {
+            content: "🎁 ";
+            margin-right: 8px;
+        }
+        .item-right {
+            display: flex;
+            align-items: center;
+        }
+        .price {
+            margin-left: 10px;
+            white-space: nowrap;
+        }
+        .priority-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            margin-right: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .high-badge {
+            background-color: #ff5252;
+        }
+        .medium-badge {
+            background-color: #ffb74d;
+        }
+        .low-badge {
+            background-color: #4caf50;
+        }
+        button.main-btn {
             display: block;
             background-color: #007bff;
             color: white;
@@ -84,7 +223,7 @@
             text-align: center;
             transition: background-color 0.3s;
         }
-        button:hover {
+        button.main-btn:hover {
             background-color: #0056b3;
         }
         footer {
@@ -110,32 +249,189 @@
     <h1>🎁 Raffaels Wunschliste 🎁</h1>
     <p class="subtitle">
         Die Preise können anders sein als angegeben. Die angegebenen Preise sind so, wie ich das Produkt auf die Liste gesetzt habe.
-        Bitte schenke mir keine Zimmerdekoration, außer wenn sie explizit auf der Wunschliste steht, und denke nicht, dass ein Wunsch zu billig ist, weil du denkst du würdest mir gerne etwas wertfolleres schenken,
+        Bitte schenke mir keine Zimmerdekoration, außer wenn sie explizit auf der Wunschliste steht, und denke nicht, dass ein Wunsch zu billig ist, weil du denkst du würdest mir gerne etwas wertfolleres schenken.
         Man kann auch etwas Günstiges wählen und dazu einen gewünschten Geldbetrag oder mehrere kleine Dinge schenken.
     </p>
 </header>
 
 <main>
-    <ul>
-        <!-- Artikel mit bekannten Preisen -->
-        <li><a class="list-item" href="https://www.amazon.de/Gregs-Tagebuch-19-Schlamassel-Comic-Roman-Held/dp/3833909218/ref=sr_1_1?sr=8-1"><span>Gregs Tagebuch 19 (als gebundenes Buch)</span><span>14,78 CHF</span></a></li>
-        <li><a class="list-item" href="https://www.radbag.ch/pinguin-coolers"><span>Pinguin Coolers (Eiswürfel in Pinguinform)</span><span>16,99 CHF</span></a></li>
-        <li><a class="list-item" href="https://www.radbag.ch/leuchtender-nebel-nachtlicht"><span>Leuchtender Nebel Nachtlicht</span><span>24,99 CHF</span></a></li>
-        <li><a class="list-item" href="https://www.galaxus.ch/de/s14/product/zeller-present-schiefer-wandtafel-40-x-60-cm-pinnwand-8855086"><span>Magnetwand</span><span>36,70 CHF</span></a></li>
-        <li><a class="list-item" href="https://kamerino.de/products/kamerino-pro?variant=50457906839818"><span>Kamerino PRO SnowVision (Aufnahmen vom Skifahren)</span><span>63,00 CHF</span></a></li>
-        <li><a class="list-item" href="https://mywhomeofficial.com/products/fingerprint-door-lock"><span>Finger Print Lok Türschloss (per Fingerabdruck öffnen)</span><span>64 CHF</span></a></li>
-        <li><a class="list-item" href="https://www.bilderwelten.de/p/WBLB_3502/WBLB_3502-30x90-Canvas"><span>Bild für mein Zimmer (40 x 120 cm)</span><span>100 CHF</span></a></li>
-        <li><a class="list-item" href="https://shufflebox.store/products/shufflebox-g1-pro-2025-version-automatic-card-shuffler-dealer-machine"><span>ShuffleBox G1 Pro (mit Extrafunktionen)</span><span>139,99 CHF</span></a></li>
-        <li><a class="list-item" href="https://lungtank.com/products/lung-t-500%E2%84%A2-hand-pump-sub-mask"><span>Lung T-500 + Hand Pump + Sub-Mask</span><span>344,00 CHF</span></a></li>
-        <li><a class="list-item" href="https://www.apple.com/ch-de/shop/buy-iphone/iphone-16-pro/6,3%22-display-1tb-titan-schwarz"><span>Neuestes iPhone</span><span>1'549,00 CHF</span></a></li>
+    <div class="legend">
+        <div class="legend-item">
+            <span class="priority-badge high-badge" style="background-color: #d32f2f;">1+</span>
+            <span>Sehr hohe Priorität - Brauche ich unbedingt!</span>
+        </div>
+        <div class="legend-item">
+            <span class="priority-badge high-badge">1</span>
+            <span>Hohe Priorität - Wünsche ich mir sehr!</span>
+        </div>
+        <div class="legend-item">
+            <span class="priority-badge medium-badge">2</span>
+            <span>Mittlere Priorität - Würde mich freuen</span>
+        </div>
+        <div class="legend-item">
+            <span class="priority-badge low-badge">3</span>
+            <span>Niedrige Priorität - Auch schön</span>
+        </div>
+    </div>
 
-        <!-- Artikel mit unklarem Preis -->
-        <li><a class="list-item" href="https://raffaelbauer.ch/Wunschliste/Nintendo%20Switch%202%20Verf%C3%BCgbarkeit/"><span>Nintendo Switch 2</span><span>Preis unbekannt</span></a></li>
-        <li><a class="list-item" href="https://www.amazon.com/-/de/dp/B0D8J5P11X?creativeASIN=B0D8J5P11X&asc_item-id=amzn1.ideas.OCANLIKC0B84&ref_=aip_sf_list_spv_ofs_m_asin"><span>RAYNEO Air VR Brille</span><span>Preis unbekannt</span></a></li>
-        <li><a class="list-item" href="https://raffaelbauer.ch/Ausflugsideen/"><span>Ausflug mit mir von meiner Liste</span><span>Preis Selbst Wählbar</span></a></li>
-        <li><a class="list-item" href="https://startselect.com/ch-de/gutscheine/steam-karten"><span>Steam Gutscheinkarte</span><span>Preis Selbst Wählbar</span></a></li>
-        <li><a class="list-item" href="https://raffaelbauer.ch/Wunschliste/Ueberaschung/"><span>Du kannst mir auch einfach Geld schenken</span><span>Preis Selbst Wählbar</span></a></li>
-        <li><a class="list-item" href="https://wa.me/41799534432?text=Hallo%20Raffael%2C%20w%C3%A4re%20es%20eine%20M%C3%B6glichkeit%2C%20dass%20ich%20dir%20...%20auf%20...%20schenke%3F"><span>Du kannst mir auch etwas anderes vorschlagen</span><span>Preis Selbst Wählbar</span></a></li>
+    <div class="filters">
+        <button class="filter-btn active" onclick="filterItems('all')">Alle anzeigen</button>
+        <button class="filter-btn" onclick="filterItems('extra-high')">Sehr Hohe Priorität</button>
+        <button class="filter-btn" onclick="filterItems('high')">Hohe Priorität</button>
+        <button class="filter-btn" onclick="filterItems('medium')">Mittlere Priorität</button>
+        <button class="filter-btn" onclick="filterItems('low')">Niedrige Priorität</button>
+    </div>
+
+    <h2 class="section-title">Meine Wunschliste</h2>
+
+    <ul id="wishlist">
+        <!-- Artikel mit bekannten Preisen -->
+        <li class="priority-medium" data-priority="medium">
+            <a class="list-item" href="https://kamerino.de/products/kamerino-pro?variant=50457906839818">
+                <div class="item-left">
+                    <span class="priority-badge medium-badge">2</span>
+                    <span>Kamerino PRO SnowVision (Aufnahmen vom Skifahren)</span>
+                </div>
+                <span class="price">63,00 CHF</span>
+            </a>
+        </li>
+        <li class="priority-medium" data-priority="medium">
+            <a class="list-item" href="https://lungtank.com/products/lung-t-500%E2%84%A2-hand-pump-sub-mask">
+                <div class="item-left">
+                    <span class="priority-badge medium-badge">2</span>
+                    <span>Lung T-500 + Hand Pump + Sub-Mask</span>
+                </div>
+                <span class="price">344,00 CHF</span>
+            </a>
+        </li>
+        <li class="priority-high" data-priority="high">
+            <a class="list-item" href="https://www.radbag.ch/leuchtender-nebel-nachtlicht">
+                <div class="item-left">
+                    <span class="priority-badge high-badge">1</span>
+                    <span>Leuchtender Nebel Nachtlicht</span>
+                </div>
+                <span class="price">24,99 CHF</span>
+            </a>
+        </li>
+        <li class="priority-medium" data-priority="medium">
+            <a class="list-item" href="https://mywhomeofficial.com/products/fingerprint-door-lock">
+                <div class="item-left">
+                    <span class="priority-badge medium-badge">2</span>
+                    <span>Finger Print Lok Türschloss (per Fingerabdruck öffnen)</span>
+                </div>
+                <span class="price">64 CHF</span>
+            </a>
+        </li>
+        <li class="priority-high" data-priority="high">
+            <a class="list-item" href="https://shufflebox.store/products/shufflebox-g1-pro-2025-version-automatic-card-shuffler-dealer-machine">
+                <div class="item-left">
+                    <span class="priority-badge high-badge">1</span>
+                    <span>ShuffleBox G1 Pro (mit Extrafunktionen)</span>
+                </div>
+                <span class="price">139,99 CHF</span>
+            </a>
+        </li>
+        <li class="priority-medium" data-priority="medium">
+            <a class="list-item" href="https://raffaelbauer.ch/Wunschliste/Nintendo%20Switch%202%20Verf%C3%BCgbarkeit/">
+                <div class="item-left">
+                    <span class="priority-badge medium-badge">2</span>
+                    <span>Nintendo Switch 2</span>
+                </div>
+                <span class="price">Preis unbekannt</span>
+            </a>
+        </li>
+        <li class="priority-high" data-priority="high">
+            <a class="list-item" href="https://www.amazon.de/Gregs-Tagebuch-19-Schlamassel-Comic-Roman-Held/dp/3833909218/ref=sr_1_1?sr=8-1">
+                <div class="item-left">
+                    <span class="priority-badge high-badge">1</span>
+                    <span>Gregs Tagebuch 19 (als gebundenes Buch)</span>
+                </div>
+                <span class="price">14,78 CHF</span>
+            </a>
+        </li>
+        <li class="priority-low" data-priority="low">
+            <a class="list-item" href="https://www.radbag.ch/pinguin-coolers">
+                <div class="item-left">
+                    <span class="priority-badge low-badge">3</span>
+                    <span>Pinguin Coolers (Eiswürfel in Pinguinform)</span>
+                </div>
+                <span class="price">16,99 CHF</span>
+            </a>
+        </li>
+        <li class="priority-high extra-high" data-priority="high" style="border-left-width: 8px;">
+            <a class="list-item" href="https://www.galaxus.ch/de/s14/product/zeller-present-schiefer-wandtafel-40-x-60-cm-pinnwand-8855086">
+                <div class="item-left">
+                    <span class="priority-badge high-badge" style="background-color: #d32f2f;">1+</span>
+                    <span>Magnetwand</span>
+                </div>
+                <span class="price">36,70 CHF</span>
+            </a>
+        </li>
+        <li class="priority-high extra-high" data-priority="high" style="border-left-width: 8px;">
+            <a class="list-item" href="https://www.bilderwelten.de/p/WBLB_3502/WBLB_3502-30x90-Canvas">
+                <div class="item-left">
+                    <span class="priority-badge high-badge" style="background-color: #d32f2f;">1+</span>
+                    <span>Bild für mein Zimmer (40 x 120 cm)</span>
+                </div>
+                <span class="price">100 CHF</span>
+            </a>
+        </li>
+        <li class="priority-high" data-priority="high">
+            <a class="list-item" href="https://www.apple.com/ch-de/shop/buy-iphone/iphone-16-pro/6,3%22-display-1tb-titan-schwarz">
+                <div class="item-left">
+                    <span class="priority-badge high-badge">1</span>
+                    <span>Neuestes iPhone</span>
+                </div>
+                <span class="price">1'549,00 CHF</span>
+            </a>
+        </li>
+        <li class="priority-medium" data-priority="medium">
+            <a class="list-item" href="https://www.amazon.com/-/de/dp/B0D8J5P11X?creativeASIN=B0D8J5P11X&asc_item-id=amzn1.ideas.OCANLIKC0B84&ref_=aip_sf_list_spv_ofs_m_asin">
+                <div class="item-left">
+                    <span class="priority-badge medium-badge">2</span>
+                    <span>RAYNEO Air VR Brille</span>
+                </div>
+                <span class="price">Preis unbekannt</span>
+            </a>
+        </li>
+
+        <!-- Flexibles -->
+        <li class="priority-medium" data-priority="medium">
+            <a class="list-item" href="https://raffaelbauer.ch/Ausflugsideen/">
+                <div class="item-left">
+                    <span class="priority-badge medium-badge">2</span>
+                    <span>Ausflug mit mir von meiner Liste</span>
+                </div>
+                <span class="price">Preis Selbst Wählbar</span>
+            </a>
+        </li>
+        <li class="priority-medium" data-priority="medium">
+            <a class="list-item" href="https://startselect.com/ch-de/gutscheine/steam-karten">
+                <div class="item-left">
+                    <span class="priority-badge medium-badge">2</span>
+                    <span>Steam Gutscheinkarte</span>
+                </div>
+                <span class="price">Preis Selbst Wählbar</span>
+            </a>
+        </li>
+        <li class="priority-medium" data-priority="medium">
+            <a class="list-item" href="https://raffaelbauer.ch/Wunschliste/Ueberaschung/">
+                <div class="item-left">
+                    <span class="priority-badge medium-badge">2</span>
+                    <span>Du kannst mir auch einfach Geld schenken</span>
+                </div>
+                <span class="price">Preis Selbst Wählbar</span>
+            </a>
+        </li>
+        <li class="priority-low" data-priority="low">
+            <a class="list-item" href="https://wa.me/41799534432?text=Hallo%20Raffael%2C%20w%C3%A4re%20es%20eine%20M%C3%B6glichkeit%2C%20dass%20ich%20dir%20...%20auf%20...%20schenke%3F">
+                <div class="item-left">
+                    <span class="priority-badge low-badge">3</span>
+                    <span>Du kannst mir auch etwas anderes vorschlagen</span>
+                </div>
+                <span class="price">Preis Selbst Wählbar</span>
+            </a>
+        </li>
     </ul>
 </main>
 
@@ -145,6 +441,32 @@
         <a href="https://raffaelbauer.ch/Datenschutz/">Datenschutzbestimmungen</a>
     </p>
 </footer>
+
+<script>
+    function filterItems(priority) {
+        // Update active button
+        const buttons = document.querySelectorAll('.filter-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        // Filter items
+        const items = document.querySelectorAll('#wishlist li');
+        
+        items.forEach(item => {
+            if (priority === 'all') {
+                item.style.display = 'flex';
+            } else if (priority === 'extra-high' && item.classList.contains('extra-high')) {
+                item.style.display = 'flex';
+            } else if (priority === 'high' && item.dataset.priority === 'high' && !item.classList.contains('extra-high')) {
+                item.style.display = 'flex';
+            } else if (priority === item.dataset.priority) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+</script>
 
 </body>
 </html>
