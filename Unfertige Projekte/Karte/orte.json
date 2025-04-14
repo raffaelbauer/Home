@@ -1,23 +1,23 @@
 [
   {
     "_comment": "lat = Breitengrad, lng = Längengrad",
-    "lat":7.72310 ,
-    "lng":48.25940 ,
-    "alter":14 
+    "lat": 48.25940,
+    "lng": 7.72310,
+    "alter": 14 
   },
   {
-    "lat": ,
-    "lng": ,
-    "alter": 
+    "lat": 47.3769,
+    "lng": 8.5417,
+    "alter": 5
   },
   {
-    "lat": ,
-    "lng": ,
-    "alter": 
+    "lat": 46.9480,
+    "lng": 7.4474,
+    "alter": 10
   },
   {
-    "lat": ,
-    "lng": ,
-    "alter": 
+    "lat": 46.2044,
+    "lng": 6.1432,
+    "alter": 18
   }
 ]
