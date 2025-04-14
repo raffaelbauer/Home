@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moderne Geburtstagseinladung</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7f7f7;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .card {
+            background: #fff;
+            max-width: 550px;
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #5433FF, #20BDFF, #A5FECB);
+            height: 200px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            text-align: center;
+            padding: 0 20px;
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: white;
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+        }
+        
+        .emoji-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            opacity: 0.1;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px;
+            font-size: 24px;
+            overflow: hidden;
+        }
+        
+        .title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 20px;
+            font-weight: 400;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .content {
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .message {
+            margin-bottom: 30px;
+            line-height: 1.6;
+            color: #555;
+            font-weight: 300;
+            font-size: 16px;
+        }
+        
+        .event-details {
+            background: #f9f9f9;
+            border-radius: 16px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            text-align: left;
+            margin: 14px 0;
+        }
+        
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(45deg, #5433FF, #20BDFF);
+            border-radius: 12px;
+            margin-right: 15px;
+            flex-shrink: 0;
+            color: white;
+            font-size: 18px;
+        }
+        
+        .info-text {
+            flex: 1;
+        }
+        
+        .info-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #777;
+            margin-bottom: 2px;
+        }
+        
+        .info-value {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #5433FF, #20BDFF);
+            color: white;
+            padding: 14px 32px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(84, 51, 255, 0.2);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(84, 51, 255, 0.3);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: #5433FF;
+            border: 2px solid #5433FF;
+            margin-left: 10px;
+            box-shadow: none;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(84, 51, 255, 0.1);
+            box-shadow: none;
+        }
+        
+        .footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+            background: #f9f9f9;
+            border-top: 1px solid #eee;
+        }
+        
+        .contact {
+            margin-top: 8px;
+            font-weight: 500;
+        }
+        
+        .signature {
+            margin: 25px 0;
+            font-style: italic;
+            color: #555;
+        }
+        
+        @media (max-width: 576px) {
+            .title {
+                font-size: 28px;
+            }
+            
+            .subtitle {
+                font-size: 16px;
+            }
+            
+            .content {
+                padding: 25px 20px;
+            }
+            
+            .info-item {
+                margin: 12px 0;
+            }
+            
+            .btn {
+                display: block;
+                margin: 15px 0;
+            }
+            
+            .btn-outline {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="header">
+            <div class="emoji-bg">
+                🎉 🎂 🎁 🎈 🥂 ✨ 🎊 🎵 🎉 🎂 🎁 🎈 
+                🥂 ✨ 🎊 🎵 🎉 🎂 🎁 🎈 🥂 ✨ 🎊 
+                🎵 🎉 🎂 🎁 🎈 🥂 ✨ 🎊 🎵
+            </div>
+            <h1 class="title">Geburtstagsfeier</h1>
+            <p class="subtitle">Let's Celebrate!</p>
+        </div>
+        
+        <div class="content">
+            <p class="message">
+                Hey! Ich werde ein Jahr älter und möchte das mit meinen Liebsten feiern. 
+                Sei dabei und lass uns gemeinsam eine unvergessliche Zeit verbringen!
+            </p>
+            
+            <div class="event-details">
+                <div class="info-item">
+                    <div class="info-icon">📅</div>
+                    <div class="info-text">
+                        <div class="info-label">Datum</div>
+                        <div class="info-value">Freitag, 25. April 2025</div>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">⏰</div>
+                    <div class="info-text">
+                        <div class="info-label">Uhrzeit</div>
+                        <div class="info-value">16:30 Uhr</div>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">📍</div>
+                    <div class="info-text">
+                        <div class="info-label">Location</div>
+                        <div class="info-value">Kirchrain 3, 4146 Hochwald SO, Schweiz</div>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">🎉</div>
+                    <div class="info-text">
+                        <div class="info-label">Programm</div>
+                        <div class="info-value">Wenn das Wetter stimmt, werden wir grillen und viel Spaß haben. Also Spaß werden wir auch haben, wenn das Wetter nicht passt, um zu grillen!</div>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="message">
+                Es wäre sehr lieb von euch, wenn ihr ein Geschenk von meiner Liste mitbringen würdet: 
+                <a href="https://raffaelbauer.ch/Wunschliste/" target="_blank">https://raffaelbauer.ch/Wunschliste/</a>
+                <br><br>
+                Also bitte bringt etwas mit, wirklich, ich meine es ernst!
+            </p>
+            
+            <p class="signature">— Raffael Bauer</p>
+            
+            <a href="https://api.whatsapp.com/send/?phone=41799534432&text=Gerne+komme+ich+zu+deinem+Geburtstag+und+bringe+dir+ein+sehr+teures+Geschenk+mit.+Ich+freue+mich%21&type=phone_number&app_absent=0" class="btn">Ich komme!</a>
+        </div>
+        
+        <div class="footer">
+            <p>Komme sonst...</p>
+        </div>
+    </div>
+</body>
+</html>
