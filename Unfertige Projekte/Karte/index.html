@@ -13,7 +13,7 @@
         }
         #map {
             width: 100%;
-            height: 90vh;
+            height: 85vh;
         }
         #legend {
             position: fixed;
@@ -38,9 +38,37 @@
             margin-right: 5px;
             border-radius: 50%;
         }
+        #controls {
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+        #updateButton {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        #updateButton:hover {
+            background-color: #45a049;
+        }
+        #status {
+            margin-left: 10px;
+            font-size: 14px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
+    <div id="controls">
+        <button id="updateButton">Karte aktualisieren</button>
+        <span id="status"></span>
+    </div>
+    
     <div id="legend">
         <strong>Orte, wo ich schon mal war (gezählt ab einer Übernachtung)</strong>
         <div class="legend-item"><span class="legend-color" style="background: green;"></span> 0-5 Jahre</div>
@@ -52,58 +80,55 @@
     <div id="map"></div>
     
     <script>
-        // Warte, bis die Seite vollständig geladen ist
-        document.addEventListener('DOMContentLoaded', function() {
-            var map = L.map('map').setView([47.5, 8.0], 6); // Standardansicht Schweiz
-            
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap-Mitwirkende'
-            }).addTo(map);
-            
-            // Option 1: Direkt eingebettete Daten (falls die JSON-Datei nicht geladen werden kann)
-            var direktePins = [
-                { "lat": 48.25940, "lng": 7.72310, "alter": 14 },
-                { "lat": 47.3769, "lng": 8.5417, "alter": 5 },
-                { "lat": 46.9480, "lng": 7.4474, "alter": 10 },
-                { "lat": 46.2044, "lng": 6.1432, "alter": 18 }
-            ];
-            
-            // Funktion zum Hinzufügen eines Markers
-            function addMarker(pin) {
-                var farbe;
-                if (pin.alter <= 5) {
-                    farbe = 'green';
-                } else if (pin.alter <= 10) {
-                    farbe = 'yellow';
-                } else if (pin.alter <= 15) {
-                    farbe = 'black';
-                } else if (pin.alter <= 20) {
-                    farbe = 'blue';
-                }
-                
-                // Farbiger Marker erstellen
-                var coloredIcon = L.divIcon({
-                    className: 'colored-marker',
-                    html: `<svg width="25" height="41" viewBox="0 0 25 41" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12.5 0C5.596 0 0 5.596 0 12.5C0 19.404 12.5 41 12.5 41S25 19.404 25 12.5C25 5.596 19.404 0 12.5 0Z" 
-                            fill="${farbe}" />
-                        <circle cx="12.5" cy="12.5" r="5" fill="white" />
-                    </svg>`,
-                    iconSize: [25, 41],
-                    iconAnchor: [12.5, 41],
-                    popupAnchor: [0, -41]
-                });
-                
-                L.marker([pin.lat, pin.lng], { icon: coloredIcon })
-                    .addTo(map)
-                    .bindPopup("Alter: " + pin.alter);
+        // Globale Variablen
+        var map;
+        var markers = [];
+        
+        // Funktion zum Hinzufügen eines Markers
+        function addMarker(pin) {
+            var farbe;
+            if (pin.alter <= 5) {
+                farbe = 'green';
+            } else if (pin.alter <= 10) {
+                farbe = 'yellow';
+            } else if (pin.alter <= 15) {
+                farbe = 'black';
+            } else if (pin.alter <= 20) {
+                farbe = 'blue';
             }
             
-            // Füge alle direkten Pins hinzu
-            direktePins.forEach(addMarker);
+            // Farbiger Marker erstellen
+            var coloredIcon = L.divIcon({
+                className: 'colored-marker',
+                html: `<svg width="25" height="41" viewBox="0 0 25 41" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.5 0C5.596 0 0 5.596 0 12.5C0 19.404 12.5 41 12.5 41S25 19.404 25 12.5C25 5.596 19.404 0 12.5 0Z" 
+                        fill="${farbe}" />
+                    <circle cx="12.5" cy="12.5" r="5" fill="white" />
+                </svg>`,
+                iconSize: [25, 41],
+                iconAnchor: [12.5, 41],
+                popupAnchor: [0, -41]
+            });
             
-            // Option 2: Versuche zusätzlich, die JSON-Datei zu laden (zur Sicherheit)
-            fetch('orte.json')
+            // Marker erstellen und zur Karte hinzufügen
+            var marker = L.marker([pin.lat, pin.lng], { icon: coloredIcon })
+                .addTo(map)
+                .bindPopup("Alter: " + pin.alter);
+            
+            // Marker zum Array hinzufügen (für späteres Entfernen)
+            markers.push(marker);
+        }
+        
+        // Funktion zum Laden und Aktualisieren der Karte
+        function updateMap() {
+            updateStatus("Lade Daten...");
+            
+            // Alle bestehenden Marker entfernen
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+            
+            // JSON laden mit einem Cache-Brecher-Parameter, um Cache-Probleme zu vermeiden
+            fetch('orte.json?v=' + new Date().getTime())
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Konnte JSON-Datei nicht laden: ' + response.status);
@@ -114,11 +139,40 @@
                     // Wenn wir hierher kommen, wurde die JSON erfolgreich geladen
                     console.log('JSON-Datei erfolgreich geladen:', pins.length + ' Orte gefunden');
                     pins.forEach(addMarker);
+                    updateStatus("Zuletzt aktualisiert: " + new Date().toLocaleTimeString());
                 })
                 .catch(error => {
-                    console.warn('Hinweis: Die externe JSON-Datei konnte nicht geladen werden. Verwende eingebettete Daten.', error);
-                    // Wir verwenden die direkten Pins, die bereits hinzugefügt wurden
+                    console.error('Fehler beim Laden der JSON-Datei:', error);
+                    updateStatus("Fehler beim Laden. Bitte erneut versuchen.");
+                    
+                    // Fallback-Daten für Testzwecke
+                    var fallbackPins = [
+                        { "lat": 48.25940, "lng": 7.72310, "alter": 14 }
+                    ];
+                    fallbackPins.forEach(addMarker);
                 });
+        }
+        
+        function updateStatus(message) {
+            document.getElementById('status').textContent = message;
+        }
+        
+        // Warte, bis die Seite vollständig geladen ist
+        document.addEventListener('DOMContentLoaded', function() {
+            // Karteninitialisierung
+            map = L.map('map').setView([20, 0], 2); // Weltkarte als Standardansicht
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap-Mitwirkende'
+            }).addTo(map);
+            
+            // Karte initial laden
+            updateMap();
+            
+            // Event-Listener für den Update-Button
+            document.getElementById('updateButton').addEventListener('click', function() {
+                updateMap();
+            });
         });
     </script>
     <footer style="text-align: center;">
