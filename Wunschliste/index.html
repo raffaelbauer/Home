@@ -109,6 +109,69 @@
             background-color: #007bff;
             color: white;
         }
+        .sort-options {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .sort-label {
+            font-weight: bold;
+            color: #333;
+        }
+        .sort-btn {
+            background-color: #e3f2fd;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .sort-btn:hover {
+            background-color: #bbdefb;
+        }
+        .sort-btn.active {
+            background-color: #007bff;
+            color: white;
+        }
+        .price-filter {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .price-filter-label {
+            font-weight: bold;
+            color: #333;
+        }
+        .price-filter-separator {
+            font-weight: bold;
+            color: #333;
+        }
+        .price-input {
+            width: 90px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+        }
+        @media (max-width: 600px) {
+            .price-filter {
+                flex-direction: column;
+                align-items: center;
+            }
+            .price-input {
+                width: 120px;
+            }
+        }
         .section-title {
             margin: 25px 0 15px;
             padding-bottom: 8px;
@@ -276,6 +339,21 @@
         <button class="filter-btn" onclick="filterItems('medium')">Mittlere Priorität</button>
         <button class="filter-btn" onclick="filterItems('low')">Niedrige Priorität</button>
     </div>
+    
+    <div class="price-filter">
+        <span class="price-filter-label">Preisfilter:</span>
+        <input type="number" id="min-price" min="0" placeholder="Min CHF" class="price-input">
+        <span class="price-filter-separator">-</span>
+        <input type="number" id="max-price" min="0" placeholder="Max CHF" class="price-input">
+        <button class="filter-btn" onclick="applyPriceFilter()">Filtern</button>
+        <button class="filter-btn" onclick="resetPriceFilter()">Zurücksetzen</button>
+    </div>
+    
+    <div class="sort-options">
+        <span class="sort-label">Sortieren nach:</span>
+        <button class="sort-btn active" onclick="sortItems('priority')">Priorität</button>
+        <button class="sort-btn" onclick="sortItems('price')">Preis</button>
+    </div>
 
     <h2 class="section-title">Meine Wunschliste</h2>
 
@@ -332,7 +410,7 @@
                     <span class="priority-badge medium-badge">2</span>
                     <span>Nintendo Switch 2</span>
                 </div>
-                <span class="price">Preis unbekannt</span>
+                <span class="price">470 CHF</span>
             </a>
         </li>
         <li class="priority-high" data-priority="high">
@@ -420,29 +498,206 @@
 </footer>
 
 <script>
+    /*
+     * SORTIERLOGIK DER WUNSCHLISTE:
+     * 
+     * 1. Sortierung nach Priorität:
+     *    - Primär: Nach Prioritätswert (1=hoch, 2=mittel, 3=niedrig)
+     *    - Sekundär: Bei gleicher Priorität nach Preis (günstigste zuerst)
+     *    - Tertiär: Bei gleichem Preis und gleicher Priorität alphabetisch nach Name
+     * 
+     * 2. Sortierung nach Preis:
+     *    - Primär: Nach Preis (günstigste zuerst)
+     *    - Sekundär: Bei gleichem Preis nach Priorität (hohe Priorität zuerst)
+     *    - Tertiär: Bei gleichem Preis und gleicher Priorität alphabetisch nach Name
+     * 
+     * 3. Preisfilter:
+     *    - Zeigt nur Artikel an, deren Preis im angegebenen Bereich liegt
+     *    - Artikel mit unbekanntem Preis oder selbst wählbarem Preis werden bei aktivem Preisfilter ausgeblendet
+     *    - Der Preisfilter kann zusammen mit Prioritätsfiltern verwendet werden
+     * 
+     * Hinweise:
+     * - "Preis unbekannt" und "Preis Selbst Wählbar" werden bei der Preissortierung ans Ende gesetzt
+     * - Die Sortierung funktioniert auch mit aktivierten Filtern (nur die sichtbaren Elemente werden sortiert)
+     */
+
+    // Extrahiere Preisdaten aus dem Text
+    function extractPrice(priceText) {
+        if (!priceText) return Infinity;
+        if (priceText === "Preis unbekannt") return Infinity;
+        if (priceText === "Preis Selbst Wählbar") return Infinity;
+        
+        // Entferne CHF und konvertiere zu Nummer
+        const numericPart = priceText.replace(/[^\d,.']/g, '').replace(',', '.').replace("'", "");
+        return parseFloat(numericPart) || Infinity;
+    }
+
+    // Bekomme den Priowert (1=high, 2=medium, 3=low)
+    function getPriorityValue(item) {
+        if (item.dataset.priority === 'high') return 1;
+        if (item.dataset.priority === 'medium') return 2;
+        if (item.dataset.priority === 'low') return 3;
+        return 4;
+    }
+
+    // Bekomme den Namen des Artikels
+    function getItemName(item) {
+        const spanElement = item.querySelector('.item-left span:nth-child(2)');
+        return spanElement ? spanElement.textContent.trim() : '';
+    }
+
+    // Aktuelle Filter- und Sortierstatus speichern
+    let currentPriorityFilter = 'all';
+    let currentMinPrice = null;
+    let currentMaxPrice = null;
+
     function filterItems(priority) {
         // Update active button
         const buttons = document.querySelectorAll('.filter-btn');
-        buttons.forEach(btn => btn.classList.remove('active'));
+        buttons.forEach(btn => {
+            if (btn.textContent.includes('Alle') || 
+                btn.textContent.includes('Hohe') || 
+                btn.textContent.includes('Mittlere') || 
+                btn.textContent.includes('Niedrige')) {
+                btn.classList.remove('active');
+            }
+        });
         event.target.classList.add('active');
         
-        // Filter items
+        // Speichere aktuellen Prioritätsfilter
+        currentPriorityFilter = priority;
+        
+        // Wende beide Filter an
+        applyAllFilters();
+    }
+    
+    function applyPriceFilter() {
+        const minPrice = document.getElementById('min-price').value;
+        const maxPrice = document.getElementById('max-price').value;
+        
+        currentMinPrice = minPrice ? parseFloat(minPrice) : null;
+        currentMaxPrice = maxPrice ? parseFloat(maxPrice) : null;
+        
+        applyAllFilters();
+    }
+    
+    function resetPriceFilter() {
+        document.getElementById('min-price').value = '';
+        document.getElementById('max-price').value = '';
+        
+        currentMinPrice = null;
+        currentMaxPrice = null;
+        
+        applyAllFilters();
+    }
+    
+    function applyAllFilters() {
         const items = document.querySelectorAll('#wishlist li');
         
         items.forEach(item => {
-            if (priority === 'all') {
-                item.style.display = 'flex';
-            } else if (priority === 'extra-high' && item.classList.contains('extra-high')) {
-                item.style.display = 'flex';
-            } else if (priority === 'high' && item.dataset.priority === 'high' && !item.classList.contains('extra-high')) {
-                item.style.display = 'flex';
-            } else if (priority === item.dataset.priority) {
+            // Zuerst prüfen ob der Artikel durch den Prioritätsfilter hindurch kommt
+            let showByPriority = false;
+            if (currentPriorityFilter === 'all') {
+                showByPriority = true;
+            } else if (currentPriorityFilter === 'extra-high' && item.classList.contains('extra-high')) {
+                showByPriority = true;
+            } else if (currentPriorityFilter === 'high' && item.dataset.priority === 'high' && !item.classList.contains('extra-high')) {
+                showByPriority = true;
+            } else if (currentPriorityFilter === item.dataset.priority) {
+                showByPriority = true;
+            }
+            
+            // Dann prüfen ob der Artikel durch den Preisfilter hindurch kommt
+            let showByPrice = true;
+            if (currentMinPrice !== null || currentMaxPrice !== null) {
+                const price = extractPrice(item.querySelector('.price').textContent);
+                
+                // Bei unendlichen Preisen (unbekannt oder selbst wählbar) nicht anzeigen
+                if (price === Infinity) {
+                    showByPrice = false;
+                } else if (currentMinPrice !== null && price < currentMinPrice) {
+                    showByPrice = false;
+                } else if (currentMaxPrice !== null && price > currentMaxPrice) {
+                    showByPrice = false;
+                }
+            }
+            
+            // Nur anzeigen wenn beide Filter erfüllt sind
+            if (showByPriority && showByPrice) {
                 item.style.display = 'flex';
             } else {
                 item.style.display = 'none';
             }
         });
+        
+        // Nach dem Filtern, sortiere nach dem aktiven Sortierkriterium
+        const activeSort = document.querySelector('.sort-btn.active');
+        if (activeSort) {
+            sortItems(activeSort.getAttribute('onclick').split("'")[1], false);
+        }
     }
+    
+    function sortItems(criterion, updateActive = true) {
+        // Update active button wenn nötig
+        if (updateActive) {
+            const buttons = document.querySelectorAll('.sort-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+        
+        const wishlist = document.getElementById('wishlist');
+        const items = Array.from(wishlist.getElementsByTagName('li'));
+        
+        items.sort((a, b) => {
+            if (criterion === 'price') {
+                // Sortieren nach Preis
+                const priceA = extractPrice(a.querySelector('.price').textContent);
+                const priceB = extractPrice(b.querySelector('.price').textContent);
+                
+                if (priceA === priceB) {
+                    // Bei gleichem Preis nach Priorität und dann nach Name sortieren
+                    const priorityA = getPriorityValue(a);
+                    const priorityB = getPriorityValue(b);
+                    
+                    if (priorityA === priorityB) {
+                        return getItemName(a).localeCompare(getItemName(b));
+                    }
+                    
+                    return priorityA - priorityB;
+                }
+                
+                return priceA - priceB;
+            } else {
+                // Sortieren nach Priorität
+                const priorityA = getPriorityValue(a);
+                const priorityB = getPriorityValue(b);
+                
+                if (priorityA === priorityB) {
+                    // Bei gleicher Priorität nach Preis und dann nach Name sortieren
+                    const priceA = extractPrice(a.querySelector('.price').textContent);
+                    const priceB = extractPrice(b.querySelector('.price').textContent);
+                    
+                    if (priceA === priceB) {
+                        return getItemName(a).localeCompare(getItemName(b));
+                    }
+                    
+                    return priceA - priceB;
+                }
+                
+                return priorityA - priorityB;
+            }
+        });
+        
+        // Neu anordnen
+        items.forEach(item => {
+            wishlist.appendChild(item);
+        });
+    }
+    
+    // Initialisiere Seite mit Standardsortierung nach Priorität
+    document.addEventListener('DOMContentLoaded', function() {
+        sortItems('priority', false);
+    });
 </script>
 
 </body>
