@@ -71,10 +71,14 @@
     
     <div id="legend">
         <strong>Orte, wo ich schon mal war (gezählt ab einer Übernachtung)</strong>
-        <div class="legend-item"><span class="legend-color" style="background: green;"></span> 0-5 Jahre</div>
-        <div class="legend-item"><span class="legend-color" style="background: yellow;"></span> 5-10 Jahre</div>
-        <div class="legend-item"><span class="legend-color" style="background: black;"></span> 10-15 Jahre</div>
-        <div class="legend-item"><span class="legend-color" style="background: blue;"></span> 15-20 Jahre</div>
+        <div class="legend-item"><span class="legend-color" style="background: #FFC0CB;"></span> Baby (0-1 Jahre)</div>
+        <div class="legend-item"><span class="legend-color" style="background: #FFCC99;"></span> Mini Kind (2-3 Jahre)</div>
+        <div class="legend-item"><span class="legend-color" style="background: #FFEB3B;"></span> Entdeckerzeit (4-6 Jahre)</div>
+        <div class="legend-item"><span class="legend-color" style="background: #AED581;"></span> Kinderabenteuer (7-9 Jahre)</div>
+        <div class="legend-item"><span class="legend-color" style="background: #4DD0E1;"></span> Große Kindheit (10-12 Jahre)</div>
+        <div class="legend-item"><span class="legend-color" style="background: #64B5F6;"></span> Frühe Jugend (13-15 Jahre)</div>
+        <div class="legend-item"><span class="legend-color" style="background: #9575CD;"></span> Späte Jugend (16-17 Jahre)</div>
+        <div class="legend-item"><span class="legend-color" style="background: #5E35B1;"></span> Junge Zukunft (ab 18 Jahre)</div>
     </div>
     
     <div id="map"></div>
@@ -87,14 +91,24 @@
         // Funktion zum Hinzufügen eines Markers
         function addMarker(pin) {
             var farbe;
-            if (pin.alter <= 5) {
-                farbe = 'green';
-            } else if (pin.alter <= 10) {
-                farbe = 'yellow';
+            
+            // Neue Kategorien mit Altern und Farben
+            if (pin.alter <= 1) {
+                farbe = '#FFC0CB'; // Pastell Rosa
+            } else if (pin.alter <= 3) {
+                farbe = '#FFCC99'; // Hellorange
+            } else if (pin.alter <= 6) {
+                farbe = '#FFEB3B'; // Sonnengelb
+            } else if (pin.alter <= 9) {
+                farbe = '#AED581'; // Hellgrün
+            } else if (pin.alter <= 12) {
+                farbe = '#4DD0E1'; // Türkis
             } else if (pin.alter <= 15) {
-                farbe = 'black';
-            } else if (pin.alter <= 20) {
-                farbe = 'blue';
+                farbe = '#64B5F6'; // Himmelblau
+            } else if (pin.alter <= 17) {
+                farbe = '#9575CD'; // Violett
+            } else {
+                farbe = '#5E35B1'; // Dunkles Violett für ab 18
             }
             
             // Farbiger Marker erstellen
