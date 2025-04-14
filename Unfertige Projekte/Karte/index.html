@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wo war Raffael schon?</title>
+    <title>Meine Übernachtungsorte</title>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <style>
@@ -52,36 +52,74 @@
     <div id="map"></div>
     
     <script>
-        var map = L.map('map').setView([47.5, 8.0], 6); // Standardansicht Schweiz
-        
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap-Mitwirkende'
-        }).addTo(map);
-        
-        fetch('orte.json')
-            .then(response => response.json())
-            .then(pins => {
-                pins.forEach(function(pin) {
-                    var farbe;
-                    if (pin.alter <= 5) {
-                        farbe = 'green';
-                    } else if (pin.alter <= 10) {
-                        farbe = 'yellow';
-                    } else if (pin.alter <= 15) {
-                        farbe = 'black';
-                    } else if (pin.alter <= 20) {
-                        farbe = 'blue';
-                    }
-                    
-                    L.circleMarker([pin.lat, pin.lng], {
-                        radius: 8,
-                        color: farbe,
-                        fillColor: farbe,
-                        fillOpacity: 0.8
-                    }).addTo(map).bindPopup("Alter: " + pin.alter);
+        // Warte, bis die Seite vollständig geladen ist
+        document.addEventListener('DOMContentLoaded', function() {
+            var map = L.map('map').setView([47.5, 8.0], 6); // Standardansicht Schweiz
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap-Mitwirkende'
+            }).addTo(map);
+            
+            // Option 1: Direkt eingebettete Daten (falls die JSON-Datei nicht geladen werden kann)
+            var direktePins = [
+                { "lat": 48.25940, "lng": 7.72310, "alter": 14 },
+                { "lat": 47.3769, "lng": 8.5417, "alter": 5 },
+                { "lat": 46.9480, "lng": 7.4474, "alter": 10 },
+                { "lat": 46.2044, "lng": 6.1432, "alter": 18 }
+            ];
+            
+            // Funktion zum Hinzufügen eines Markers
+            function addMarker(pin) {
+                var farbe;
+                if (pin.alter <= 5) {
+                    farbe = 'green';
+                } else if (pin.alter <= 10) {
+                    farbe = 'yellow';
+                } else if (pin.alter <= 15) {
+                    farbe = 'black';
+                } else if (pin.alter <= 20) {
+                    farbe = 'blue';
+                }
+                
+                // Farbiger Marker erstellen
+                var coloredIcon = L.divIcon({
+                    className: 'colored-marker',
+                    html: `<svg width="25" height="41" viewBox="0 0 25 41" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12.5 0C5.596 0 0 5.596 0 12.5C0 19.404 12.5 41 12.5 41S25 19.404 25 12.5C25 5.596 19.404 0 12.5 0Z" 
+                            fill="${farbe}" />
+                        <circle cx="12.5" cy="12.5" r="5" fill="white" />
+                    </svg>`,
+                    iconSize: [25, 41],
+                    iconAnchor: [12.5, 41],
+                    popupAnchor: [0, -41]
                 });
-            })
-            .catch(error => console.error('Fehler beim Laden der JSON-Datei:', error));
+                
+                L.marker([pin.lat, pin.lng], { icon: coloredIcon })
+                    .addTo(map)
+                    .bindPopup("Alter: " + pin.alter);
+            }
+            
+            // Füge alle direkten Pins hinzu
+            direktePins.forEach(addMarker);
+            
+            // Option 2: Versuche zusätzlich, die JSON-Datei zu laden (zur Sicherheit)
+            fetch('orte.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Konnte JSON-Datei nicht laden: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(pins => {
+                    // Wenn wir hierher kommen, wurde die JSON erfolgreich geladen
+                    console.log('JSON-Datei erfolgreich geladen:', pins.length + ' Orte gefunden');
+                    pins.forEach(addMarker);
+                })
+                .catch(error => {
+                    console.warn('Hinweis: Die externe JSON-Datei konnte nicht geladen werden. Verwende eingebettete Daten.', error);
+                    // Wir verwenden die direkten Pins, die bereits hinzugefügt wurden
+                });
+        });
     </script>
     <footer style="text-align: center;">
         <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
