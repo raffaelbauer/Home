@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Newsletter Anmeldung</title>
 
+  <link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css" />
+
   <style>
     @font-face {
       font-display: block;
@@ -47,11 +49,6 @@
       padding: 20px;
     }
 
-    .sib-form {
-      width: 100%;
-      max-width: 540px;
-    }
-
     footer {
       text-align: center;
       padding: 15px;
@@ -62,6 +59,11 @@
     footer a {
       color: white;
       text-decoration: underline;
+    }
+
+    .sib-form-container {
+      width: 100%;
+      max-width: 540px;
     }
 
     #sib-container input::placeholder,
@@ -76,35 +78,40 @@
       color: #2BB2FC;
     }
   </style>
-
-  <link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css">
 </head>
 <body>
   <main>
+    <!-- Brevo Formular eingebettet -->
     <div class="sib-form" style="text-align: center; background-color: #EFF2F7;">
       <div id="sib-form-container" class="sib-form-container">
-        <div id="sib-container" class="sib-container--large sib-container--vertical" style="text-align:center; background-color:rgba(255,255,255,1); max-width:540px; border-radius:3px; border-width:1px; border-color:#C0CCD9; border-style:solid; direction:ltr">
-          <form id="sib-form" method="POST" action="https://sibforms.com/serve/MUIFANXZT5Eb0z7FkeNqb-j_7uXyvQBtin58mjiQeC4fKeruQ3FG6YVkCKjEB5I2U02iTJCAWprIfLhKN-hxVAJ1anJs8hWvRGPbMhVNl5YbEN5gzk61U7RlWeSFeOKSueYSNj2nO9OikuixcTmIod2rPgVsNA_I5JK3uqaO8s-Q29aa6Qfp0HxJ7F3Fins8PGktW9G3OvnEIqKA" data-type="subscription">
-            <div style="padding: 8px 0;">
-              <p style="font-size: 24px; font-weight: bold; color: #3C4858;">Newsletter</p>
-              <p style="font-size: 16px; color: #3C4858;">Melde dich bei meinem Newsletter an, um auf dem Laufenden über Änderungen auf <strong>raffaelbauer.ch</strong> zu bleiben.</p>
-            </div>
+        <div id="sib-container" class="sib-container--large sib-container--vertical"
+          style="text-align:center; background-color:#ffffff; max-width:540px; border-radius:3px; border:1px solid #C0CCD9;">
+          <form id="sib-form" method="POST" action="https://sibforms.com/serve/MUIFABZw-bMdeQs6q3SzPOWTmUCPERICGv-hvknV6xbN--_QK0KiiAikWmZ1vsdTaiKHIP1VqtVULWN-ichGWFxzNbAyLRRZwi1kGxTep50k9fKz6fOXOdK6Nhvs6A-XeDrK00ReGuLAS_DuSC44ZpI7mGgw7rHpo-3Aosct9Qgm69XsMS2VajL1phdmlKbef-XUKKl3QY19jI3Z"
+            data-type="subscription">
+            <div style="padding: 16px;">
+              <h2 style="text-align:left; font-family:Helvetica,sans-serif; color:#3C4858;">Newsletter</h2>
+              <p style="text-align:left; font-family:Helvetica,sans-serif; color:#3C4858;">
+                Melde dich bei meinem Newsletter an, um auf dem Laufenden über Änderungen auf <strong>raffaelbauer.ch</strong> zu bleiben.
+              </p>
+              <div style="margin-top: 16px; text-align: left;">
+                <label for="EMAIL" style="font-weight: bold;">E-Mail-Adresse</label><br>
+                <input class="input" type="email" id="EMAIL" name="EMAIL" required placeholder="z. B. du@beispiel.ch"
+                  style="width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px;" />
+              </div>
 
-            <div style="padding: 8px 0;">
-              <label for="EMAIL" style="display:block; text-align:left; font-weight:bold; margin-bottom:5px;">E-Mail-Adresse</label>
-              <input type="email" id="EMAIL" name="EMAIL" required placeholder="z. B. dein@email.ch" style="width:100%; padding:12px; border:1px solid #ccc; border-radius:4px;">
-            </div>
+              <div style="margin: 20px 0;">
+                <div class="g-recaptcha" data-sitekey="6LcUMRwrAAAAAHEtnnjkfJYIUtf1nksbWMlinkr8"></div>
+              </div>
 
-            <div style="padding: 8px 0;">
-              <div class="g-recaptcha" data-sitekey="6LcUMRwrAAAAAHEtnnjkfJYIUtf1nksbWMlinkr8"></div>
+              <div style="margin-bottom: 20px;">
+                <button type="submit"
+                  style="background-color: #3E4857; color: white; font-weight: bold; padding: 12px 24px; border: none; border-radius: 4px;">
+                  Anmelden
+                </button>
+              </div>
+              <input type="text" name="email_address_check" value="" class="input--hidden">
+              <input type="hidden" name="locale" value="de">
             </div>
-
-            <div style="padding: 8px 0;">
-              <button type="submit" style="background-color:#3E4857; color:white; padding:12px 24px; border:none; border-radius:4px; font-weight:bold;">Anmelden</button>
-            </div>
-
-            <input type="text" name="email_address_check" value="" class="input--hidden">
-            <input type="hidden" name="locale" value="de">
           </form>
         </div>
       </div>
@@ -113,9 +120,7 @@
 
   <footer>
     <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
-    <p>
-      <a href="https://raffaelbauer.ch/Datenschutz/">Datenschutzbestimmungen</a>
-    </p>
+    <p><a href="https://raffaelbauer.ch/Datenschutz/">Datenschutzbestimmungen</a></p>
   </footer>
 
   <script>
