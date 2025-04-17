@@ -749,4 +749,154 @@
         const items = Array.from(wishlist.getElementsByTagName('li'));
         
         items.sort((a, b) => {
-            if (criterion ===
+            if (criterion === 'price') {
+                // Sortieren nach Preis
+                const priceA = extractPrice(a.querySelector('.price').textContent);
+                const priceB = extractPrice(b.querySelector('.price').textContent);
+                
+                if (priceA === priceB) {
+                    // Bei gleichem Preis nach Priorität und dann nach Name sortieren
+                    const priorityA = getPriorityValue(a);
+                    const priorityB = getPriorityValue(b);
+                    
+                    if (priorityA === priorityB) {
+                        return getItemName(a).localeCompare(getItemName(b));
+                    }
+                    
+                    return priorityA - priorityB;
+                }
+                
+                return priceA - priceB;
+            } else {
+                // Sortieren nach Priorität
+                const priorityA = getPriorityValue(a);
+                const priorityB = getPriorityValue(b);
+                
+                if (priorityA === priorityB) {
+                    // Bei gleicher Priorität nach Preis und dann nach Name sortieren
+                    const priceA = extractPrice(a.querySelector('.price').textContent);
+                    const priceB = extractPrice(b.querySelector('.price').textContent);
+                    
+                    if (priceA === priceB) {
+                        return getItemName(a).localeCompare(getItemName(b));
+                    }
+                    
+                    return priceA - priceB;
+                }
+                
+                return priorityA - priorityB;
+            }
+        });
+        
+        // Neu anordnen
+        items.forEach(item => {
+            wishlist.appendChild(item);
+        });
+    }
+    
+    // Globale Variablen für die Geschenkauswahl
+    let selectedGiftElement = null;
+    let selectedGiftName = "";
+    let selectedGiftPrice = "";
+    
+    // Funktion zum Anzeigen des Dialogs bei Geschenkauswahl
+    function selectGift(element) {
+        // Speichere das ausgewählte Geschenk
+        selectedGiftElement = element.closest('li');
+        selectedGiftName = element.getAttribute('data-gift-name');
+        selectedGiftPrice = element.getAttribute('data-gift-price');
+        
+        // Zeige den Namen im Dialog an
+        document.getElementById('selected-gift-name').textContent = selectedGiftName + " - " + selectedGiftPrice;
+        
+        // Zeige den Dialog an
+        const dialog = document.getElementById('gift-selected-dialog');
+        dialog.style.display = 'flex';
+    }
+    
+    // Funktion zum Bestätigen der Geschenkauswahl
+    function confirmGiftSelection() {
+        if (selectedGiftElement && selectedGiftName) {
+            // Verstecke das Geschenk in der Liste
+            selectedGiftElement.classList.add('hidden-gift');
+            
+            // Erstelle die WhatsApp-Nachricht
+            let message = "Hallo Raffael, ich habe folgendes Geschenk von deiner Wunschliste für dich ausgewählt: " + selectedGiftName;
+            if (selectedGiftPrice && selectedGiftPrice !== "Preis unbekannt") {
+                message += " (" + selectedGiftPrice + ")";
+            }
+            
+            // Kodiere die Nachricht für den URL
+            const encodedMessage = encodeURIComponent(message);
+            
+            // Öffne WhatsApp in einem neuen Tab
+            window.open("https://wa.me/41799534432?text=" + encodedMessage, "_blank");
+            
+            // Speichere die ausgewählten Geschenke im localStorage
+            saveSelectedGifts();
+            
+            // Schließe den Dialog
+            hideDialog();
+            
+            // Setze die Auswahl zurück
+            selectedGiftElement = null;
+            selectedGiftName = "";
+            selectedGiftPrice = "";
+        }
+    }
+    
+    // Funktion zum Abbrechen der Geschenkauswahl
+    function cancelGiftSelection() {
+        hideDialog();
+        selectedGiftElement = null;
+        selectedGiftName = "";
+        selectedGiftPrice = "";
+    }
+    
+    // Dialog ausblenden
+    function hideDialog() {
+        const dialog = document.getElementById('gift-selected-dialog');
+        dialog.style.display = 'none';
+    }
+    
+    // Speichern der ausgewählten Geschenke im localStorage
+    function saveSelectedGifts() {
+        let selectedGifts = JSON.parse(localStorage.getItem('raffaelSelectedGifts') || '[]');
+        if (selectedGiftElement) {
+            const giftId = selectedGiftElement.getAttribute('data-gift-id');
+            if (giftId && !selectedGifts.includes(giftId)) {
+                selectedGifts.push(giftId);
+                localStorage.setItem('raffaelSelectedGifts', JSON.stringify(selectedGifts));
+            }
+        }
+    }
+    
+    // Laden und Anwenden der gespeicherten Auswahlen
+    function loadSelectedGifts() {
+        let selectedGifts = JSON.parse(localStorage.getItem('raffaelSelectedGifts') || '[]');
+        if (selectedGifts.length > 0) {
+            selectedGifts.forEach(giftId => {
+                const item = document.querySelector(`li[data-gift-id="${giftId}"]`);
+                if (item) {
+                    item.classList.add('hidden-gift');
+                }
+            });
+        }
+    }
+    
+    // EventListener für Buttons im Dialog
+    document.addEventListener('DOMContentLoaded', function() {
+        // Sortiere die Liste nach Priorität beim Laden
+        sortItems('priority', false);
+        
+        // Lade gespeicherte Geschenkauswahlen
+        loadSelectedGifts();
+        
+        // Event-Listener für die Dialog-Buttons
+        document.getElementById('gift-confirm').addEventListener('click', confirmGiftSelection);
+        document.getElementById('gift-cancel').addEventListener('click', cancelGiftSelection);
+    });
+</script>
+
+</body>
+</html>
