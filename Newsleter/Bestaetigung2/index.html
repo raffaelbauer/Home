@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Erfolgreich angemeldet</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #8fd3f4, #84fab0);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      color: #333;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: #ffffffcc;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    .container h1 {
+      color: #00796b;
+      font-size: 28px;
+    }
+
+    .container p {
+      margin: 20px 0;
+      font-size: 18px;
+    }
+
+    .button {
+      margin-top: 30px;
+      padding: 12px 24px;
+      background-color: #00796b;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 16px;
+      transition: background 0.3s ease;
+      display: inline-block;
+    }
+
+    .button:hover {
+      background-color: #004d40;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      font-weight: bold;
+      color: white;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 25px;
+      }
+
+      .container h1 {
+        font-size: 24px;
+      }
+
+      .container p {
+        font-size: 16px;
+      }
+
+      .button {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="container">
+      <h1>🎉 Willkommen im Newsletter!</h1>
+      <p>Danke, dass du dich für unseren Newsletter angemeldet hast. Ab sofort halten wir dich auf dem Laufenden über alle Neuigkeiten auf <strong>raffaelbauer.ch</strong>.</p>
+      <a class="button" href="https://raffaelbauer.ch">Zurück zur Startseite</a>
+    </div>
+  </main>
+  <footer>
+    <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
+    <p>
+      <a href="https://raffaelbauer.ch/Datenschutz/">Datenschutzbestimmungen</a>
+    </p>
+  </footer>
+</body>
+</html>
