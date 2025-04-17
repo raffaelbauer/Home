@@ -4,18 +4,41 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Newsletter Anmeldung</title>
-  <link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css" />
 
+  <!-- Brevo Fonts und Styles -->
+  <link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css">
   <style>
+    @font-face {
+      font-display: block;
+      font-family: Roboto;
+      src: url(https://assets.brevo.com/font/Roboto/Latin/normal/normal/7529907e9eaf8ebb5220c5f9850e3811.woff2) format("woff2"),
+           url(https://assets.brevo.com/font/Roboto/Latin/normal/normal/25c678feafdc175a70922a116c9be3e7.woff) format("woff");
+    }
+    @font-face {
+      font-display: fallback;
+      font-family: Roboto;
+      font-weight: 600;
+      src: url(https://assets.brevo.com/font/Roboto/Latin/medium/normal/6e9caeeafb1f3491be3e32744bc30440.woff2) format("woff2"),
+           url(https://assets.brevo.com/font/Roboto/Latin/medium/normal/71501f0d8d5aa95960f6475d5487d4c2.woff) format("woff");
+    }
+    @font-face {
+      font-display: fallback;
+      font-family: Roboto;
+      font-weight: 700;
+      src: url(https://assets.brevo.com/font/Roboto/Latin/bold/normal/3ef7cf158f310cf752d5ad08cd0e7e60.woff2) format("woff2"),
+           url(https://assets.brevo.com/font/Roboto/Latin/bold/normal/ece3a1d82f18b60bcce0211725c476aa.woff) format("woff");
+    }
+
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(to right, #8fd3f4, #84fab0);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
+
     main {
       flex: 1;
       display: flex;
@@ -23,12 +46,14 @@
       align-items: center;
       padding: 20px;
     }
+
     footer {
       text-align: center;
       padding: 15px;
       font-weight: bold;
       color: white;
     }
+
     footer a {
       color: white;
       text-decoration: underline;
@@ -37,20 +62,61 @@
 </head>
 <body>
   <main>
-    <iframe src="https://742b0f91.sibforms.com/serve/MUIFABZw-bMdeQs6q3SzPOWTmUCPERICGv-hvknV6xbN--_QK0KiiAikWmZ1vsdTaiKHIP1VqtVULWN-ichGWFxzNbAyLRRZwi1kGxTep50k9fKz6fOXOdK6Nhvs6A-XeDrK00ReGuLAS_DuSC44ZpI7mGgw7rHpo-3Aosct9Qgm69XsMS2VajL1phdmlKbef-XUKKl3QY19jI3Z"
-            width="100%" height="600" frameborder="0" scrolling="auto" allowfullscreen
-            style="max-width: 540px; width: 100%; border: none; border-radius: 10px;">
-    </iframe>
+    <div class="sib-form" style="text-align: center; background-color: #EFF2F7;">
+      <div id="sib-form-container" class="sib-form-container">
+        <div id="sib-container" class="sib-container--large sib-container--vertical" style="text-align:center; background-color:#fff; max-width:540px; margin:auto; padding:20px; border-radius:10px; border:1px solid #C0CCD9;">
+          <form id="sib-form" method="POST" action="https://sibforms.com/serve/MUIFAJmkMJ7ImIffGulibCB4mNwAM0eIcAfsfNw8HixsBO28QvLinpzJwKWKl0wF0TT3ELlsa-0kCOXYrOINZwAhMwyyNAx3CsZ10UYs097gcftdM9xKGZf37seMj8cKxgXrvNZOh5luSOalRq88VmfXKCcRc55F4Rb3LHl-sPNqePhVPufhMiv62fnNxXeUmmd4KoUUyOt6GjDB" data-type="subscription">
+            <h2 style="color:#3C4858; font-size:28px;">Newsletter</h2>
+            <p style="color:#3C4858;">Melde dich bei meinem Newsletter an, um auf dem Laufenden über Änderungen auf meiner Website <strong>raffaelbauer.ch</strong> zu bleiben.</p>
+
+            <label for="EMAIL" style="display:block; text-align:left; font-weight:700; color:#3C4858;">E-Mail-Adresse</label>
+            <input type="email" name="EMAIL" id="EMAIL" required placeholder="dein@email.ch" style="width:100%; padding:10px; margin:10px 0; border-radius:5px; border:1px solid #ccc;" />
+
+            <div class="g-recaptcha" id="sib-captcha"
+              data-sitekey="6LeWOhwrAAAAAEdHyOHMI6qq9rCPQ7u8j5HuW_r_"
+              data-callback="handleCaptchaResponse"
+              style="margin: 20px auto;"></div>
+
+            <button type="submit" style="background-color:#3E4857; color:white; border:none; border-radius:5px; padding:12px 25px; font-size:16px; cursor:pointer;">
+              Anmelden
+            </button>
+            <input type="hidden" name="locale" value="de">
+          </form>
+        </div>
+      </div>
+    </div>
   </main>
 
   <footer>
     <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
-    <p>
-      <a href="https://raffaelbauer.ch/Datenschutz/">Datenschutzbestimmungen</a>
-    </p>
+    <p><a href="https://raffaelbauer.ch/Datenschutz/">Datenschutzbestimmungen</a></p>
   </footer>
 
-  <!-- Google reCAPTCHA mit deinem Site Key -->
+  <!-- JS-Konfiguration -->
+  <script>
+    function handleCaptchaResponse() {
+      var event = new Event('captchaChange');
+      document.getElementById('sib-captcha').dispatchEvent(event);
+    }
+
+    window.REQUIRED_CODE_ERROR_MESSAGE = 'Wähle bitte einen Ländervorwahl aus.';
+    window.LOCALE = 'de';
+    window.EMAIL_INVALID_MESSAGE = window.SMS_INVALID_MESSAGE = "Die eingegebenen Informationen sind nicht gültig.";
+    window.REQUIRED_ERROR_MESSAGE = "Dieses Feld darf nicht leer sein.";
+    window.GENERIC_INVALID_MESSAGE = "Die eingegebenen Informationen sind nicht gültig.";
+    window.translation = {
+      common: {
+        selectedList: '{quantity} Liste ausgewählt',
+        selectedLists: '{quantity} Listen ausgewählt',
+        selectedOption: '{quantity} ausgewählt',
+        selectedOptions: '{quantity} ausgewählt',
+      }
+    };
+    var AUTOHIDE = Boolean(0);
+  </script>
+
+  <!-- Brevo + reCAPTCHA -->
   <script src="https://www.google.com/recaptcha/api.js?hl=de" async defer></script>
+  <script defer src="https://sibforms.com/forms/end-form/build/main.js"></script>
 </body>
 </html>
