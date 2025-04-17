@@ -234,6 +234,76 @@
         a.list-item:hover {
             text-decoration: underline;
         }
+        
+        .gift-selected-dialog {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .gift-selected-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        
+        .gift-selected-content h3 {
+            color: #007bff;
+            margin-top: 0;
+        }
+        
+        .gift-selected-content p {
+            margin: 15px 0;
+        }
+        
+        .gift-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .gift-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .gift-confirm {
+            background-color: #4caf50;
+            color: white;
+        }
+        
+        .gift-confirm:hover {
+            background-color: #3d8b40;
+        }
+        
+        .gift-cancel {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .gift-cancel:hover {
+            background-color: #d32f2f;
+        }
+        
+        .hidden-gift {
+            display: none !important;
+        }
         .item-left {
             display: flex;
             align-items: center;
@@ -308,6 +378,19 @@
 </head>
 <body>
 
+<!-- Dialog für Geschenkauswahl -->
+<div id="gift-selected-dialog" class="gift-selected-dialog">
+    <div class="gift-selected-content">
+        <h3>Geschenk reservieren</h3>
+        <p>Möchtest du dieses Geschenk für Raffael reservieren?</p>
+        <p id="selected-gift-name" style="font-weight: bold;"></p>
+        <div class="gift-buttons">
+            <button id="gift-confirm" class="gift-button gift-confirm">Ja, ich schenke das!</button>
+            <button id="gift-cancel" class="gift-button gift-cancel">Abbrechen</button>
+        </div>
+    </div>
+</div>
+
 <header>
     <h1>🎁 Raffaels Wunschliste 🎁</h1>
     <p class="subtitle">
@@ -359,8 +442,10 @@
 
     <ul id="wishlist">
         <!-- Artikel mit bekannten Preisen -->
-        <li class="priority-medium" data-priority="medium">
-            <a class="list-item" href="https://kamerino.de/products/kamerino-pro?variant=50457906839818">
+        <li class="priority-medium" data-priority="medium" data-gift-id="kamerino-pro">
+            <a class="list-item" href="javascript:void(0)" onclick="selectGift(this)" 
+               data-gift-name="Kamerino PRO SnowVision (Aufnahmen vom Skifahren)" 
+               data-gift-price="63,00 CHF">
                 <div class="item-left">
                     <span class="priority-badge medium-badge">2</span>
                     <span>Kamerino PRO SnowVision (Aufnahmen vom Skifahren)</span>
@@ -368,8 +453,10 @@
                 <span class="price">63,00 CHF</span>
             </a>
         </li>
-        <li class="priority-medium" data-priority="medium">
-            <a class="list-item" href="https://lungtank.com/products/lung-t-500%E2%84%A2-hand-pump-sub-mask">
+        <li class="priority-medium" data-priority="medium" data-gift-id="lung-t-500">
+            <a class="list-item" href="javascript:void(0)" onclick="selectGift(this)" 
+               data-gift-name="Lung T-500 + Hand Pump + Sub-Mask" 
+               data-gift-price="344,00 CHF">
                 <div class="item-left">
                     <span class="priority-badge medium-badge">2</span>
                     <span>Lung T-500 + Hand Pump + Sub-Mask</span>
@@ -377,8 +464,10 @@
                 <span class="price">344,00 CHF</span>
             </a>
         </li>
-        <li class="priority-high" data-priority="high">
-            <a class="list-item" href="https://www.radbag.ch/leuchtender-nebel-nachtlicht">
+        <li class="priority-high" data-priority="high" data-gift-id="nebel-nachtlicht">
+            <a class="list-item" href="javascript:void(0)" onclick="selectGift(this)" 
+               data-gift-name="Leuchtender Nebel Nachtlicht" 
+               data-gift-price="24,99 CHF">
                 <div class="item-left">
                     <span class="priority-badge high-badge">1</span>
                     <span>Leuchtender Nebel Nachtlicht</span>
@@ -386,8 +475,10 @@
                 <span class="price">24,99 CHF</span>
             </a>
         </li>
-        <li class="priority-medium" data-priority="medium">
-            <a class="list-item" href="https://mywhomeofficial.com/products/fingerprint-door-lock">
+        <li class="priority-medium" data-priority="medium" data-gift-id="fingerprint-lock">
+            <a class="list-item" href="javascript:void(0)" onclick="selectGift(this)" 
+               data-gift-name="Finger Print Lok Türschloss (per Fingerabdruck öffnen)" 
+               data-gift-price="64 CHF">
                 <div class="item-left">
                     <span class="priority-badge medium-badge">2</span>
                     <span>Finger Print Lok Türschloss (per Fingerabdruck öffnen)</span>
@@ -395,8 +486,10 @@
                 <span class="price">64 CHF</span>
             </a>
         </li>
-        <li class="priority-high" data-priority="high">
-            <a class="list-item" href="https://shufflebox.store/products/shufflebox-g1-pro-2025-version-automatic-card-shuffler-dealer-machine">
+        <li class="priority-high" data-priority="high" data-gift-id="shufflebox">
+            <a class="list-item" href="javascript:void(0)" onclick="selectGift(this)" 
+               data-gift-name="ShuffleBox G1 Pro (mit Extrafunktionen)" 
+               data-gift-price="139,99 CHF">
                 <div class="item-left">
                     <span class="priority-badge high-badge">1</span>
                     <span>ShuffleBox G1 Pro (mit Extrafunktionen)</span>
@@ -404,8 +497,10 @@
                 <span class="price">139,99 CHF</span>
             </a>
         </li>
-        <li class="priority-medium" data-priority="medium">
-            <a class="list-item" href="https://raffaelbauer.ch/Wunschliste/Nintendo%20Switch%202%20Verf%C3%BCgbarkeit/">
+        <li class="priority-medium" data-priority="medium" data-gift-id="nintendo-switch-2">
+            <a class="list-item" href="javascript:void(0)" onclick="selectGift(this)" 
+               data-gift-name="Nintendo Switch 2" 
+               data-gift-price="470 CHF">
                 <div class="item-left">
                     <span class="priority-badge medium-badge">2</span>
                     <span>Nintendo Switch 2</span>
@@ -413,8 +508,10 @@
                 <span class="price">470 CHF</span>
             </a>
         </li>
-        <li class="priority-low" data-priority="low">
-            <a class="list-item" href="https://www.radbag.ch/pinguin-coolers">
+        <li class="priority-low" data-priority="low" data-gift-id="pinguin-coolers">
+            <a class="list-item" href="javascript:void(0)" onclick="selectGift(this)" 
+               data-gift-name="Pinguin Coolers (Eiswürfel in Pinguinform)" 
+               data-gift-price="16,99 CHF">
                 <div class="item-left">
                     <span class="priority-badge low-badge">3</span>
                     <span>Pinguin Coolers (Eiswürfel in Pinguinform)</span>
@@ -422,8 +519,10 @@
                 <span class="price">16,99 CHF</span>
             </a>
         </li>
-        <li class="priority-high" data-priority="high">
-            <a class="list-item" href="https://www.apple.com/ch-de/shop/buy-iphone/iphone-16-pro/6,3%22-display-1tb-titan-schwarz">
+        <li class="priority-high" data-priority="high" data-gift-id="iphone">
+            <a class="list-item" href="javascript:void(0)" onclick="selectGift(this)" 
+               data-gift-name="Neuestes iPhone" 
+               data-gift-price="1'549,00 CHF">
                 <div class="item-left">
                     <span class="priority-badge high-badge">1</span>
                     <span>Neuestes iPhone</span>
@@ -431,8 +530,10 @@
                 <span class="price">1'549,00 CHF</span>
             </a>
         </li>
-        <li class="priority-medium" data-priority="medium">
-            <a class="list-item" href="https://www.amazon.com/-/de/dp/B0D8J5P11X?creativeASIN=B0D8J5P11X&asc_item-id=amzn1.ideas.OCANLIKC0B84&ref_=aip_sf_list_spv_ofs_m_asin">
+        <li class="priority-medium" data-priority="medium" data-gift-id="rayneo-vr">
+            <a class="list-item" href="javascript:void(0)" onclick="selectGift(this)" 
+               data-gift-name="RAYNEO Air VR Brille" 
+               data-gift-price="Preis unbekannt">
                 <div class="item-left">
                     <span class="priority-badge medium-badge">2</span>
                     <span>RAYNEO Air VR Brille</span>
@@ -442,8 +543,10 @@
         </li>
 
         <!-- Flexibles -->
-        <li class="priority-medium" data-priority="medium">
-            <a class="list-item" href="https://raffaelbauer.ch/Ausflugsideen/">
+        <li class="priority-medium" data-priority="medium" data-gift-id="ausflug">
+            <a class="list-item" href="javascript:void(0)" onclick="selectGift(this)" 
+               data-gift-name="Ausflug mit mir von meiner Liste" 
+               data-gift-price="Preis Selbst Wählbar">
                 <div class="item-left">
                     <span class="priority-badge medium-badge">2</span>
                     <span>Ausflug mit mir von meiner Liste</span>
@@ -451,8 +554,10 @@
                 <span class="price">Preis Selbst Wählbar</span>
             </a>
         </li>
-        <li class="priority-medium" data-priority="medium">
-            <a class="list-item" href="https://startselect.com/ch-de/gutscheine/steam-karten">
+        <li class="priority-medium" data-priority="medium" data-gift-id="steam-karte">
+            <a class="list-item" href="javascript:void(0)" onclick="selectGift(this)" 
+               data-gift-name="Steam Gutscheinkarte" 
+               data-gift-price="Preis Selbst Wählbar">
                 <div class="item-left">
                     <span class="priority-badge medium-badge">2</span>
                     <span>Steam Gutscheinkarte</span>
@@ -460,8 +565,10 @@
                 <span class="price">Preis Selbst Wählbar</span>
             </a>
         </li>
-        <li class="priority-medium" data-priority="medium">
-            <a class="list-item" href="https://raffaelbauer.ch/Wunschliste/Ueberaschung/">
+        <li class="priority-medium" data-priority="medium" data-gift-id="geld">
+            <a class="list-item" href="javascript:void(0)" onclick="selectGift(this)" 
+               data-gift-name="Du kannst mir auch einfach Geld schenken" 
+               data-gift-price="Preis Selbst Wählbar">
                 <div class="item-left">
                     <span class="priority-badge medium-badge">2</span>
                     <span>Du kannst mir auch einfach Geld schenken</span>
@@ -469,8 +576,10 @@
                 <span class="price">Preis Selbst Wählbar</span>
             </a>
         </li>
-        <li class="priority-low" data-priority="low">
-            <a class="list-item" href="https://wa.me/41799534432?text=Hallo%20Raffael%2C%20w%C3%A4re%20es%20eine%20M%C3%B6glichkeit%2C%20dass%20ich%20dir%20...%20auf%20...%20schenke%3F">
+        <li class="priority-low" data-priority="low" data-gift-id="anderes-vorschlagen">
+            <a class="list-item" href="javascript:void(0)" onclick="selectGift(this)" 
+               data-gift-name="Du kannst mir auch etwas anderes vorschlagen" 
+               data-gift-price="Preis Selbst Wählbar">
                 <div class="item-left">
                     <span class="priority-badge low-badge">3</span>
                     <span>Du kannst mir auch etwas anderes vorschlagen</span>
@@ -640,56 +749,4 @@
         const items = Array.from(wishlist.getElementsByTagName('li'));
         
         items.sort((a, b) => {
-            if (criterion === 'price') {
-                // Sortieren nach Preis
-                const priceA = extractPrice(a.querySelector('.price').textContent);
-                const priceB = extractPrice(b.querySelector('.price').textContent);
-                
-                if (priceA === priceB) {
-                    // Bei gleichem Preis nach Priorität und dann nach Name sortieren
-                    const priorityA = getPriorityValue(a);
-                    const priorityB = getPriorityValue(b);
-                    
-                    if (priorityA === priorityB) {
-                        return getItemName(a).localeCompare(getItemName(b));
-                    }
-                    
-                    return priorityA - priorityB;
-                }
-                
-                return priceA - priceB;
-            } else {
-                // Sortieren nach Priorität
-                const priorityA = getPriorityValue(a);
-                const priorityB = getPriorityValue(b);
-                
-                if (priorityA === priorityB) {
-                    // Bei gleicher Priorität nach Preis und dann nach Name sortieren
-                    const priceA = extractPrice(a.querySelector('.price').textContent);
-                    const priceB = extractPrice(b.querySelector('.price').textContent);
-                    
-                    if (priceA === priceB) {
-                        return getItemName(a).localeCompare(getItemName(b));
-                    }
-                    
-                    return priceA - priceB;
-                }
-                
-                return priorityA - priorityB;
-            }
-        });
-        
-        // Neu anordnen
-        items.forEach(item => {
-            wishlist.appendChild(item);
-        });
-    }
-    
-    // Initialisiere Seite mit Standardsortierung nach Priorität
-    document.addEventListener('DOMContentLoaded', function() {
-        sortItems('priority', false);
-    });
-</script>
-
-</body>
-</html>
+            if (criterion ===
