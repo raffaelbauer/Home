@@ -4,17 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wo war Raffael schon?</title>
+    <!-- Leaflet Haupt-Bibliothek -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    
+    <!-- Leaflet MarkerCluster Plugin für das Clustering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css" />
+    
     <style>
         body {
             margin: 0;
             font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
+        
         #map {
             width: 100%;
             height: 85vh;
+            flex-grow: 1;
         }
+        
         #legend {
             position: fixed;
             top: 10px;
@@ -25,12 +39,15 @@
             box-shadow: 0 0 5px rgba(0,0,0,0.3);
             font-size: 12px;
             z-index: 1000;
+            max-width: 90%;
         }
+        
         .legend-item {
             display: flex;
             align-items: center;
             margin-bottom: 5px;
         }
+        
         .legend-color {
             width: 15px;
             height: 15px;
@@ -38,39 +55,50 @@
             margin-right: 5px;
             border-radius: 50%;
         }
-        #controls {
-            padding: 10px;
-            background-color: #f5f5f5;
-            border-bottom: 1px solid #ddd;
+        
+        footer {
             text-align: center;
-        }
-        #updateButton {
-            padding: 8px 16px;
-            background-color: #4CAF50;
+            padding: 15px 0;
+            font-weight: bold;
             color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
+            background-color: rgba(0, 0, 0, 0.7);
+            margin-top: auto;
+            width: 100%;
         }
-        #updateButton:hover {
-            background-color: #45a049;
+        
+        footer a {
+            color: white;
+            text-decoration: none;
         }
-        #status {
-            margin-left: 10px;
-            font-size: 14px;
-            color: #666;
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Verstecke Standard-Cluster-Styles */
+        .marker-cluster {
+            background-color: transparent !important;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+        
+        .marker-cluster div {
+            background-color: transparent !important;
+            background: transparent !important;
+        }
+        
+        /* Anpassungen für mobile Geräte */
+        @media (max-width: 768px) {
+            #legend {
+                font-size: 10px;
+                max-width: 80%;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="controls">
-        <button id="updateButton">Karte aktualisieren</button>
-        <span id="status"></span>
-    </div>
-    
     <div id="legend">
-        <strong>Orte, wo ich schon mal war (gezählt ab einer Übernachtung)</strong>
         <div class="legend-item"><span class="legend-color" style="background: #FFC0CB;"></span> Baby (0-1 Jahre)</div>
         <div class="legend-item"><span class="legend-color" style="background: #FFCC99;"></span> Mini Kind (2-3 Jahre)</div>
         <div class="legend-item"><span class="legend-color" style="background: #FFEB3B;"></span> Entdeckerzeit (4-6 Jahre)</div>
@@ -83,32 +111,84 @@
     
     <div id="map"></div>
     
+    <footer>
+        <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
+        <p>
+            <a href="https://raffaelbauer.ch/Datenschutz/">Datenschutzbestimmungen</a>
+        </p>
+    </footer>
+    
     <script>
         // Globale Variablen
         var map;
-        var markers = [];
+        var markers = L.markerClusterGroup({
+            maxClusterRadius: 40, // Radius in Pixeln, bei dem Marker zusammengefasst werden
+            iconCreateFunction: function(cluster) {
+                // Alle Marker im Cluster abrufen
+                var markers = cluster.getAllChildMarkers();
+                var count = markers.length;
+                
+                // Wählen Sie zufällig einen der Marker aus dem Cluster aus
+                var randomMarker = markers[Math.floor(Math.random() * markers.length)];
+                
+                // Extrahieren Sie die Farbe aus dem HTML des Markers
+                var markerHtml = randomMarker.options.icon.options.html;
+                var farbeMatch = markerHtml.match(/fill="(#[0-9A-F]{6})"/);
+                var farbe = farbeMatch ? farbeMatch[1] : '#5E35B1'; // Standardfarbe als Fallback
+                
+                // Erstellen Sie ein Pin-Icon mit der extrahierten Farbe und der Anzahl der Marker
+                return L.divIcon({
+                    className: 'colored-cluster',
+                    html: `<svg width="30" height="48" viewBox="0 0 25 41" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12.5 0C5.596 0 0 5.596 0 12.5C0 19.404 12.5 41 12.5 41S25 19.404 25 12.5C25 5.596 19.404 0 12.5 0Z" 
+                            fill="${farbe}" />
+                        <circle cx="12.5" cy="12.5" r="8" fill="white" />
+                        <text x="12.5" y="16" text-anchor="middle" font-size="10" font-weight="bold" fill="black">${count}</text>
+                    </svg>`,
+                    iconSize: [30, 48],
+                    iconAnchor: [15, 48],
+                    popupAnchor: [0, -48]
+                });
+            },
+            // Popup für Cluster
+            spiderfyOnMaxZoom: true,
+            showCoverageOnHover: false, 
+            zoomToBoundsOnClick: true
+        });
+        
+        // Speichert die Marker für spätere Operationen
+        var markerArray = [];
         
         // Funktion zum Hinzufügen eines Markers
         function addMarker(pin) {
             var farbe;
+            var alterText;
             
             // Neue Kategorien mit Altern und Farben
             if (pin.alter <= 1) {
                 farbe = '#FFC0CB'; // Pastell Rosa
+                alterText = "Baby (0-1 Jahre)";
             } else if (pin.alter <= 3) {
                 farbe = '#FFCC99'; // Hellorange
+                alterText = "Mini Kind (2-3 Jahre)";
             } else if (pin.alter <= 6) {
                 farbe = '#FFEB3B'; // Sonnengelb
+                alterText = "Entdeckerzeit (4-6 Jahre)";
             } else if (pin.alter <= 9) {
                 farbe = '#AED581'; // Hellgrün
+                alterText = "Kinderabenteuer (7-9 Jahre)";
             } else if (pin.alter <= 12) {
                 farbe = '#4DD0E1'; // Türkis
+                alterText = "Große Kindheit (10-12 Jahre)";
             } else if (pin.alter <= 15) {
                 farbe = '#64B5F6'; // Himmelblau
+                alterText = "Frühe Jugend (13-15 Jahre)";
             } else if (pin.alter <= 17) {
                 farbe = '#9575CD'; // Violett
+                alterText = "Späte Jugend (16-17 Jahre)";
             } else {
                 farbe = '#5E35B1'; // Dunkles Violett für ab 18
+                alterText = "Junge Zukunft (ab 18 Jahre)";
             }
             
             // Farbiger Marker erstellen
@@ -124,24 +204,18 @@
                 popupAnchor: [0, -41]
             });
             
-            // Marker erstellen und zur Karte hinzufügen
+            // Marker erstellen und zum MarkerCluster hinzufügen
             var marker = L.marker([pin.lat, pin.lng], { icon: coloredIcon })
-                .addTo(map)
-                .bindPopup("Alter: " + pin.alter);
+                .bindPopup(`<strong>Besuch mit ${pin.alter} Jahren</strong><br>${alterText}`);
             
-            // Marker zum Array hinzufügen (für späteres Entfernen)
-            markers.push(marker);
+            // Marker zum Array und zur Cluster-Gruppe hinzufügen
+            markerArray.push(marker);
+            markers.addLayer(marker);
         }
         
-        // Funktion zum Laden und Aktualisieren der Karte
-        function updateMap() {
-            updateStatus("Lade Daten...");
-            
-            // Alle bestehenden Marker entfernen
-            markers.forEach(marker => map.removeLayer(marker));
-            markers = [];
-            
-            // JSON laden mit einem Cache-Brecher-Parameter, um Cache-Probleme zu vermeiden
+        // Funktion zum Laden der Karte
+        function loadMap() {
+            // JSON laden
             fetch('orte.json?v=' + new Date().getTime())
                 .then(response => {
                     if (!response.ok) {
@@ -150,25 +224,26 @@
                     return response.json();
                 })
                 .then(pins => {
-                    // Wenn wir hierher kommen, wurde die JSON erfolgreich geladen
                     console.log('JSON-Datei erfolgreich geladen:', pins.length + ' Orte gefunden');
                     pins.forEach(addMarker);
-                    updateStatus("Zuletzt aktualisiert: " + new Date().toLocaleTimeString());
+                    
+                    // Marker-Cluster zur Karte hinzufügen
+                    map.addLayer(markers);
                 })
                 .catch(error => {
                     console.error('Fehler beim Laden der JSON-Datei:', error);
-                    updateStatus("Fehler beim Laden. Bitte erneut versuchen.");
                     
                     // Fallback-Daten für Testzwecke
                     var fallbackPins = [
-                        { "lat": 48.25940, "lng": 7.72310, "alter": 14 }
+                        { "lat": 48.25940, "lng": 7.72310, "alter": 14 },
+                        { "lat": 48.25950, "lng": 7.72320, "alter": 15 },
+                        { "lat": 48.25960, "lng": 7.72330, "alter": 16 }
                     ];
                     fallbackPins.forEach(addMarker);
+                    
+                    // Marker-Cluster zur Karte hinzufügen
+                    map.addLayer(markers);
                 });
-        }
-        
-        function updateStatus(message) {
-            document.getElementById('status').textContent = message;
         }
         
         // Warte, bis die Seite vollständig geladen ist
@@ -180,20 +255,27 @@
                 attribution: '&copy; OpenStreetMap-Mitwirkende'
             }).addTo(map);
             
-            // Karte initial laden
-            updateMap();
+            // Karte laden
+            loadMap();
             
-            // Event-Listener für den Update-Button
-            document.getElementById('updateButton').addEventListener('click', function() {
-                updateMap();
+            // Event-Listener für Cluster-Popup
+            markers.on('clusterclick', function(a) {
+                var markers = a.layer.getAllChildMarkers();
+                var popupContent = "<div style='max-height: 200px; overflow-y: auto;'><strong>" + markers.length + " Besuche an diesem Ort:</strong><ul>";
+                markers.forEach(function(marker) {
+                    // Extrahiere Alter aus dem Popup-Content
+                    var popupText = marker.getPopup().getContent();
+                    var alter = popupText.match(/Besuch mit (\d+) Jahren/)[1];
+                    popupContent += "<li>Besuch mit " + alter + " Jahren</li>";
+                });
+                popupContent += "</ul></div>";
+                
+                var popup = L.popup()
+                    .setLatLng(a.layer.getLatLng())
+                    .setContent(popupContent)
+                    .openOn(map);
             });
         });
     </script>
-    <footer style="text-align: center;">
-        <p>&copy; 2025 Raffael Bauer. Alle Rechte vorbehalten.</p>
-        <p>
-            <a href="https://raffaelbauer.github.io/Datenschutzerklaerung/">Datenschutzbestimmungen</a>
-        </p>
-    </footer>
 </body>
 </html>
