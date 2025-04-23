@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>🎁 Raffaels Wunschliste</title>
+  <script>
+    async function loadWishlist() {
+      const response = await fetch('https://raffaelbauer.ch/wunschliste/wunschliste.json');
+      const data = await response.json();
+      const list = document.getElementById('wishlist');
+      list.innerHTML = '';
+      data.forEach(item => {
+        if (item.reserved) return;
+        const li = document.createElement('li');
+        li.innerHTML = `<strong>${item.name}</strong> – ${item.preis} – <button onclick="reserve('${item.id}')">Ich schenke das!</button>`;
+        list.appendChild(li);
+      });
+    }
+    async function reserve(id) {
+      await fetch('https://raffaelbauer.ch/wunschliste/reservieren.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ id })
+      });
+      loadWishlist();
+    }
+    window.onload = loadWishlist;
+  </script>
+</head>
+<body>
+  <h1>🎁 Raffaels Wunschliste</h1>
+  <ul id="wishlist"></ul>
+</body>
+</html>

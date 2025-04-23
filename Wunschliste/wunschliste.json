@@ -1,0 +1,18 @@
+[
+  {
+    "id": "apple-watch-band",
+    "name": "Neues Armband für meine Uhr (Gehäuse 40mm)",
+    "preis": "49,00 CHF",
+    "link": "https://www.apple.com/ch-de/shop/product/MDUX4ZM/A/40-mm-sport-loop-veilchen",
+    "prioritaet": 1,
+    "reserved": false
+  },
+  {
+    "id": "geld",
+    "name": "Du kannst mir auch einfach Geld schenken",
+    "preis": "Preis Selbst Wählbar",
+    "link": "https://raffaelbauer.ch/Wunschliste/Ueberaschung/",
+    "prioritaet": 1,
+    "reserved": false
+  }
+]
