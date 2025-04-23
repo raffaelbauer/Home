@@ -1,17 +1,15 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>🎁 Raffaels Wunschliste 🎁</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #cce7ff, #ffffff);
       margin: 0;
       padding: 0;
-      color: #333;
-      background: linear-gradient(to bottom right, #cce7ff, #ffffff);
     }
     header {
       background-color: #007bff;
@@ -19,20 +17,42 @@
       text-align: center;
       padding: 30px 20px;
     }
-    header h1 {
-      margin: 0;
-      font-size: 36px;
-    }
     main {
       max-width: 800px;
       margin: 30px auto;
       background-color: #fff;
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      background-color: #e3f2fd;
+      margin: 15px 0;
+      padding: 15px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .priority-badge {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      color: white;
+      text-align: center;
+      line-height: 28px;
+      margin-right: 10px;
+    }
+    .badge-1 { background-color: #ff0000; }
+    .badge-2 { background-color: #ff5252; }
+    .badge-3 { background-color: #ffb74d; }
+    .badge-4 { background-color: #4caf50; }
     .btn {
-      padding: 10px 15px;
+      padding: 8px 15px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
@@ -41,14 +61,11 @@
     .btn-buy {
       background-color: #2196F3;
       color: white;
+      margin-right: 10px;
     }
     .btn-gift {
       background-color: #4CAF50;
       color: white;
-    }
-    .btn-gift:disabled {
-      background-color: #aaa;
-      cursor: not-allowed;
     }
     .gift-selected-dialog {
       display: none;
@@ -60,76 +77,105 @@
       background-color: rgba(0, 0, 0, 0.5);
       justify-content: center;
       align-items: center;
-      z-index: 1000;
     }
     .gift-selected-content {
       background-color: white;
       padding: 20px;
       border-radius: 10px;
-      text-align: center;
+      max-width: 500px;
       width: 90%;
-      max-width: 400px;
+      text-align: center;
+    }
+    .gift-buttons {
+      margin-top: 20px;
+    }
+    .gift-button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 0 10px;
+    }
+    .gift-confirm {
+      background-color: #4caf50;
+      color: white;
+    }
+    .gift-cancel {
+      background-color: #f44336;
+      color: white;
+    }
+    .hidden-gift {
+      display: none !important;
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>🎁 Raffaels Wunschliste 🎁</h1>
+    <p>Bitte wähle ein Geschenk aus der Liste aus und bestätige deine Auswahl.</p>
+  </header>
+  <main>
+    <ul id="wishlist">
+      <li data-gift-id="apple-watch-band">
+        <div>
+          <span class="priority-badge badge-1">1</span>
+          <span>Neues Armband für meine Uhr (40mm)</span>
+        </div>
+        <div>
+          <a href="https://www.apple.com/ch-de/shop/product/MT2W3ZM/A/sportarmband-blau-kompatibel-mit-apple-watch-40mm-38mm" target="_blank" class="btn btn-buy">Produkt ansehen</a>
+          <button class="btn btn-gift" onclick="selectGift(this)" data-gift-name="Neues Armband für meine Uhr (40mm)" data-gift-price="49,00 CHF">Ich schenke das!</button>
+        </div>
+      </li>
+      <!-- Weitere Geschenke können hier hinzugefügt werden -->
+    </ul>
+  </main>
 
-<div id="gift-selected-dialog" class="gift-selected-dialog">
-  <div class="gift-selected-content">
-    <h3>Geschenk reservieren</h3>
-    <p id="selected-gift-name"></p>
-    <button id="gift-confirm" class="btn btn-gift">Ja, ich schenke das!</button>
-    <button id="gift-cancel" class="btn btn-buy">Abbrechen</button>
+  <!-- Dialog für Geschenkauswahl -->
+  <div id="gift-selected-dialog" class="gift-selected-dialog">
+    <div class="gift-selected-content">
+      <h3>Geschenk reservieren</h3>
+      <p>Möchtest du dieses Geschenk für Raffael reservieren?</p>
+      <p id="selected-gift-name" style="font-weight: bold;"></p>
+      <div class="gift-buttons">
+        <button id="gift-confirm" class="gift-button gift-confirm">Ja, ich schenke das!</button>
+        <button id="gift-cancel" class="gift-button gift-cancel">Abbrechen</button>
+      </div>
+    </div>
   </div>
-</div>
 
-<header>
-  <h1>🎁 Raffaels Wunschliste 🎁</h1>
-</header>
-
-<main>
-  <ul id="wishlist">
-    <li>
-      <span>Neues Armband für meine Uhr</span>
-      <button class="btn btn-gift" data-gift-name="Neues Armband für meine Uhr" data-gift-price="49 CHF">Ich schenke das!</button>
-    </li>
-    <li>
-      <span>Geld schenken</span>
-      <button class="btn btn-gift" data-gift-name="Geld schenken" data-gift-price="Selbst wählbar">Ich schenke das!</button>
-    </li>
-  </ul>
-</main>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  const confirmButton = document.getElementById('gift-confirm');
-  const cancelButton = document.getElementById('gift-cancel');
-  const dialog = document.getElementById('gift-selected-dialog');
-  const selectedGiftNameElement = document.getElementById('selected-gift-name');
-
-  document.querySelectorAll('.btn-gift').forEach(button => {
-    button.addEventListener('click', () => {
+  <script>
+    // Geschenk auswählen
+    function selectGift(button) {
       const giftName = button.getAttribute('data-gift-name');
       const giftPrice = button.getAttribute('data-gift-price');
+      const selectedGiftNameElement = document.getElementById('selected-gift-name');
+      const listItem = button.closest('li');
+
+      // Speichern des aktuellen Geschenkeintrags für spätere Verwendung
+      window.currentSelectedItem = listItem;
+
       selectedGiftNameElement.textContent = `${giftName} (${giftPrice})`;
+
+      const dialog = document.getElementById('gift-selected-dialog');
       dialog.style.display = 'flex';
-      window.currentButton = button;
-    });
-  });
-
-  confirmButton.addEventListener('click', () => {
-    if (window.currentButton) {
-      window.currentButton.disabled = true;
-      window.currentButton.textContent = "Reserviert 🎉";
     }
-    dialog.style.display = 'none';
-  });
 
-  cancelButton.addEventListener('click', () => {
-    dialog.style.display = 'none';
-  });
-});
-</script>
+    // Event-Listener für das Dialog
+    document.addEventListener('DOMContentLoaded', function() {
+      const confirmButton = document.getElementById('gift-confirm');
+      const cancelButton = document.getElementById('gift-cancel');
+      const dialog = document.getElementById('gift-selected-dialog');
 
-</body>
-</html>
+      confirmButton.addEventListener('click', function() {
+        const giftName = document.getElementById('selected-gift-name').textContent;
+
+        // Ausblenden des gewählten Geschenks
+        if (window.currentSelectedItem) {
+          window.currentSelectedItem.classList.add('hidden-gift');
+
+          // Speichern der Auswahl im localStorage
+          const giftId = window.currentSelectedItem.getAttribute('data-gift-id');
+          let reservedGifts = JSON.parse(localStorage.getItem('reservedG
+::contentReference[oaicite:4]{index=4}
+ 
