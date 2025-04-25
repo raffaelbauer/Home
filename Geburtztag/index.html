@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Bilder hochladen & ansehen</title>
+  <script>
+    UPLOADCARE_PUBLIC_KEY = 'a1fbb460be44fc12e9b7';
+  </script>
+  <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+    h1 { margin-bottom: 30px; }
+    .gallery img { max-width: 200px; margin: 10px; border: 1px solid #ccc; border-radius: 4px; }
+    .gallery { display: flex; flex-wrap: wrap; justify-content: center; }
+  </style>
+</head>
+<body>
+  <h1>Bilder hochladen & ansehen</h1>
+
+  <!-- UploadCare Widget -->
+  <input type="hidden"
+         role="uploadcare-uploader"
+         data-clearable="true"
+         data-multiple="true"
+         data-tabs="file url"
+         data-images-only="true" />
+
+  <h2>Hochgeladene Bilder</h2>
+  <div id="gallery" class="gallery"></div>
+
+  <script>
+    const input = document.querySelector('[role=uploadcare-uploader]');
+    input.addEventListener('change', function () {
+      const fileGroup = uploadcare.fileGroup(input.value);
+      fileGroup.done(group => {
+        const gallery = document.getElementById('gallery');
+        group.files().forEach(filePromise => {
+          filePromise.done(file => {
+            const img = document.createElement('img');
+            img.src = file.cdnUrl;
+            img.alt = "Hochgeladenes Bild";
+            img.title = "Klicke zum Herunterladen";
+            img.style.cursor = "pointer";
+            img.onclick = () => window.open(file.cdnUrl, '_blank');
+            gallery.appendChild(img);
+          });
+        });
+      });
+    });
+  </script>
+</body>
+</html>
