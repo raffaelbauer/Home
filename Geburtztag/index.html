@@ -8,62 +8,67 @@
   </script>
   <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-    h1 { margin-bottom: 30px; }
-    .gallery img {
-      max-width: 200px;
-      margin: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      cursor: pointer;
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
     }
     .gallery {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
+      margin-top: 30px;
+    }
+    .gallery img {
+      max-width: 200px;
+      margin: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <h1>Bilder hochladen & ansehen</h1>
 
+  <!-- UploadCare-Widget -->
   <input type="hidden"
          role="uploadcare-uploader"
-         data-clearable="true"
          data-multiple="true"
+         data-clearable="true"
          data-tabs="file url"
          data-images-only="true" />
 
-  <h2>Hochgeladene Bilder</h2>
-  <div id="gallery" class="gallery"></div>
+  <div class="gallery" id="gallery"></div>
 
   <script>
     const input = document.querySelector('[role=uploadcare-uploader]');
-    input.addEventListener('change', function () {
+    const gallery = document.getElementById('gallery');
+
+    input.addEventListener('change', async () => {
       const value = input.value;
 
-      // Wenn mehrere Bilder hochgeladen wurden (Gruppe)
       if (value.startsWith('https://ucarecdn.com/group/')) {
-        const fileGroup = uploadcare.fileGroup(value);
-        fileGroup.done(group => {
-          group.files().forEach(filePromise => {
-            filePromise.done(showImage);
+        // Mehrere Bilder (Gruppe)
+        const group = await uploadcare.fileGroup(value);
+        group.files().forEach(filePromise => {
+          filePromise.done(file => {
+            addImage(file.cdnUrl);
           });
         });
       } else {
-        // Nur ein Bild
-        const file = uploadcare.fileFrom('uploaded', value);
-        file.done(showImage);
+        // Einzelnes Bild
+        const file = await uploadcare.fileFrom('uploaded', value);
+        file.done(fileInfo => {
+          addImage(fileInfo.cdnUrl);
+        });
       }
     });
 
-    function showImage(file) {
-      const gallery = document.getElementById('gallery');
+    function addImage(url) {
       const img = document.createElement('img');
-      img.src = file.cdnUrl;
-      img.alt = "Bild";
-      img.title = "Klick zum Öffnen";
-      img.onclick = () => window.open(file.cdnUrl, '_blank');
+      img.src = url + '-/preview/500x500/'; // optional Vorschaugrösse
+      img.onclick = () => window.open(url, '_blank');
       gallery.appendChild(img);
     }
   </script>
