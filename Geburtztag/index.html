@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Bilder hochladen & ansehen</title>
+  <title>Bilder UploadCare Galerie</title>
   <script>
     UPLOADCARE_PUBLIC_KEY = 'a1fbb460be44fc12e9b7';
   </script>
@@ -13,11 +13,11 @@
       text-align: center;
       padding: 20px;
     }
+    h1 { margin-bottom: 30px; }
     .gallery {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      margin-top: 30px;
     }
     .gallery img {
       max-width: 200px;
@@ -31,7 +31,6 @@
 <body>
   <h1>Bilder hochladen & ansehen</h1>
 
-  <!-- UploadCare-Widget -->
   <input type="hidden"
          role="uploadcare-uploader"
          data-multiple="true"
@@ -45,29 +44,29 @@
     const input = document.querySelector('[role=uploadcare-uploader]');
     const gallery = document.getElementById('gallery');
 
-    input.addEventListener('change', async () => {
+    input.addEventListener('change', () => {
       const value = input.value;
 
-      if (value.startsWith('https://ucarecdn.com/group/')) {
-        // Mehrere Bilder (Gruppe)
-        const group = await uploadcare.fileGroup(value);
-        group.files().forEach(filePromise => {
-          filePromise.done(file => {
-            addImage(file.cdnUrl);
+      // Wenn es eine Gruppe ist (mehrere Bilder)
+      if (value.includes('/group/')) {
+        uploadcare.fileGroup(value).then(group => {
+          group.files().forEach(filePromise => {
+            filePromise.then(file => {
+              showImage(file.cdnUrl);
+            });
           });
         });
       } else {
-        // Einzelnes Bild
-        const file = await uploadcare.fileFrom('uploaded', value);
-        file.done(fileInfo => {
-          addImage(fileInfo.cdnUrl);
+        // Ein einzelnes Bild
+        uploadcare.fileFrom('uploaded', value).then(file => {
+          showImage(file.cdnUrl);
         });
       }
     });
 
-    function addImage(url) {
+    function showImage(url) {
       const img = document.createElement('img');
-      img.src = url + '-/preview/500x500/'; // optional Vorschaugrösse
+      img.src = url + '-/preview/500x500/';
       img.onclick = () => window.open(url, '_blank');
       gallery.appendChild(img);
     }
